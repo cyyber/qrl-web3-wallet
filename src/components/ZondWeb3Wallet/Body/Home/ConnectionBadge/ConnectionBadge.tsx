@@ -177,7 +177,24 @@ const ConnectionBadge = observer(
                 </TabsList>
                 {Object.values(ZOND_BLOCKCHAIN).map((provider) => {
                   return (
-                    <TabsContent key={provider.id} value={provider.id}>
+                    <TabsContent
+                      className="space-y-4"
+                      key={provider.id}
+                      value={provider.id}
+                    >
+                      {isValidationRequired &&
+                        isConnected &&
+                        provider.name === ZOND_BLOCKCHAIN[blockchain].name && (
+                          <Card className="flex items-center gap-2 p-2 text-secondary">
+                            <PlugZap />
+                            <div className="flex flex-col">
+                              <div>Currently connected to</div>
+                              <div className="font-semibold">
+                                {ipAddressFromStorage}:{portFromStorage}
+                              </div>
+                            </div>
+                          </Card>
+                        )}
                       <Card className="p-2">
                         <div className="space-y-4">
                           <div>{provider.description}</div>
