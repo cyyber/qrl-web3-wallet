@@ -155,88 +155,86 @@ const ConnectionBadge = observer(
               <DialogHeader className="text-left">
                 <DialogTitle>Select Blockchain</DialogTitle>
               </DialogHeader>
-              <div>
-                <Tabs
-                  defaultValue={blockchain}
-                  onValueChange={(value) => {
-                    setSelectedBlockchain(value as BlockchainType);
-                  }}
-                >
-                  <TabsList className="grid w-full grid-cols-3">
-                    {Object.values(ZOND_BLOCKCHAIN).map((provider) => {
-                      return (
-                        <TabsTrigger
-                          key={provider.id}
-                          value={provider.id}
-                          className="data-[state=active]:text-secondary"
-                        >
-                          {getConnectionTypeIcon(provider.id)}
-                          <span className="text-xs">{provider.name}</span>
-                        </TabsTrigger>
-                      );
-                    })}
-                  </TabsList>
+              <Tabs
+                defaultValue={blockchain}
+                onValueChange={(value) => {
+                  setSelectedBlockchain(value as BlockchainType);
+                }}
+              >
+                <TabsList className="grid w-full grid-cols-3">
                   {Object.values(ZOND_BLOCKCHAIN).map((provider) => {
                     return (
-                      <TabsContent key={provider.id} value={provider.id}>
-                        <Card className="p-2">
-                          <div className="space-y-4">
-                            <div>{provider.description}</div>
-                            {provider.isConfigurationRequired && (
-                              <div className="space-y-4">
-                                <FormField
-                                  control={control}
-                                  name="ipAddress"
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <FormControl>
-                                        <Input
-                                          {...field}
-                                          aria-label={field.name}
-                                          disabled={isSubmitting}
-                                          placeholder="http://127.0.0.1"
-                                          type="text"
-                                          autoComplete="off"
-                                        />
-                                      </FormControl>
-                                      <FormDescription>
-                                        Enter the IP address
-                                      </FormDescription>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                                <FormField
-                                  control={control}
-                                  name="port"
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <FormControl>
-                                        <Input
-                                          {...field}
-                                          aria-label={field.name}
-                                          disabled={isSubmitting}
-                                          placeholder="8545"
-                                          type="text"
-                                          autoComplete="off"
-                                        />
-                                      </FormControl>
-                                      <FormDescription>
-                                        Enter the port number
-                                      </FormDescription>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                              </div>
-                            )}
-                          </div>
-                        </Card>
-                      </TabsContent>
+                      <TabsTrigger
+                        key={provider.id}
+                        value={provider.id}
+                        className="data-[state=active]:text-secondary"
+                      >
+                        {getConnectionTypeIcon(provider.id)}
+                        <span className="text-xs">{provider.name}</span>
+                      </TabsTrigger>
                     );
                   })}
-                </Tabs>
-              </div>
+                </TabsList>
+                {Object.values(ZOND_BLOCKCHAIN).map((provider) => {
+                  return (
+                    <TabsContent key={provider.id} value={provider.id}>
+                      <Card className="p-2">
+                        <div className="space-y-4">
+                          <div>{provider.description}</div>
+                          {provider.isConfigurationRequired && (
+                            <div className="space-y-4">
+                              <FormField
+                                control={control}
+                                name="ipAddress"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormControl>
+                                      <Input
+                                        {...field}
+                                        aria-label={field.name}
+                                        disabled={isSubmitting}
+                                        placeholder="http://127.0.0.1"
+                                        type="text"
+                                        autoComplete="off"
+                                      />
+                                    </FormControl>
+                                    <FormDescription>
+                                      Enter the IP address
+                                    </FormDescription>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                              <FormField
+                                control={control}
+                                name="port"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormControl>
+                                      <Input
+                                        {...field}
+                                        aria-label={field.name}
+                                        disabled={isSubmitting}
+                                        placeholder="8545"
+                                        type="text"
+                                        autoComplete="off"
+                                      />
+                                    </FormControl>
+                                    <FormDescription>
+                                      Enter the port number
+                                    </FormDescription>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      </Card>
+                    </TabsContent>
+                  );
+                })}
+              </Tabs>
               <DialogFooter className="flex flex-row gap-4">
                 <DialogClose asChild>
                   <Button className="w-full" type="button" variant="outline">
