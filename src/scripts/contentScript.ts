@@ -7,6 +7,7 @@ import {
 import { WindowPostMessageStream } from "@theqrl/zond-wallet-provider/post-message-stream";
 import { BaseProvider } from "@theqrl/zond-wallet-provider/providers";
 import { JsonRpcRequest } from "@theqrl/zond-wallet-provider/utils";
+import axios from "axios";
 import PortStream from "extension-port-stream";
 import { pipeline } from "readable-stream";
 import browser from "webextension-polyfill";
@@ -267,6 +268,14 @@ const prepareListeners = () => {
           txHashForTransactionReceipt,
         );
         return getSerializableObject(transactionReceipt);
+      } else if (method === UNRESTRICTED_METHODS.ZOND_SUBSCRIBE) {
+        const params = message.data.params;
+        const response = await axios.post(
+          "http://localhost:3000/zond_subscribe",
+          { params },
+        );
+        const subscriptionId = response?.data?.subscriptionId as string;
+        return subscriptionId;
       } else if (method === UNRESTRICTED_METHODS.ZOND_GET_TRANSACTION_BY_HASH) {
         const [txHashForTransactionByHash] = message.data.params;
         const transactionDetails = await zond.getTransaction(
