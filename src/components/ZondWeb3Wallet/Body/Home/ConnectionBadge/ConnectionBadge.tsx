@@ -102,6 +102,8 @@ const ConnectionBadge = observer(
         blockchain: selectedBlockchain,
         ipAddress: formData?.ipAddress ?? ipAddress,
         port: formData?.port ?? port,
+        wsRpcIpAddress: ZOND_BLOCKCHAIN[selectedBlockchain].wsRpcIpAddress,
+        wsRpcPort: ZOND_BLOCKCHAIN[selectedBlockchain].wsRpcPort,
       });
     }
 

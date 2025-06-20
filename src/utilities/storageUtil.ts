@@ -147,6 +147,8 @@ class StorageUtil {
       blockchain: ZOND_BLOCKCHAIN.MAIN_NET.id as BlockchainType,
       ipAddress: ZOND_BLOCKCHAIN.MAIN_NET.ipAddress,
       port: ZOND_BLOCKCHAIN.MAIN_NET.port,
+      wsRpcIpAddress: ZOND_BLOCKCHAIN.MAIN_NET.wsRpcIpAddress,
+      wsRpcPort: ZOND_BLOCKCHAIN.MAIN_NET.wsRpcPort,
     };
     const storedBlockchainDetails = await browser.storage.local.get(
       BLOCKCHAIN_SELECTION_IDENTIFIER,

@@ -4,6 +4,8 @@ export const ZOND_BLOCKCHAIN = {
     isConfigurationRequired: true,
     ipAddress: "http://127.0.0.1",
     port: "8543",
+    wsRpcIpAddress: "http://localhost",
+    wsRpcPort: "3000",
     name: "Local",
     description:
       "Connect to a locally running zond blockchain node. You should have a blockchain running in your machine.",
@@ -13,6 +15,8 @@ export const ZOND_BLOCKCHAIN = {
     isConfigurationRequired: true,
     ipAddress: "http://127.0.0.1",
     port: "8544",
+    wsRpcIpAddress: "http://localhost",
+    wsRpcPort: "3000",
     name: "Testnet",
     description:
       "Connect to the zond testnet. Specify the IP address and port number of the testnet.",
@@ -22,6 +26,8 @@ export const ZOND_BLOCKCHAIN = {
     isConfigurationRequired: false,
     ipAddress: "http://127.0.0.1",
     port: "8545",
+    wsRpcIpAddress: "http://localhost",
+    wsRpcPort: "3000",
     name: "Mainnet",
     description:
       "Connect to the zond mainnet. The real zond blockchain network.",
@@ -33,4 +39,6 @@ export type BlockchainDetailsType = {
   blockchain: BlockchainType;
   ipAddress: string;
   port: string;
+  wsRpcIpAddress: string;
+  wsRpcPort: string;
 };

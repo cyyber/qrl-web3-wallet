@@ -35,13 +35,14 @@ let extensionChannel: Substream;
 // The field below is used to ensure that replay is done only once for each restart.
 let hasExtensionConnectSent = false;
 
-const getZondInstance = async () => {
-  const { ipAddress, port } = await StorageUtil.getBlockChain();
+const getZondProperties = async () => {
+  const { ipAddress, port, wsRpcIpAddress, wsRpcPort } =
+    await StorageUtil.getBlockChain();
   const zondHttpProvider = new Web3.providers.HttpProvider(
     `${ipAddress}:${port}`,
   );
   const { zond } = new Web3({ provider: zondHttpProvider });
-  return zond;
+  return { zond, wsRpcIpAddress, wsRpcPort };
 };
 
 const setupPageStreams = () => {
@@ -191,7 +192,7 @@ const prepareListeners = () => {
       }
       return "ZondWeb3Wallet: handled service worker ready message";
     } else if (message.name === EXTENSION_MESSAGES.UNRESTRICTED_METHOD_CALLS) {
-      const zond = await getZondInstance();
+      const { zond, wsRpcIpAddress, wsRpcPort } = await getZondProperties();
       const method = message.data.method;
       if (method === UNRESTRICTED_METHODS.ZOND_GET_BLOCK_BY_NUMBER) {
         // @ts-ignore
@@ -271,7 +272,7 @@ const prepareListeners = () => {
       } else if (method === UNRESTRICTED_METHODS.ZOND_SUBSCRIBE) {
         const params = message.data.params;
         const response = await axios.post(
-          "http://localhost:3000/zond_subscribe",
+          `${wsRpcIpAddress}:${wsRpcPort}/zond_subscribe`,
           { params },
         );
         const subscriptionId = response?.data?.subscriptionId as string;
