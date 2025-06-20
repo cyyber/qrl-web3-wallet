@@ -223,6 +223,14 @@ const prepareListeners = () => {
       } else if (method === UNRESTRICTED_METHODS.ZOND_SYNCING) {
         const isSyncing = await zond.isSyncing();
         return isSyncing;
+      } else if (method === UNRESTRICTED_METHODS.ZOND_UNSUBSCRIBE) {
+        const params = message?.data?.params;
+        const response = await axios.post(
+          `${wsRpcIpAddress}:${wsRpcPort}/zond_unsubscribe`,
+          { params },
+        );
+        const unsubscribed = response?.data?.unsubscribed as boolean;
+        return unsubscribed;
       } else if (method === UNRESTRICTED_METHODS.NET_VERSION) {
         const networkId = await zond.net.getId();
         return "0x".concat(networkId.toString(16));

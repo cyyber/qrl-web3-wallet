@@ -26,6 +26,7 @@ export const UNRESTRICTED_METHODS = Object.freeze({
   ZOND_GET_TRANSACTION_RECEIPT: "zond_getTransactionReceipt",
   ZOND_SUBSCRIBE: "zond_subscribe",
   ZOND_SYNCING: "zond_syncing",
+  ZOND_UNSUBSCRIBE: "zond_unsubscribe",
   ZOND_WEB3_WALLET_GET_PROVIDER_STATE: "zondWallet_getProviderState",
 });
 
