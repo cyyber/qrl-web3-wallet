@@ -329,6 +329,13 @@ const prepareListeners = () => {
         const [address, blockNumber] = message.data.params;
         const byteCode = await zond.getCode(address, blockNumber);
         return byteCode;
+      } else if (method === UNRESTRICTED_METHODS.ZOND_GET_FILTER_CHANGES) {
+        const [filterIdentifier] = message.data.params;
+        const logObjects = await zondRpcMethods.getFilterChanges(
+          new Web3RequestManager(provider),
+          filterIdentifier,
+        );
+        return getSerializableObject(logObjects);
       } else if (method === UNRESTRICTED_METHODS.ZOND_GET_FILTER_LOGS) {
         const [filterIdentifier] = message.data.params;
         const logObjects = await zondRpcMethods.getFilterLogs(
