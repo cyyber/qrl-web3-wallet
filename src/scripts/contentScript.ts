@@ -1,5 +1,7 @@
 import StorageUtil from "@/utilities/storageUtil";
 import Web3, { FMT_BYTES, FMT_NUMBER } from "@theqrl/web3";
+import { Web3RequestManager } from "@theqrl/web3-core";
+import { zondRpcMethods } from "@theqrl/web3-rpc-methods";
 import {
   ObjectMultiplex,
   Substream,
@@ -41,8 +43,8 @@ const getZondProperties = async () => {
   const zondHttpProvider = new Web3.providers.HttpProvider(
     `${ipAddress}:${port}`,
   );
-  const { zond } = new Web3({ provider: zondHttpProvider });
-  return { zond, wsRpcIpAddress, wsRpcPort };
+  const { provider, zond } = new Web3({ provider: zondHttpProvider });
+  return { provider, zond, wsRpcIpAddress, wsRpcPort };
 };
 
 const setupPageStreams = () => {
@@ -192,7 +194,8 @@ const prepareListeners = () => {
       }
       return "ZondWeb3Wallet: handled service worker ready message";
     } else if (message.name === EXTENSION_MESSAGES.UNRESTRICTED_METHOD_CALLS) {
-      const { zond, wsRpcIpAddress, wsRpcPort } = await getZondProperties();
+      const { provider, zond, wsRpcIpAddress, wsRpcPort } =
+        await getZondProperties();
       const method = message.data.method;
       if (method === UNRESTRICTED_METHODS.ZOND_GET_BLOCK_BY_NUMBER) {
         // @ts-ignore
@@ -277,6 +280,13 @@ const prepareListeners = () => {
           txHashForTransactionReceipt,
         );
         return getSerializableObject(transactionReceipt);
+      } else if (method === UNRESTRICTED_METHODS.ZOND_NEW_FILTER) {
+        const [filter] = message?.data?.params;
+        const filterIdentifier = await zondRpcMethods.newFilter(
+          new Web3RequestManager(provider),
+          filter,
+        );
+        return filterIdentifier;
       } else if (method === UNRESTRICTED_METHODS.ZOND_SUBSCRIBE) {
         const params = message.data.params;
         const response = await axios.post(
