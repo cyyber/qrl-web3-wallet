@@ -26,6 +26,7 @@ export const UNRESTRICTED_METHODS = Object.freeze({
   ZOND_GET_TRANSACTION_RECEIPT: "zond_getTransactionReceipt",
   ZOND_NEW_BLOCK_FILTER: "zond_newBlockFilter",
   ZOND_NEW_FILTER: "zond_newFilter",
+  ZOND_NEW_PENDING_TRANSACTION_FILTER: "zond_newPendingTransactionFilter",
   ZOND_SUBSCRIBE: "zond_subscribe",
   ZOND_SYNCING: "zond_syncing",
   ZOND_UNSUBSCRIBE: "zond_unsubscribe",

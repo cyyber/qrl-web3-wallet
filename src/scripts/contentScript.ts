@@ -292,6 +292,14 @@ const prepareListeners = () => {
           filter,
         );
         return filterIdentifier;
+      } else if (
+        method === UNRESTRICTED_METHODS.ZOND_NEW_PENDING_TRANSACTION_FILTER
+      ) {
+        const filterIdentifier =
+          await zondRpcMethods.newPendingTransactionFilter(
+            new Web3RequestManager(provider),
+          );
+        return filterIdentifier;
       } else if (method === UNRESTRICTED_METHODS.ZOND_SUBSCRIBE) {
         const params = message.data.params;
         const response = await axios.post(
