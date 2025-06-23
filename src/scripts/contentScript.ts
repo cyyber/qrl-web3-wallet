@@ -359,6 +359,16 @@ const prepareListeners = () => {
           blockNumber,
         );
         return storageAt;
+      } else if (
+        method ===
+        UNRESTRICTED_METHODS.ZOND_GET_TRANSACTION_BY_BLOCK_HASH_AND_INDEX
+      ) {
+        const [blockHash, transactionIndex] = message?.data?.params;
+        const transactionInformation = zond?.getTransactionFromBlock(
+          blockHash,
+          transactionIndex,
+        );
+        return getSerializableObject(transactionInformation);
       } else if (method === UNRESTRICTED_METHODS.ZOND_CHAIN_ID) {
         const chainId = await zond.getChainId({
           number: FMT_NUMBER.HEX,
