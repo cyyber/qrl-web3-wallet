@@ -280,6 +280,11 @@ const prepareListeners = () => {
           txHashForTransactionReceipt,
         );
         return getSerializableObject(transactionReceipt);
+      } else if (method === UNRESTRICTED_METHODS.ZOND_NEW_BLOCK_FILTER) {
+        const filterIdentifier = await zondRpcMethods.newBlockFilter(
+          new Web3RequestManager(provider),
+        );
+        return filterIdentifier;
       } else if (method === UNRESTRICTED_METHODS.ZOND_NEW_FILTER) {
         const [filter] = message?.data?.params;
         const filterIdentifier = await zondRpcMethods.newFilter(
