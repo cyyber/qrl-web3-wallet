@@ -226,6 +226,13 @@ const prepareListeners = () => {
       } else if (method === UNRESTRICTED_METHODS.ZOND_SYNCING) {
         const isSyncing = await zond.isSyncing();
         return isSyncing;
+      } else if (method === UNRESTRICTED_METHODS.ZOND_UNINSTALL_FILTER) {
+        const [filterIdentifier] = message?.data?.params;
+        const isSuccess = await zondRpcMethods.uninstallFilter(
+          new Web3RequestManager(provider),
+          filterIdentifier,
+        );
+        return isSuccess;
       } else if (method === UNRESTRICTED_METHODS.ZOND_UNSUBSCRIBE) {
         const params = message?.data?.params;
         const response = await axios.post(

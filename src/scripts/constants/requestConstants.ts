@@ -29,6 +29,7 @@ export const UNRESTRICTED_METHODS = Object.freeze({
   ZOND_NEW_PENDING_TRANSACTION_FILTER: "zond_newPendingTransactionFilter",
   ZOND_SUBSCRIBE: "zond_subscribe",
   ZOND_SYNCING: "zond_syncing",
+  ZOND_UNINSTALL_FILTER: "zond_uninstallFilter",
   ZOND_UNSUBSCRIBE: "zond_unsubscribe",
   ZOND_WEB3_WALLET_GET_PROVIDER_STATE: "zondWallet_getProviderState",
 });
