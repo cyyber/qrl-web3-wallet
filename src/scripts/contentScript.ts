@@ -361,11 +361,13 @@ const prepareListeners = () => {
         return storageAt;
       } else if (
         method ===
-        UNRESTRICTED_METHODS.ZOND_GET_TRANSACTION_BY_BLOCK_HASH_AND_INDEX
+          UNRESTRICTED_METHODS.ZOND_GET_TRANSACTION_BY_BLOCK_HASH_AND_INDEX ||
+        method ===
+          UNRESTRICTED_METHODS.ZOND_GET_TRANSACTION_BY_BLOCK_NUMBER_AND_INDEX
       ) {
-        const [blockHash, transactionIndex] = message?.data?.params;
+        const [blockHashOrNumber, transactionIndex] = message?.data?.params;
         const transactionInformation = zond?.getTransactionFromBlock(
-          blockHash,
+          blockHashOrNumber,
           transactionIndex,
         );
         return getSerializableObject(transactionInformation);
