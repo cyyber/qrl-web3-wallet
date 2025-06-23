@@ -18,6 +18,7 @@ export const UNRESTRICTED_METHODS = Object.freeze({
   ZOND_GET_BLOCK_TRANSACTION_COUNT_BY_NUMBER:
     "zond_getBlockTransactionCountByNumber",
   ZOND_GET_CODE: "zond_getCode",
+  ZOND_GET_FILTER_LOGS: "zond_getFilterLogs",
   ZOND_GET_LOGS: "zond_getLogs",
   ZOND_GET_PROOF: "zond_getProof",
   ZOND_GET_STORAGE_AT: "zond_getStorageAt",
