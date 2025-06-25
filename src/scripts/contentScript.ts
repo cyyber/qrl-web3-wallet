@@ -307,6 +307,12 @@ const prepareListeners = () => {
             new Web3RequestManager(provider),
           );
         return filterIdentifier;
+      } else if (method === UNRESTRICTED_METHODS.ZOND_SEND_RAW_TRANSACTION) {
+        const [rawTransaction] = message?.data?.params;
+        const transactionHash = (
+          await zond.sendSignedTransaction(rawTransaction)
+        )?.transactionHash;
+        return transactionHash;
       } else if (method === UNRESTRICTED_METHODS.ZOND_SUBSCRIBE) {
         const params = message.data.params;
         const response = await axios.post(
