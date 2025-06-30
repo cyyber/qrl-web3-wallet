@@ -10,10 +10,10 @@ import { Card, CardContent, CardFooter } from "@/components/UI/Card";
 import { useStore } from "@/stores/store";
 import { Check, Loader, X } from "lucide-react";
 import { observer } from "mobx-react-lite";
-import ConnectionBadge from "../../Body/Home/ConnectionBadge/ConnectionBadge";
 import DAppRequestCompleted from "./DAppRequestCompleted/DAppRequestCompleted";
 import DAppRequestWebsite from "./DAppRequestWebsite/DAppRequestWebsite";
 import DAppRequestConnectionNotAvailable from "./DAppRequestConnectionNotAvailable/DAppRequestConnectionNotAvailable";
+import ConnectionBadge from "../../Header/ConnectionBadge/ConnectionBadge";
 
 const DAppRequestContent = observer(() => {
   const { zondStore, dAppRequestStore } = useStore();
