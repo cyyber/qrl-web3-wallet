@@ -11,10 +11,12 @@ describe("ZondWeb3WalletLogo", () => {
       </MemoryRouter>,
     );
 
-  it("should render the zond and wallet text in the component", () => {
+  it("should render the zond web3 wallet logo in the component", () => {
     renderComponent();
 
-    expect(screen.getByText("Zond")).toBeInTheDocument();
-    expect(screen.getByText("Web3 Wallet")).toBeInTheDocument();
+    const img = screen.getByAltText("Zond Web3 Wallet Logo");
+    expect(img).toBeInTheDocument();
+    expect(img).toHaveAttribute("src", "icons/qrl/default.png");
+    expect(img).toHaveClass("h-6", "w-6");
   });
 });
