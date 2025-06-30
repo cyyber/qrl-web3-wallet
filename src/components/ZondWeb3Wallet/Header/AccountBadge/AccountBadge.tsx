@@ -20,9 +20,10 @@ const AccountBadge = observer(() => {
       <Link to={ROUTES.ACCOUNT_LIST}>
         <Button
           variant="outline"
-          className="flex items-center gap-2 rounded-full px-4 py-2 text-foreground"
+          size="sm"
+          className="flex items-center gap-1 rounded-full text-xs text-foreground"
         >
-          <Wallet className="h-4 w-4" />
+          <Wallet className="h-3 w-3" />
           {account}
         </Button>
       </Link>
