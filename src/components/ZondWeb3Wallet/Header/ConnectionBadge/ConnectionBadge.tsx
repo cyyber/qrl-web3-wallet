@@ -57,6 +57,7 @@ const getConnectionTypeIcon = (blockchain: string) => {
 
 type ConnectionBadgeProps = {
   isDisabled?: boolean;
+  displayChainName?: boolean;
 };
 
 const FormSchema = z.object({
@@ -65,7 +66,7 @@ const FormSchema = z.object({
 });
 
 const ConnectionBadge = observer(
-  ({ isDisabled = false }: ConnectionBadgeProps) => {
+  ({ isDisabled = false, displayChainName = true }: ConnectionBadgeProps) => {
     const { zondStore } = useStore();
     const { zondConnection, selectBlockchain } = zondStore;
     const {
@@ -143,14 +144,16 @@ const ConnectionBadge = observer(
             <DialogTrigger asChild disabled={isDisabled}>
               <Button
                 variant="outline"
-                className="flex items-center gap-2 rounded-full px-4 py-2 text-foreground"
+                size="sm"
+                className="flex items-center gap-1 rounded-full text-xs text-foreground"
               >
                 <Card
                   className={networkStatusClasses({
                     networkStatus: isConnected,
                   })}
                 />
-                {ZOND_BLOCKCHAIN[blockchain].name}
+                <PlugZap className="h-3 w-3" />
+                {displayChainName && ZOND_BLOCKCHAIN[blockchain].name}
               </Button>
             </DialogTrigger>
             <DialogContent className="w-80 rounded-md">

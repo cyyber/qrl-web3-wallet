@@ -17,6 +17,14 @@ const AccountBadge = withSuspense(
       import("@/components/ZondWeb3Wallet/Header/AccountBadge/AccountBadge"),
   ),
 );
+const ConnectionBadge = withSuspense(
+  lazy(
+    () =>
+      import(
+        "@/components/ZondWeb3Wallet/Header/ConnectionBadge/ConnectionBadge"
+      ),
+  ),
+);
 
 const Header = observer(() => {
   const { zondStore } = useStore();
@@ -26,7 +34,10 @@ const Header = observer(() => {
   return (
     <div className="fixed top-0 z-20 flex h-16 w-full items-center justify-between border-b-2 border-secondary bg-background px-4">
       <ZondWeb3WalletLogo />
-      {isConnected && <AccountBadge />}
+      <div className="flex gap-2">
+        {isConnected && <AccountBadge />}
+        <ConnectionBadge displayChainName={false} />
+      </div>
     </div>
   );
 });
