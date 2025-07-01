@@ -63,11 +63,11 @@ describe("ChainBadge", () => {
   it("should display the network selection popup on clicking the network badge button", async () => {
     renderComponent();
     document.body.style.pointerEvents = "auto";
-    const connectionBadge = screen.getByRole("button", {
+    const chainBadge = screen.getByRole("button", {
       name: "Local",
     });
 
-    await userEvent.click(connectionBadge);
+    await userEvent.click(chainBadge);
 
     expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
       "Select Blockchain",
@@ -96,10 +96,10 @@ describe("ChainBadge", () => {
       }),
     );
     document.body.style.pointerEvents = "auto";
-    const connectionBadge = screen.getByRole("button", {
+    const chainBadge = screen.getByRole("button", {
       name: "Testnet",
     });
-    await userEvent.click(connectionBadge);
+    await userEvent.click(chainBadge);
     expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
       "Select Blockchain",
     );
@@ -127,10 +127,10 @@ describe("ChainBadge", () => {
       }),
     );
     document.body.style.pointerEvents = "auto";
-    const connectionBadge = screen.getByRole("button", {
+    const chainBadge = screen.getByRole("button", {
       name: "Mainnet",
     });
-    await userEvent.click(connectionBadge);
+    await userEvent.click(chainBadge);
     expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
       "Select Blockchain",
     );
@@ -158,10 +158,10 @@ describe("ChainBadge", () => {
       }),
     );
     document.body.style.pointerEvents = "auto";
-    const connectionBadge = screen.getByRole("button", {
+    const chainBadge = screen.getByRole("button", {
       name: "Local",
     });
-    await userEvent.click(connectionBadge);
+    await userEvent.click(chainBadge);
     const ipAddressField = screen.getByLabelText("ipAddress");
     await userEvent.clear(ipAddressField);
     const portField = screen.getByLabelText("port");
@@ -185,10 +185,10 @@ describe("ChainBadge", () => {
       }),
     );
     document.body.style.pointerEvents = "auto";
-    const connectionBadge = screen.getByRole("button", {
+    const chainBadge = screen.getByRole("button", {
       name: "Testnet",
     });
-    await userEvent.click(connectionBadge);
+    await userEvent.click(chainBadge);
     const ipAddressField = screen.getByLabelText("ipAddress");
     await userEvent.clear(ipAddressField);
     const portField = screen.getByLabelText("port");
@@ -212,10 +212,10 @@ describe("ChainBadge", () => {
       }),
     );
     document.body.style.pointerEvents = "auto";
-    const connectionBadge = screen.getByRole("button", {
+    const chainBadge = screen.getByRole("button", {
       name: "Mainnet",
     });
-    await userEvent.click(connectionBadge);
+    await userEvent.click(chainBadge);
     const ipAddressField = screen.queryByLabelText("ipAddress");
     expect(ipAddressField).not.toBeInTheDocument();
     const portField = screen.queryByLabelText("port");
@@ -238,8 +238,8 @@ describe("ChainBadge", () => {
       }),
     );
     document.body.style.pointerEvents = "auto";
-    const connectionBadge = screen.getByRole("button", { name: "Mainnet" });
-    await userEvent.click(connectionBadge);
+    const chainBadge = screen.getByRole("button", { name: "Mainnet" });
+    await userEvent.click(chainBadge);
     const connectButton = await screen.findByRole("button", {
       name: "Connect",
     });

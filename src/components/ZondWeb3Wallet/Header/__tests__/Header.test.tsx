@@ -26,7 +26,7 @@ describe("Header", () => {
       </StoreProvider>,
     );
 
-  it("should render the zond web3 wallet logo component and the connection badge component", async () => {
+  it("should render the zond web3 wallet logo component and the chain badge component", async () => {
     renderComponent();
 
     await waitFor(() => {
@@ -37,7 +37,7 @@ describe("Header", () => {
     });
   });
 
-  it("should not render the connection badge component if the connection status is false", async () => {
+  it("should not render the chain badge component if the connection status is false", async () => {
     const mockedStoreValues = mockedStore({
       zondStore: { zondConnection: { isConnected: false } },
     });

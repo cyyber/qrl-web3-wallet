@@ -132,7 +132,7 @@ const ChainBadge = observer(
 
     return (
       <Form {...form}>
-        <form name="connectionBadgeForm" aria-label="connectionBadgeForm">
+        <form name="chainBadgeForm" aria-label="chainBadgeForm">
           <Dialog
             onOpenChange={(open) => {
               if (open && isValidationRequired) {

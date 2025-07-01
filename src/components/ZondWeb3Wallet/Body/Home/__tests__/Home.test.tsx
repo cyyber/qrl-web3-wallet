@@ -14,8 +14,8 @@ jest.mock("lucide-react", () => {
   };
 });
 jest.mock(
-  "@/components/ZondWeb3Wallet/Body/Home/ConnectionBadge/ConnectionBadge",
-  () => () => <div>Mocked Connection Badge</div>,
+  "@/components/ZondWeb3Wallet/Header/ChainBadge/ChainBadge",
+  () => () => <div>Mocked Chain Badge</div>,
 );
 jest.mock(
   "@/components/ZondWeb3Wallet/Body/Home/AccountCreateImport/AccountCreateImport",
@@ -45,11 +45,11 @@ describe("Home", () => {
     expect(screen.getByText("Mocked Loader")).toBeInTheDocument();
   });
 
-  it("should always render the connection badge component once the loading is completed", async () => {
+  it("should always render the chain badge component once the loading is completed", async () => {
     renderComponent();
 
     await waitFor(() => {
-      expect(screen.getByText("Mocked Connection Badge")).toBeInTheDocument();
+      expect(screen.getByText("Mocked Chain Badge")).toBeInTheDocument();
     });
   });
 
@@ -57,7 +57,7 @@ describe("Home", () => {
     renderComponent();
 
     await waitFor(() => {
-      expect(screen.getByText("Mocked Connection Badge")).toBeInTheDocument();
+      expect(screen.getByText("Mocked Chain Badge")).toBeInTheDocument();
       expect(
         screen.getByText("Mocked Account Create Import"),
       ).toBeInTheDocument();
@@ -73,7 +73,7 @@ describe("Home", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText("Mocked Connection Badge")).toBeInTheDocument();
+      expect(screen.getByText("Mocked Chain Badge")).toBeInTheDocument();
       expect(
         screen.queryByText("Mocked Account Create Import"),
       ).not.toBeInTheDocument();
