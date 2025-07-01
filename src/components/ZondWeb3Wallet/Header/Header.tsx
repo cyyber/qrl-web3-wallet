@@ -1,3 +1,4 @@
+import { TooltipProvider } from "@/components/UI/Tooltip";
 import withSuspense from "@/functions/withSuspense";
 import { useStore } from "@/stores/store";
 import { observer } from "mobx-react-lite";
@@ -17,6 +18,9 @@ const AccountBadge = withSuspense(
       import("@/components/ZondWeb3Wallet/Header/AccountBadge/AccountBadge"),
   ),
 );
+const DAppBadge = withSuspense(
+  lazy(() => import("@/components/ZondWeb3Wallet/Header/DAppBadge/DAppBadge")),
+);
 const ChainBadge = withSuspense(
   lazy(
     () => import("@/components/ZondWeb3Wallet/Header/ChainBadge/ChainBadge"),
@@ -31,10 +35,17 @@ const Header = observer(() => {
   return (
     <div className="fixed top-0 z-20 flex h-16 w-full items-center justify-between border-b-2 border-secondary bg-background px-4">
       <ZondWeb3WalletLogo />
-      <div className="flex gap-2">
-        {isConnected && <AccountBadge />}
-        <ChainBadge displayChainName={false} />
-      </div>
+      <TooltipProvider>
+        <div className="flex gap-2">
+          {isConnected && (
+            <>
+              <AccountBadge />
+              <DAppBadge />
+            </>
+          )}
+          <ChainBadge displayChainName={false} />
+        </div>
+      </TooltipProvider>
     </div>
   );
 });

@@ -1,4 +1,11 @@
 import { Button } from "@/components/UI/Button";
+import { Label } from "@/components/UI/Label";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/UI/Tooltip";
 import { ROUTES } from "@/router/router";
 import { useStore } from "@/stores/store";
 import StringUtil from "@/utilities/stringUtil";
@@ -18,14 +25,23 @@ const AccountBadge = observer(() => {
   return (
     !!accountAddress && (
       <Link to={ROUTES.ACCOUNT_LIST}>
-        <Button
-          variant="outline"
-          size="sm"
-          className="flex items-center gap-1 rounded-full text-xs text-foreground"
-        >
-          <Wallet className="h-3 w-3" />
-          {account}
-        </Button>
+        <TooltipProvider>
+          <Tooltip delayDuration={0}>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex items-center gap-1 rounded-full text-xs text-foreground"
+              >
+                <Wallet className="h-3 w-3" />
+                {account}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+              <Label>Accounts</Label>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </Link>
     )
   );
