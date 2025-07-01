@@ -18,7 +18,6 @@ import { Label } from "@/components/UI/Label";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/components/UI/Tooltip";
 import { getHexSeedFromMnemonic } from "@/functions/getHexSeedFromMnemonic";
@@ -181,24 +180,22 @@ const ZondSignTypedDataV4Content = observer(() => {
                   <div>Primary Type</div>
                   <div className="font-bold text-secondary">{primaryType}</div>
                 </div>
-                <TooltipProvider>
-                  <Tooltip delayDuration={0}>
-                    <TooltipTrigger asChild>
-                      <Button
-                        className="w-10 hover:text-secondary"
-                        variant="outline"
-                        size="icon"
-                        aria-label="Copy message data"
-                        onClick={copyMessageData}
-                      >
-                        <Copy size="18" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent side="bottom">
-                      <Label>Copy Message Data</Label>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                <Tooltip delayDuration={0}>
+                  <TooltipTrigger asChild>
+                    <Button
+                      className="w-10 hover:text-secondary"
+                      variant="outline"
+                      size="icon"
+                      aria-label="Copy message data"
+                      onClick={copyMessageData}
+                    >
+                      <Copy size="18" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom">
+                    <Label>Copy Message Data</Label>
+                  </TooltipContent>
+                </Tooltip>
               </div>
               <div className="flex flex-col gap-1">
                 <div>Contents</div>

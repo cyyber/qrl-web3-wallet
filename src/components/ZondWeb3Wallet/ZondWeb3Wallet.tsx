@@ -4,6 +4,7 @@ import StorageUtil from "@/utilities/storageUtil";
 import { observer } from "mobx-react-lite";
 import { lazy, useEffect, useState } from "react";
 import DAppRequest from "./DAppRequest/DAppRequest";
+import { TooltipProvider } from "../UI/Tooltip";
 
 const Header = withSuspense(
   lazy(() => import("@/components/ZondWeb3Wallet/Header/Header")),
@@ -25,14 +26,16 @@ const ZondWeb3Wallet = observer(() => {
   return (
     <div className="flex min-h-[48rem] w-[23rem] flex-col overflow-x-hidden bg-background text-foreground">
       <RouteMonitor />
-      {hasDAppRequest ? (
-        <DAppRequest />
-      ) : (
-        <>
-          <Header />
-          <Body />
-        </>
-      )}
+      <TooltipProvider>
+        {hasDAppRequest ? (
+          <DAppRequest />
+        ) : (
+          <>
+            <Header />
+            <Body />
+          </>
+        )}
+      </TooltipProvider>
     </div>
   );
 });

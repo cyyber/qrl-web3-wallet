@@ -5,7 +5,6 @@ import { Separator } from "@/components/UI/Separator";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/components/UI/Tooltip";
 import { useStore } from "@/stores/store";
@@ -45,25 +44,23 @@ const OtherAccounts = observer(() => {
           >
             <AccountId account={accountAddress} />
             <span>
-              <TooltipProvider>
-                <Tooltip delayDuration={0}>
-                  <TooltipTrigger asChild>
-                    <Button
-                      className="hover:text-secondary"
-                      variant="outline"
-                      size="icon"
-                      onClick={() => {
-                        onAccountSwitch(accountAddress);
-                      }}
-                    >
-                      <ArrowRight size="18" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent side="bottom">
-                    <Label>Switch to this account</Label>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <Tooltip delayDuration={0}>
+                <TooltipTrigger asChild>
+                  <Button
+                    className="hover:text-secondary"
+                    variant="outline"
+                    size="icon"
+                    onClick={() => {
+                      onAccountSwitch(accountAddress);
+                    }}
+                  >
+                    <ArrowRight size="18" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">
+                  <Label>Switch to this account</Label>
+                </TooltipContent>
+              </Tooltip>
             </span>
           </Card>
         ))}

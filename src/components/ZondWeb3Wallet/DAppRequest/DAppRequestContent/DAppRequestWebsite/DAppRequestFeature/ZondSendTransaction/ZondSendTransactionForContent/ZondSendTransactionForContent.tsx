@@ -13,7 +13,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/UI/tabs";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/components/UI/Tooltip";
 import { getHexSeedFromMnemonic } from "@/functions/getHexSeedFromMnemonic";
@@ -271,23 +270,21 @@ const ZondSendTransactionForContent = observer(
                   <div className="max-h-[8rem] w-full overflow-hidden break-words font-bold text-secondary">
                     {data}
                   </div>
-                  <TooltipProvider>
-                    <Tooltip delayDuration={0}>
-                      <TooltipTrigger asChild>
-                        <Button
-                          className="w-12 hover:text-secondary"
-                          variant="outline"
-                          size="icon"
-                          onClick={copyData}
-                        >
-                          <Copy size="18" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent side="bottom">
-                        <Label>Copy Data</Label>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  <Tooltip delayDuration={0}>
+                    <TooltipTrigger asChild>
+                      <Button
+                        className="w-12 hover:text-secondary"
+                        variant="outline"
+                        size="icon"
+                        onClick={copyData}
+                      >
+                        <Copy size="18" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom">
+                      <Label>Copy Data</Label>
+                    </TooltipContent>
+                  </Tooltip>
                 </div>
               </div>
             </TabsContent>

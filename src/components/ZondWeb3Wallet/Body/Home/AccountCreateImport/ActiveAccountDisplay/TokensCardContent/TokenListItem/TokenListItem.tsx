@@ -4,7 +4,6 @@ import { Label } from "@/components/UI/Label";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/components/UI/Tooltip";
 import { ROUTES } from "@/router/router";
@@ -64,25 +63,23 @@ const TokenListItem = ({
           <div className="text-xs">{name}</div>
         </div>
       </div>
-      <TooltipProvider>
-        <Tooltip delayDuration={0}>
-          <TooltipTrigger asChild>
-            <Button
-              className="hover:text-secondary"
-              variant="outline"
-              type="button"
-              size="icon"
-              aria-label={symbol}
-              onClick={onSend}
-            >
-              <Send size="18" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="bottom">
-            <Label>Send {symbol}</Label>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      <Tooltip delayDuration={0}>
+        <TooltipTrigger asChild>
+          <Button
+            className="hover:text-secondary"
+            variant="outline"
+            type="button"
+            size="icon"
+            aria-label={symbol}
+            onClick={onSend}
+          >
+            <Send size="18" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="bottom">
+          <Label>Send {symbol}</Label>
+        </TooltipContent>
+      </Tooltip>
     </Card>
   );
 };

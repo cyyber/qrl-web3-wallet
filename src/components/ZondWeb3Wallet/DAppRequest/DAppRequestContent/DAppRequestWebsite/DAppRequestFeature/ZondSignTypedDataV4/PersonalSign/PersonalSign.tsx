@@ -12,7 +12,6 @@ import { Label } from "@/components/UI/Label";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/components/UI/Tooltip";
 import { getHexSeedFromMnemonic } from "@/functions/getHexSeedFromMnemonic";
@@ -132,24 +131,22 @@ const PersonalSign = observer(() => {
             <div className="max-h-[8rem] w-full overflow-hidden break-words font-bold text-secondary">
               {challenge}
             </div>
-            <TooltipProvider>
-              <Tooltip delayDuration={0}>
-                <TooltipTrigger asChild>
-                  <Button
-                    className="w-12 hover:text-secondary"
-                    variant="outline"
-                    size="icon"
-                    aria-label="Copy message"
-                    onClick={copyMessage}
-                  >
-                    <Copy size="18" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="bottom">
-                  <Label>Copy Message</Label>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <Tooltip delayDuration={0}>
+              <TooltipTrigger asChild>
+                <Button
+                  className="w-12 hover:text-secondary"
+                  variant="outline"
+                  size="icon"
+                  aria-label="Copy message"
+                  onClick={copyMessage}
+                >
+                  <Copy size="18" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">
+                <Label>Copy Message</Label>
+              </TooltipContent>
+            </Tooltip>
           </div>
         </div>
       </div>

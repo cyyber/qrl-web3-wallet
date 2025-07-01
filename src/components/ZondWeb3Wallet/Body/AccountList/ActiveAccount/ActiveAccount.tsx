@@ -5,7 +5,6 @@ import { Separator } from "@/components/UI/Separator";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/components/UI/Tooltip";
 import { ROUTES } from "@/router/router";
@@ -36,23 +35,21 @@ const ActiveAccount = observer(() => {
           <div className="flex gap-3">
             <AccountId account={accountAddress} />
             <span>
-              <TooltipProvider>
-                <Tooltip delayDuration={0}>
-                  <TooltipTrigger asChild>
-                    <Button
-                      className="hover:text-secondary"
-                      variant="outline"
-                      size="icon"
-                      onClick={copyAccount}
-                    >
-                      <Copy size="18" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent side="bottom">
-                    <Label>Copy Address</Label>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <Tooltip delayDuration={0}>
+                <TooltipTrigger asChild>
+                  <Button
+                    className="hover:text-secondary"
+                    variant="outline"
+                    size="icon"
+                    onClick={copyAccount}
+                  >
+                    <Copy size="18" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">
+                  <Label>Copy Address</Label>
+                </TooltipContent>
+              </Tooltip>
             </span>
           </div>
           <Link
