@@ -18,7 +18,13 @@ import {
   FormMessage,
 } from "@/components/UI/Form";
 import { Input } from "@/components/UI/Input";
+import { Label } from "@/components/UI/Label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/UI/tabs";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/UI/Tooltip";
 import {
   BlockchainType,
   ZOND_BLOCKCHAIN,
@@ -142,19 +148,26 @@ const ChainBadge = observer(
             }}
           >
             <DialogTrigger asChild disabled={isDisabled}>
-              <Button
-                variant="outline"
-                size="sm"
-                className="flex items-center gap-1 rounded-full text-xs text-foreground"
-              >
-                <Card
-                  className={networkStatusClasses({
-                    networkStatus: isConnected,
-                  })}
-                />
-                <PlugZap className="h-3 w-3" />
-                {displayChainName && ZOND_BLOCKCHAIN[blockchain].name}
-              </Button>
+              <Tooltip delayDuration={0}>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center gap-1 rounded-full text-xs text-foreground"
+                  >
+                    <Card
+                      className={networkStatusClasses({
+                        networkStatus: isConnected,
+                      })}
+                    />
+                    <PlugZap className="h-3 w-3" />
+                    {displayChainName && ZOND_BLOCKCHAIN[blockchain].name}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">
+                  <Label>Chains</Label>
+                </TooltipContent>
+              </Tooltip>
             </DialogTrigger>
             <DialogContent className="w-80 rounded-md">
               <DialogHeader className="text-left">

@@ -1,5 +1,11 @@
 import { Button } from "@/components/UI/Button";
 import { Card } from "@/components/UI/Card";
+import { Label } from "@/components/UI/Label";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/UI/Tooltip";
 import { useStore } from "@/stores/store";
 import { cva } from "class-variance-authority";
 import { Link2 } from "lucide-react";
@@ -22,18 +28,25 @@ const DAppBadge = observer(() => {
   const { hasDAppRequest } = dAppRequestStore;
 
   return (
-    <Button
-      variant="outline"
-      size="sm"
-      className="flex items-center gap-1 rounded-full text-xs text-foreground"
-    >
-      <Card
-        className={requestStatusClasses({
-          requestStatus: hasDAppRequest,
-        })}
-      />
-      <Link2 className="h-3 w-3" />
-    </Button>
+    <Tooltip delayDuration={0}>
+      <TooltipTrigger asChild>
+        <Button
+          variant="outline"
+          size="sm"
+          className="flex items-center gap-1 rounded-full text-xs text-foreground"
+        >
+          <Card
+            className={requestStatusClasses({
+              requestStatus: hasDAppRequest,
+            })}
+          />
+          <Link2 className="h-3 w-3" />
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent side="bottom">
+        <Label>DApp Connectivity</Label>
+      </TooltipContent>
+    </Tooltip>
   );
 });
 
