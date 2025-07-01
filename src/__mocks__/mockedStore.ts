@@ -103,6 +103,7 @@ const mockedStoreValues: StoreType = {
         },
       },
     },
+    hasDAppRequest: true,
     responseData: undefined,
     canProceed: false,
     onPermissionCallBack: async (hasApproved: boolean) => {

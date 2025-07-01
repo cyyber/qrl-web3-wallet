@@ -33,6 +33,10 @@ class DAppRequestStore {
     });
   }
 
+  get hasDAppRequest() {
+    return !!this.dAppRequestData;
+  }
+
   async readDAppRequestData() {
     const storedDAppRequestData = await StorageUtil.getDAppRequestData();
     this.dAppRequestData = storedDAppRequestData;

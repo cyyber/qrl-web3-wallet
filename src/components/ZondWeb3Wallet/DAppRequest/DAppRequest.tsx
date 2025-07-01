@@ -6,13 +6,13 @@ import DAppRequestContent from "./DAppRequestContent/DAppRequestContent";
 
 const DAppRequest = observer(() => {
   const { dAppRequestStore } = useStore();
-  const { dAppRequestData, readDAppRequestData } = dAppRequestStore;
+  const { hasDAppRequest, readDAppRequestData } = dAppRequestStore;
 
   useEffect(() => {
     readDAppRequestData();
   }, []);
 
-  return dAppRequestData ? (
+  return hasDAppRequest ? (
     <DAppRequestContent />
   ) : (
     <div className="flex justify-center pt-48">
