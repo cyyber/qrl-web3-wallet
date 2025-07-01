@@ -147,9 +147,9 @@ const ChainBadge = observer(
               }
             }}
           >
-            <DialogTrigger asChild disabled={isDisabled}>
-              <Tooltip delayDuration={0}>
-                <TooltipTrigger asChild>
+            <Tooltip delayDuration={0}>
+              <TooltipTrigger asChild>
+                <DialogTrigger asChild disabled={isDisabled}>
                   <Button
                     variant="outline"
                     size="sm"
@@ -163,12 +163,12 @@ const ChainBadge = observer(
                     <PlugZap className="h-3 w-3" />
                     {displayChainName && ZOND_BLOCKCHAIN[blockchain].name}
                   </Button>
-                </TooltipTrigger>
-                <TooltipContent side="bottom">
-                  <Label>Chains</Label>
-                </TooltipContent>
-              </Tooltip>
-            </DialogTrigger>
+                </DialogTrigger>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">
+                <Label>Chains</Label>
+              </TooltipContent>
+            </Tooltip>
             <DialogContent className="w-80 rounded-md">
               <DialogHeader className="text-left">
                 <DialogTitle>Select Blockchain</DialogTitle>
