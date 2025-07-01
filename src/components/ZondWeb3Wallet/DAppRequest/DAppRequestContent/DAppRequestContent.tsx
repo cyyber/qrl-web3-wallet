@@ -13,7 +13,7 @@ import { observer } from "mobx-react-lite";
 import DAppRequestCompleted from "./DAppRequestCompleted/DAppRequestCompleted";
 import DAppRequestWebsite from "./DAppRequestWebsite/DAppRequestWebsite";
 import DAppRequestConnectionNotAvailable from "./DAppRequestConnectionNotAvailable/DAppRequestConnectionNotAvailable";
-import ConnectionBadge from "../../Header/ConnectionBadge/ConnectionBadge";
+import ChainBadge from "../../Header/ChainBadge/ChainBadge";
 
 const DAppRequestContent = observer(() => {
   const { zondStore, dAppRequestStore } = useStore();
@@ -50,7 +50,7 @@ const DAppRequestContent = observer(() => {
           <>
             <Card className="w-full">
               <div className="flex justify-center pt-6">
-                <ConnectionBadge isDisabled={true} />
+                <ChainBadge isDisabled={true} />
               </div>
               <div className="p-6">
                 <div className="mb-1 text-xs font-bold">

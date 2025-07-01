@@ -19,10 +19,7 @@ const AccountBadge = withSuspense(
 );
 const ConnectionBadge = withSuspense(
   lazy(
-    () =>
-      import(
-        "@/components/ZondWeb3Wallet/Header/ConnectionBadge/ConnectionBadge"
-      ),
+    () => import("@/components/ZondWeb3Wallet/Header/ChainBadge/ChainBadge"),
   ),
 );
 

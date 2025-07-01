@@ -55,7 +55,7 @@ const getConnectionTypeIcon = (blockchain: string) => {
   }
 };
 
-type ConnectionBadgeProps = {
+type ChainBadgeProps = {
   isDisabled?: boolean;
   displayChainName?: boolean;
 };
@@ -65,8 +65,8 @@ const FormSchema = z.object({
   port: z.string().min(1, "Port is required"),
 });
 
-const ConnectionBadge = observer(
-  ({ isDisabled = false, displayChainName = true }: ConnectionBadgeProps) => {
+const ChainBadge = observer(
+  ({ isDisabled = false, displayChainName = true }: ChainBadgeProps) => {
     const { zondStore } = useStore();
     const { zondConnection, selectBlockchain } = zondStore;
     const {
@@ -282,4 +282,4 @@ const ConnectionBadge = observer(
   },
 );
 
-export default ConnectionBadge;
+export default ChainBadge;

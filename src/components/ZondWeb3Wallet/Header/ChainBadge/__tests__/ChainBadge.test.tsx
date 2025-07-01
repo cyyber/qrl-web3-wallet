@@ -4,16 +4,16 @@ import { afterEach, describe, expect, it, jest } from "@jest/globals";
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
-import ConnectionBadge from "../ConnectionBadge";
+import ChainBadge from "../ChainBadge";
 
-describe("ConnectionBadge", () => {
+describe("ChainBadge", () => {
   afterEach(cleanup);
 
   const renderComponent = (mockedStoreValues = mockedStore()) =>
     render(
       <StoreProvider value={mockedStoreValues}>
         <MemoryRouter>
-          <ConnectionBadge />
+          <ChainBadge />
         </MemoryRouter>
       </StoreProvider>,
     );
