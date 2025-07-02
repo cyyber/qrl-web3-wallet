@@ -1,0 +1,16 @@
+import { Alert, AlertDescription, AlertTitle } from "@/components/UI/Alert";
+import { Unlink } from "lucide-react";
+
+const DAppNotConnected = () => {
+  return (
+    <Alert>
+      <Unlink className="h-4 w-4" />
+      <AlertTitle>Not Connected</AlertTitle>
+      <AlertDescription>
+        Zond Web3 Wallet is not connected to this website.
+      </AlertDescription>
+    </Alert>
+  );
+};
+
+export default DAppNotConnected;
