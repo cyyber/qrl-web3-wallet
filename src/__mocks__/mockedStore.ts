@@ -103,6 +103,7 @@ const mockedStoreValues: StoreType = {
         },
       },
     },
+    hasDAppConnected: false,
     hasDAppRequest: true,
     responseData: undefined,
     canProceed: false,
@@ -136,6 +137,7 @@ const mockedStoreValues: StoreType = {
     onPermission: async (hasApproved: boolean) => {
       hasApproved;
     },
+    fetchCurrentTabUrl: async () => {},
   },
 };
 

@@ -9,6 +9,8 @@ import { action, makeAutoObservable, observable } from "mobx";
 import browser from "webextension-polyfill";
 
 class DAppRequestStore {
+  hasDAppConnected = false;
+  currentTabData?: browser.Tabs.Tab;
   dAppRequestData?: DAppRequestType;
   responseData: any = {};
   canProceed: boolean = false;
@@ -31,10 +33,23 @@ class DAppRequestStore {
       onPermission: action.bound,
       approvalProcessingStatus: observable.struct,
     });
+    this.fetchCurrentTabUrl();
   }
 
   get hasDAppRequest() {
     return !!this.dAppRequestData;
+  }
+
+  async fetchCurrentTabUrl() {
+    const tabs = await browser.tabs.query({
+      active: true,
+      currentWindow: true,
+    });
+    this.currentTabData = tabs[0];
+    const urlOrigin = new URL(this.currentTabData.url ?? "").origin;
+    const connectedAccounts =
+      await StorageUtil.getConnectedAccountsData(urlOrigin);
+    this.hasDAppConnected = !!connectedAccounts?.accounts?.length;
   }
 
   async readDAppRequestData() {

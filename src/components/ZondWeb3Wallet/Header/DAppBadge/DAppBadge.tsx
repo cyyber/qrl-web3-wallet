@@ -15,19 +15,19 @@ import { Link } from "react-router-dom";
 
 const requestStatusClasses = cva("h-2 w-2 rounded-full", {
   variants: {
-    requestStatus: {
+    hasDAppConnected: {
       true: ["bg-constructive"],
       false: ["bg-destructive"],
     },
   },
   defaultVariants: {
-    requestStatus: false,
+    hasDAppConnected: false,
   },
 });
 
 const DAppBadge = observer(() => {
   const { dAppRequestStore } = useStore();
-  const { hasDAppRequest } = dAppRequestStore;
+  const { hasDAppConnected } = dAppRequestStore;
 
   return (
     <Link to={ROUTES.DAPP_CONNECTIVITY}>
@@ -40,7 +40,7 @@ const DAppBadge = observer(() => {
           >
             <Card
               className={requestStatusClasses({
-                requestStatus: hasDAppRequest,
+                hasDAppConnected,
               })}
             />
             <Link2 className="h-3 w-3" />
