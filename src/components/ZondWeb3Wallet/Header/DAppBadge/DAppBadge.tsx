@@ -9,7 +9,7 @@ import {
 import { ROUTES } from "@/router/router";
 import { useStore } from "@/stores/store";
 import { cva } from "class-variance-authority";
-import { Link2 } from "lucide-react";
+import { Unlink } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { Link } from "react-router-dom";
 
@@ -27,7 +27,7 @@ const requestStatusClasses = cva("h-2 w-2 rounded-full", {
 
 const DAppBadge = observer(() => {
   const { dAppRequestStore } = useStore();
-  const { hasDAppConnected } = dAppRequestStore;
+  const { hasDAppConnected, currentTabData } = dAppRequestStore;
 
   return (
     <Link to={ROUTES.DAPP_CONNECTIVITY}>
@@ -43,7 +43,15 @@ const DAppBadge = observer(() => {
                 hasDAppConnected,
               })}
             />
-            <Link2 className="h-3 w-3" />
+            {hasDAppConnected && currentTabData?.favIconUrl ? (
+              <img
+                className="h-3 w-3"
+                src={currentTabData?.favIconUrl}
+                alt={currentTabData?.title}
+              />
+            ) : (
+              <Unlink className="h-3 w-3" />
+            )}
           </Button>
         </TooltipTrigger>
         <TooltipContent side="bottom">

@@ -8,9 +8,15 @@ import StorageUtil from "@/utilities/storageUtil";
 import { action, makeAutoObservable, observable } from "mobx";
 import browser from "webextension-polyfill";
 
+type CurrentTabData = {
+  favIconUrl: string;
+  urlOrigin: string;
+  title: string;
+};
+
 class DAppRequestStore {
   hasDAppConnected = false;
-  currentTabData?: browser.Tabs.Tab;
+  currentTabData?: CurrentTabData;
   dAppRequestData?: DAppRequestType;
   responseData: any = {};
   canProceed: boolean = false;
@@ -45,10 +51,15 @@ class DAppRequestStore {
       active: true,
       currentWindow: true,
     });
-    this.currentTabData = tabs[0];
-    const urlOrigin = new URL(this.currentTabData.url ?? "").origin;
-    const connectedAccounts =
-      await StorageUtil.getConnectedAccountsData(urlOrigin);
+    const currentTab = tabs[0];
+    this.currentTabData = {
+      favIconUrl: currentTab?.favIconUrl ?? "",
+      title: currentTab?.title ?? "",
+      urlOrigin: new URL(currentTab?.url ?? "").origin,
+    };
+    const connectedAccounts = await StorageUtil.getConnectedAccountsData(
+      this.currentTabData.urlOrigin,
+    );
     this.hasDAppConnected = !!connectedAccounts?.accounts?.length;
   }
 
