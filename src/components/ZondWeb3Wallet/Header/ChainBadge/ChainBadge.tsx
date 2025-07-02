@@ -44,9 +44,13 @@ const networkStatusClasses = cva("h-2 w-2 rounded-full", {
       true: ["bg-constructive"],
       false: ["bg-destructive"],
     },
+    isLoading: {
+      true: ["animate-ping"],
+    },
   },
   defaultVariants: {
     networkStatus: false,
+    isLoading: true,
   },
 });
 
@@ -76,6 +80,7 @@ const ChainBadge = observer(
     const { zondStore } = useStore();
     const { zondConnection, selectBlockchain } = zondStore;
     const {
+      isLoading,
       isConnected,
       blockchain,
       ipAddress: ipAddressFromStorage,
@@ -149,7 +154,7 @@ const ChainBadge = observer(
           >
             <Tooltip delayDuration={0}>
               <TooltipTrigger asChild>
-                <DialogTrigger asChild disabled={isDisabled}>
+                <DialogTrigger asChild disabled={isLoading || isDisabled}>
                   <Button
                     variant="outline"
                     size="sm"
@@ -158,6 +163,7 @@ const ChainBadge = observer(
                     <Card
                       className={networkStatusClasses({
                         networkStatus: isConnected,
+                        isLoading,
                       })}
                     />
                     <PlugZap className="h-3 w-3" />
