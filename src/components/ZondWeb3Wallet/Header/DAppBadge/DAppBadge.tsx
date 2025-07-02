@@ -6,10 +6,12 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/UI/Tooltip";
+import { ROUTES } from "@/router/router";
 import { useStore } from "@/stores/store";
 import { cva } from "class-variance-authority";
 import { Link2 } from "lucide-react";
 import { observer } from "mobx-react-lite";
+import { Link } from "react-router-dom";
 
 const requestStatusClasses = cva("h-2 w-2 rounded-full", {
   variants: {
@@ -28,25 +30,27 @@ const DAppBadge = observer(() => {
   const { hasDAppRequest } = dAppRequestStore;
 
   return (
-    <Tooltip delayDuration={0}>
-      <TooltipTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          className="flex items-center gap-1 rounded-full text-xs text-foreground"
-        >
-          <Card
-            className={requestStatusClasses({
-              requestStatus: hasDAppRequest,
-            })}
-          />
-          <Link2 className="h-3 w-3" />
-        </Button>
-      </TooltipTrigger>
-      <TooltipContent side="bottom">
-        <Label>DApp Connectivity</Label>
-      </TooltipContent>
-    </Tooltip>
+    <Link to={ROUTES.DAPP_CONNECTIVITY}>
+      <Tooltip delayDuration={0}>
+        <TooltipTrigger asChild>
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex items-center gap-1 rounded-full text-xs text-foreground"
+          >
+            <Card
+              className={requestStatusClasses({
+                requestStatus: hasDAppRequest,
+              })}
+            />
+            <Link2 className="h-3 w-3" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="bottom">
+          <Label>DApp Connectivity</Label>
+        </TooltipContent>
+      </Tooltip>
+    </Link>
   );
 });
 

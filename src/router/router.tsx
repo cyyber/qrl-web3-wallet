@@ -31,6 +31,14 @@ const AccountList = withSuspense(
     () => import("@/components/ZondWeb3Wallet/Body/AccountList/AccountList"),
   ),
 );
+const DAppConnectivity = withSuspense(
+  lazy(
+    () =>
+      import(
+        "@/components/ZondWeb3Wallet/Body/DAppConnectivity/DAppConnectivity"
+      ),
+  ),
+);
 const TokenTransfer = withSuspense(
   lazy(
     () =>
@@ -46,6 +54,7 @@ export const ROUTES = {
   ALL_ZRC_20_TOKENS: "/all-zrc-20-tokens",
   TOKEN_TRANSFER: "/token-transfer",
   ACCOUNT_LIST: "/account-list",
+  DAPP_CONNECTIVITY: "/dapp-connectivity",
   DEFAULT: "*",
 };
 
@@ -81,6 +90,10 @@ const router = createMemoryRouter([
       {
         path: ROUTES.ACCOUNT_LIST,
         element: <AccountList />,
+      },
+      {
+        path: ROUTES.DAPP_CONNECTIVITY,
+        element: <DAppConnectivity />,
       },
     ],
   },
