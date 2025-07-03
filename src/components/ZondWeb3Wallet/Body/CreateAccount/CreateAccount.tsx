@@ -5,6 +5,7 @@ import { observer } from "mobx-react-lite";
 import { lazy, useState } from "react";
 import AccountCreationForm from "./AccountCreationForm/AccountCreationForm";
 import AccountCreationSuccess from "./AccountCreationSuccess/AccountCreationSuccess";
+import CircuitBackground from "../Shared/CircuitBackground/CircuitBackground";
 
 const MnemonicDisplay = withSuspense(
   lazy(
@@ -39,10 +40,7 @@ const CreateAccount = observer(() => {
 
   return (
     <>
-      <img
-        className="fixed z-0 h-96 w-96 -translate-x-8 animate-rotate-scale overflow-hidden opacity-30"
-        src="tree.svg"
-      />
+      <CircuitBackground />
       <div className="relative z-10 p-8">
         {hasAccountCreated ? (
           hasMnemonicNoted ? (

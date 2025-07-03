@@ -12,6 +12,7 @@ import StringUtil from "@/utilities/stringUtil";
 import { TransactionReceipt, utils } from "@theqrl/web3";
 import { Check } from "lucide-react";
 import { Link } from "react-router-dom";
+import CircuitBackground from "../../Shared/CircuitBackground/CircuitBackground";
 
 type TransactionSuccessfulProps = {
   transactionReceipt: TransactionReceipt;
@@ -35,10 +36,7 @@ export const TransactionSuccessful = ({
 
   return (
     <div className="w-full">
-      <img
-        className="fixed z-0 h-96 w-96 -translate-x-8 animate-rotate-scale overflow-hidden opacity-30"
-        src="tree.svg"
-      />
+      <CircuitBackground />
       <div className="relative z-10 p-8">
         <Card className="w-full">
           <CardHeader>

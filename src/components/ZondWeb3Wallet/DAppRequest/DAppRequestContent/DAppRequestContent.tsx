@@ -14,6 +14,7 @@ import DAppRequestCompleted from "./DAppRequestCompleted/DAppRequestCompleted";
 import DAppRequestWebsite from "./DAppRequestWebsite/DAppRequestWebsite";
 import DAppRequestConnectionNotAvailable from "./DAppRequestConnectionNotAvailable/DAppRequestConnectionNotAvailable";
 import ChainBadge from "../../Header/ChainBadge/ChainBadge";
+import CircuitBackground from "../../Body/Shared/CircuitBackground/CircuitBackground";
 
 const DAppRequestContent = observer(() => {
   const { zondStore, dAppRequestStore } = useStore();
@@ -39,10 +40,7 @@ const DAppRequestContent = observer(() => {
 
   return (
     <>
-      <img
-        className="fixed z-0 h-96 w-96 -translate-x-8 animate-rotate-scale overflow-hidden opacity-30"
-        src="tree.svg"
-      />
+      <CircuitBackground />
       <div className="relative z-10 flex flex-col items-center space-y-4 p-4">
         {hasCompleted ? (
           <DAppRequestCompleted />

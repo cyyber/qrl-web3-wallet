@@ -40,6 +40,7 @@ import AccountAddressSection from "./AccountAddressSection/AccountAddressSection
 import { GasFeeNotice } from "./GasFeeNotice/GasFeeNotice";
 import TokenDisplaySection from "./TokenDisplaySection/TokenDisplaySection";
 import { TransactionSuccessful } from "./TransactionSuccessful/TransactionSuccessful";
+import CircuitBackground from "../Shared/CircuitBackground/CircuitBackground";
 
 const FormSchema = z
   .object({
@@ -248,10 +249,7 @@ const TokenTransfer = observer(() => {
   ) : (
     <Form {...form}>
       <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
-        <img
-          className="fixed z-0 h-96 w-96 -translate-x-8 animate-rotate-scale overflow-hidden opacity-30"
-          src="tree.svg"
-        />
+        <CircuitBackground />
         <div className="relative z-10 p-8">
           <BackButton />
           <Card className="w-full">

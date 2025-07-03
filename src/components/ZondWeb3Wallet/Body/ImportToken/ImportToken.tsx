@@ -24,6 +24,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import BackButton from "../Shared/BackButton/BackButton";
 import TokenImportSuccess from "./TokenImportSuccess/TokenImportSuccess";
+import CircuitBackground from "../Shared/CircuitBackground/CircuitBackground";
 
 const FormSchema = z.object({
   contractAddress: z.string().min(1, "Contract address is required"),
@@ -70,10 +71,7 @@ const ImportToken = observer(() => {
 
   return (
     <>
-      <img
-        className="fixed z-0 h-96 w-96 -translate-x-8 animate-rotate-scale overflow-hidden opacity-30"
-        src="tree.svg"
-      />
+      <CircuitBackground />
       <div className="relative z-10 p-8">
         {hasTokenImported ? (
           <TokenImportSuccess
