@@ -12,8 +12,11 @@ import StorageUtil from "@/utilities/storageUtil";
 import { ArrowRight } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import AccountId from "../AccountId/AccountId";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "@/router/router";
 
 const OtherAccounts = observer(() => {
+  const navigate = useNavigate();
   const { zondStore } = useStore();
   const { zondAccounts, activeAccount, setActiveAccount, zondConnection } =
     zondStore;
@@ -28,6 +31,7 @@ const OtherAccounts = observer(() => {
 
   const onAccountSwitch = async (accountAddress: string) => {
     await StorageUtil.clearTransactionValues(blockchain);
+    navigate(ROUTES.HOME);
     await setActiveAccount(accountAddress);
   };
 
