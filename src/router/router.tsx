@@ -39,6 +39,14 @@ const DAppConnectivity = withSuspense(
       ),
   ),
 );
+const ChainConnectivity = withSuspense(
+  lazy(
+    () =>
+      import(
+        "@/components/ZondWeb3Wallet/Body/ChainConnectivity/ChainConnectivity"
+      ),
+  ),
+);
 const TokenTransfer = withSuspense(
   lazy(
     () =>
@@ -55,6 +63,7 @@ export const ROUTES = {
   TOKEN_TRANSFER: "/token-transfer",
   ACCOUNT_LIST: "/account-list",
   DAPP_CONNECTIVITY: "/dapp-connectivity",
+  CHAIN_CONNECTIVITY: "/chain-connectivity",
   DEFAULT: "*",
 };
 
@@ -94,6 +103,10 @@ const router = createMemoryRouter([
       {
         path: ROUTES.DAPP_CONNECTIVITY,
         element: <DAppConnectivity />,
+      },
+      {
+        path: ROUTES.CHAIN_CONNECTIVITY,
+        element: <ChainConnectivity />,
       },
     ],
   },
