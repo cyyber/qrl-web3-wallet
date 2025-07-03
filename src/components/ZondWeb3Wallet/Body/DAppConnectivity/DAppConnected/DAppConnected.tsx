@@ -44,12 +44,7 @@ const DAppConnected = observer(() => {
       )}
       <div className="grid grid-cols-2 gap-4">
         <span />
-        <Button
-          className="w-full"
-          type="button"
-          variant="outline"
-          onClick={disconnect}
-        >
+        <Button className="w-full" type="button" onClick={disconnect}>
           <Unlink className="mr-2 h-4 w-4" />
           Disconnect
         </Button>
