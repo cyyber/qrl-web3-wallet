@@ -12,6 +12,7 @@ type CurrentTabData = {
   favIconUrl: string;
   urlOrigin: string;
   title: string;
+  connectedAccounts: string[];
 };
 
 class DAppRequestStore {
@@ -52,15 +53,16 @@ class DAppRequestStore {
       currentWindow: true,
     });
     const currentTab = tabs[0];
+    const urlOrigin = new URL(currentTab?.url ?? "").origin;
     this.currentTabData = {
       favIconUrl: currentTab?.favIconUrl ?? "",
       title: currentTab?.title ?? "",
-      urlOrigin: new URL(currentTab?.url ?? "").origin,
+      urlOrigin,
+      connectedAccounts:
+        (await StorageUtil.getConnectedAccountsData(urlOrigin))?.accounts ?? [],
     };
-    const connectedAccounts = await StorageUtil.getConnectedAccountsData(
-      this.currentTabData.urlOrigin,
-    );
-    this.hasDAppConnected = !!connectedAccounts?.accounts?.length;
+
+    this.hasDAppConnected = !!this.currentTabData.connectedAccounts?.length;
   }
 
   async readDAppRequestData() {
