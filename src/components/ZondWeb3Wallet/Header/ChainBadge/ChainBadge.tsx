@@ -9,7 +9,7 @@ import {
 import { ROUTES } from "@/router/router";
 import { useStore } from "@/stores/store";
 import { cva } from "class-variance-authority";
-import { Unlink } from "lucide-react";
+import { Wifi, WifiOff } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { Link } from "react-router-dom";
 
@@ -19,9 +19,13 @@ const connectivityStatusClasses = cva("h-2 w-2 rounded-full", {
       true: ["bg-constructive"],
       false: ["bg-destructive"],
     },
+    isLoading: {
+      true: ["bg-secondary animate-ping"],
+    },
   },
   defaultVariants: {
     hasChainConnected: false,
+    isLoading: true,
   },
 });
 
@@ -34,7 +38,7 @@ const ChainBadge = observer(
   ({ isDisabled = false, displayChainName = true }: ChainBadgeProps) => {
     const { zondStore } = useStore();
     const { zondConnection } = zondStore;
-    const { isConnected, blockchain } = zondConnection;
+    const { isLoading, isConnected, blockchain } = zondConnection;
 
     return (
       <Link to={ROUTES.CHAIN_CONNECTIVITY}>
@@ -43,15 +47,25 @@ const ChainBadge = observer(
             <Button
               variant="outline"
               size="sm"
-              disabled={isDisabled}
+              disabled={isDisabled || isLoading}
               className="flex items-center gap-1 rounded-full text-xs text-foreground"
             >
               <Card
                 className={connectivityStatusClasses({
                   hasChainConnected: isConnected,
+                  isLoading,
                 })}
               />
-              <Unlink className="h-3 w-3" />
+              {isConnected ? (
+                // <img
+                //   className="h-3 w-3"
+                //   src={currentTabData?.favIconUrl}
+                //   alt={currentTabData?.title}
+                // />
+                <Wifi className="h-3 w-3" />
+              ) : (
+                <WifiOff className="h-3 w-3" />
+              )}
               {displayChainName && blockchain}
             </Button>
           </TooltipTrigger>
