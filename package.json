@@ -5,6 +5,7 @@
   "version": "0.1.1",
   "type": "module",
   "scripts": {
+    "dev": "vite build --watch",
     "build": "tsc && vite build",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
     "test": "jest",
