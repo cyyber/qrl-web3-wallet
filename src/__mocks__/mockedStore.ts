@@ -138,6 +138,7 @@ const mockedStoreValues: StoreType = {
       hasApproved;
     },
     fetchCurrentTabUrl: async () => {},
+    disconnectFromCurrentTab: async () => {},
   },
 };
 

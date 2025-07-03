@@ -16,7 +16,6 @@ type CurrentTabData = {
 };
 
 class DAppRequestStore {
-  hasDAppConnected = false;
   currentTabData?: CurrentTabData;
   dAppRequestData?: DAppRequestType;
   responseData: any = {};
@@ -39,12 +38,17 @@ class DAppRequestStore {
       setOnPermissionCallBack: action.bound,
       onPermission: action.bound,
       approvalProcessingStatus: observable.struct,
+      disconnectFromCurrentTab: action.bound,
     });
     this.fetchCurrentTabUrl();
   }
 
   get hasDAppRequest() {
     return !!this.dAppRequestData;
+  }
+
+  get hasDAppConnected() {
+    return !!this?.currentTabData?.connectedAccounts?.length;
   }
 
   async fetchCurrentTabUrl() {
@@ -61,8 +65,13 @@ class DAppRequestStore {
       connectedAccounts:
         (await StorageUtil.getConnectedAccountsData(urlOrigin))?.accounts ?? [],
     };
+  }
 
-    this.hasDAppConnected = !!this.currentTabData.connectedAccounts?.length;
+  async disconnectFromCurrentTab() {
+    await StorageUtil.clearConnectedAccountsData(
+      this.currentTabData?.urlOrigin,
+    );
+    await this.fetchCurrentTabUrl();
   }
 
   async readDAppRequestData() {

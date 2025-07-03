@@ -1,15 +1,23 @@
 import { Button } from "@/components/UI/Button";
 import { Card } from "@/components/UI/Card";
+import { ROUTES } from "@/router/router";
 import { useStore } from "@/stores/store";
 import { Unlink } from "lucide-react";
 import { observer } from "mobx-react-lite";
+import { useNavigate } from "react-router-dom";
 import AccountId from "../../AccountList/AccountId/AccountId";
 
 const DAppConnected = observer(() => {
+  const navigate = useNavigate();
   const { dAppRequestStore, zondStore } = useStore();
   const { zondAccounts } = zondStore;
   const { isLoading } = zondAccounts;
-  const { currentTabData } = dAppRequestStore;
+  const { currentTabData, disconnectFromCurrentTab } = dAppRequestStore;
+
+  const disconnect = async () => {
+    await disconnectFromCurrentTab();
+    navigate(ROUTES.HOME);
+  };
 
   return (
     <Card className="flex flex-col gap-4 p-4">
@@ -40,7 +48,7 @@ const DAppConnected = observer(() => {
           className="w-full"
           type="button"
           variant="outline"
-          onClick={() => {}}
+          onClick={disconnect}
         >
           <Unlink className="mr-2 h-4 w-4" />
           Disconnect
