@@ -13,7 +13,7 @@ import { Unlink } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { Link } from "react-router-dom";
 
-const requestStatusClasses = cva("h-2 w-2 rounded-full", {
+const connectivityStatusClasses = cva("h-2 w-2 rounded-full", {
   variants: {
     hasDAppConnected: {
       true: ["bg-constructive"],
@@ -39,7 +39,7 @@ const DAppBadge = observer(() => {
             className="flex items-center gap-1 rounded-full text-xs text-foreground"
           >
             <Card
-              className={requestStatusClasses({
+              className={connectivityStatusClasses({
                 hasDAppConnected,
               })}
             />
