@@ -7,7 +7,7 @@ const DAppNotConnected = () => {
       <Unlink className="h-4 w-4" />
       <AlertTitle>Not Connected</AlertTitle>
       <AlertDescription>
-        Zond Web3 Wallet is not connected to this website.
+        Zond Web3 Wallet is not connected with this website.
       </AlertDescription>
     </Alert>
   );
