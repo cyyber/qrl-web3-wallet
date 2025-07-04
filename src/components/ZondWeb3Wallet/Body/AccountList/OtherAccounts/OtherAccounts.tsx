@@ -38,36 +38,34 @@ const OtherAccounts = observer(() => {
     !!otherAccounts.length && (
       <div className="flex flex-col gap-2">
         <Label className="text-lg">{otherAccountsLabel}</Label>
-        <div className="flex flex-col gap-2">
-          {otherAccounts.map(({ accountAddress }) => (
-            <Card
-              key={accountAddress}
-              id={accountAddress}
-              className="flex gap-3 p-3 font-bold text-foreground"
-            >
-              <AccountId account={accountAddress} />
-              <span>
-                <Tooltip delayDuration={0}>
-                  <TooltipTrigger asChild>
-                    <Button
-                      className="hover:bg-accent hover:text-secondary"
-                      variant="outline"
-                      size="icon"
-                      onClick={() => {
-                        onAccountSwitch(accountAddress);
-                      }}
-                    >
-                      <ArrowRight size="18" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent side="bottom">
-                    <Label>Switch to this account</Label>
-                  </TooltipContent>
-                </Tooltip>
-              </span>
-            </Card>
-          ))}
-        </div>
+        {otherAccounts.map(({ accountAddress }) => (
+          <Card
+            key={accountAddress}
+            id={accountAddress}
+            className="flex gap-3 p-3 font-bold text-foreground"
+          >
+            <AccountId account={accountAddress} />
+            <span>
+              <Tooltip delayDuration={0}>
+                <TooltipTrigger asChild>
+                  <Button
+                    className="hover:bg-accent hover:text-secondary"
+                    variant="outline"
+                    size="icon"
+                    onClick={() => {
+                      onAccountSwitch(accountAddress);
+                    }}
+                  >
+                    <ArrowRight size="18" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">
+                  <Label>Switch to this account</Label>
+                </TooltipContent>
+              </Tooltip>
+            </span>
+          </Card>
+        ))}
       </div>
     )
   );
