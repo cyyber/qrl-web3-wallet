@@ -1,4 +1,3 @@
-import { Separator } from "@/components/UI/Separator";
 import { useStore } from "@/stores/store";
 import StringUtil from "@/utilities/stringUtil";
 import { observer } from "mobx-react-lite";
@@ -19,17 +18,16 @@ const AccountAddressSection = observer(
       : getAccountBalance(accountAddress);
 
     return (
-      <>
-        <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-1">
           <div>Account address</div>
           <div className="font-bold text-secondary">{`${prefix} ${addressSplit.join(" ")}`}</div>
         </div>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-1">
           <div>Balance</div>
           <div className="font-bold text-secondary">{tokenAccountBalance}</div>
         </div>
-        <Separator />
-      </>
+      </div>
     );
   },
 );

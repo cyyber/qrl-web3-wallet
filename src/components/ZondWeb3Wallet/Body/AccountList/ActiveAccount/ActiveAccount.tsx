@@ -1,7 +1,6 @@
 import { Button } from "@/components/UI/Button";
 import { Card } from "@/components/UI/Card";
 import { Label } from "@/components/UI/Label";
-import { Separator } from "@/components/UI/Separator";
 import {
   Tooltip,
   TooltipContent,
@@ -28,17 +27,16 @@ const ActiveAccount = observer(() => {
 
   return (
     !!accountAddress && (
-      <>
-        <Separator className="mt-3" />
-        <Label className="text-lg font-bold">{activeAccountLabel}</Label>
-        <Card className="flex w-full flex-col gap-3 p-3 font-bold text-foreground hover:bg-accent">
+      <div className="flex flex-col gap-2">
+        <Label className="text-lg">{activeAccountLabel}</Label>
+        <Card className="flex w-full flex-col gap-3 p-3 font-bold text-foreground">
           <div className="flex gap-3">
             <AccountId account={accountAddress} />
             <span>
               <Tooltip delayDuration={0}>
                 <TooltipTrigger asChild>
                   <Button
-                    className="hover:text-secondary"
+                    className="hover:bg-accent hover:text-secondary"
                     variant="outline"
                     size="icon"
                     onClick={copyAccount}
@@ -63,7 +61,7 @@ const ActiveAccount = observer(() => {
             </Button>
           </Link>
         </Card>
-      </>
+      </div>
     )
   );
 });

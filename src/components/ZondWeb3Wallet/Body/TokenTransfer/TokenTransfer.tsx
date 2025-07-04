@@ -11,7 +11,6 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/UI/Card";
 import {
   Form,
@@ -36,11 +35,11 @@ import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import BackButton from "../Shared/BackButton/BackButton";
+import CircuitBackground from "../Shared/CircuitBackground/CircuitBackground";
 import AccountAddressSection from "./AccountAddressSection/AccountAddressSection";
 import { GasFeeNotice } from "./GasFeeNotice/GasFeeNotice";
 import TokenDisplaySection from "./TokenDisplaySection/TokenDisplaySection";
 import { TransactionSuccessful } from "./TransactionSuccessful/TransactionSuccessful";
-import CircuitBackground from "../Shared/CircuitBackground/CircuitBackground";
 
 const FormSchema = z
   .object({
@@ -259,88 +258,94 @@ const TokenTransfer = observer(() => {
                 tokenName={tokenName}
                 tokenSymbol={tokenSymbol}
               />
-              <CardTitle>Active account</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <AccountAddressSection tokenBalance={tokenBalance} />
-              <CardTitle>Make a transaction</CardTitle>
-              <FormField
-                control={control}
-                name="receiverAddress"
-                render={({ field }) => (
-                  <FormItem>
-                    <Label>Send to</Label>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        aria-label={field.name}
-                        autoComplete="off"
-                        disabled={isSubmitting}
-                        placeholder="Receiver address"
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      Receiver&apos;s public address
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="flex items-start gap-4">
-                <FormField
-                  control={control}
-                  name="amount"
-                  render={({ field }) => (
-                    <FormItem>
-                      <Label>Amount</Label>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          aria-label={field.name}
-                          autoComplete="off"
-                          disabled={isSubmitting}
-                          placeholder="Amount"
-                          type="number"
-                        />
-                      </FormControl>
-                      <FormDescription>Amount to send</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <div className="w-8 pt-8 text-lg">{tokenSymbol}</div>
+            <CardContent className="flex flex-col gap-8 pt-6">
+              <div className="flex flex-col gap-1">
+                <Label className="text-lg">Active account</Label>
+                <AccountAddressSection tokenBalance={tokenBalance} />
               </div>
-              <FormField
-                control={control}
-                name="mnemonicPhrases"
-                render={({ field }) => (
-                  <FormItem>
-                    <Label>Mnemonic Phrases</Label>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        aria-label={field.name}
-                        autoComplete="off"
-                        disabled={isSubmitting}
-                        placeholder="Mnemonic phrases"
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      Your secret mnemonic phrases
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <GasFeeNotice
-                isZrc20Token={isZrc20Token}
-                tokenContractAddress={tokenContractAddress}
-                tokenDecimals={tokenDecimals}
-                from={accountAddress}
-                to={watch().receiverAddress}
-                value={watch().amount}
-                isSubmitting={isSubmitting}
-              />
+              <div className="flex flex-col gap-2">
+                <Label className="text-lg">Make a transaction</Label>
+                <div className="flex flex-col gap-4">
+                  <FormField
+                    control={control}
+                    name="receiverAddress"
+                    render={({ field }) => (
+                      <FormItem>
+                        <Label>Send to</Label>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            aria-label={field.name}
+                            autoComplete="off"
+                            disabled={isSubmitting}
+                            placeholder="Receiver address"
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Receiver&apos;s public address
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <div className="flex items-start gap-4">
+                    <FormField
+                      control={control}
+                      name="amount"
+                      render={({ field }) => (
+                        <FormItem>
+                          <Label>Amount</Label>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              aria-label={field.name}
+                              autoComplete="off"
+                              disabled={isSubmitting}
+                              placeholder="Amount"
+                              type="number"
+                            />
+                          </FormControl>
+                          <FormDescription>Amount to send</FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <div className="w-8 pt-8 text-lg">{tokenSymbol}</div>
+                  </div>
+                  <FormField
+                    control={control}
+                    name="mnemonicPhrases"
+                    render={({ field }) => (
+                      <FormItem>
+                        <Label>Mnemonic Phrases</Label>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            aria-label={field.name}
+                            autoComplete="off"
+                            disabled={isSubmitting}
+                            placeholder="Mnemonic phrases"
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Your secret mnemonic phrases
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <GasFeeNotice
+                    isZrc20Token={isZrc20Token}
+                    tokenContractAddress={tokenContractAddress}
+                    tokenDecimals={tokenDecimals}
+                    from={accountAddress}
+                    to={watch().receiverAddress}
+                    value={watch().amount}
+                    isSubmitting={isSubmitting}
+                  />
+                </div>
+              </div>
             </CardContent>
             <CardFooter className="gap-4">
               <Button

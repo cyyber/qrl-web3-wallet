@@ -49,7 +49,7 @@ const TokenListItem = ({
   };
 
   return (
-    <Card className="flex h-16 w-full animate-appear-in items-center justify-between gap-4 p-4 text-foreground hover:bg-accent">
+    <Card className="flex h-16 w-full animate-appear-in items-center justify-between gap-4 p-4 text-foreground">
       <div className="flex items-center gap-4">
         {!!icon ? (
           <img className="h-8 w-8" src={icon} />
@@ -66,7 +66,7 @@ const TokenListItem = ({
       <Tooltip delayDuration={0}>
         <TooltipTrigger asChild>
           <Button
-            className="hover:text-secondary"
+            className="hover:bg-accent hover:text-secondary"
             variant="outline"
             type="button"
             size="icon"
