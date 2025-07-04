@@ -6,6 +6,12 @@ import { Unlink } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useNavigate } from "react-router-dom";
 import AccountId from "../../AccountList/AccountId/AccountId";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/UI/Tooltip";
+import { Label } from "@/components/UI/Label";
 
 const DAppConnected = observer(() => {
   const navigate = useNavigate();
@@ -21,9 +27,27 @@ const DAppConnected = observer(() => {
 
   return (
     <Card className="flex flex-col gap-4 p-4">
-      <div className="text-sm">
-        The following accounts are connected to, and can interact with this
-        website.
+      <div className="flex gap-3">
+        <div className="text-sm">
+          The following accounts are connected with this website.
+        </div>
+        <span>
+          <Tooltip delayDuration={0}>
+            <TooltipTrigger asChild>
+              <Button
+                className="hover:bg-accent hover:text-secondary"
+                variant="outline"
+                size="icon"
+                onClick={disconnect}
+              >
+                <Unlink size="18" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+              <Label>Disconnect</Label>
+            </TooltipContent>
+          </Tooltip>
+        </span>
       </div>
       {isLoading ? (
         <div className="flex h-20 w-full animate-pulse items-center justify-between">
@@ -42,13 +66,6 @@ const DAppConnected = observer(() => {
           ))}
         </div>
       )}
-      <div className="grid grid-cols-2 gap-4">
-        <span />
-        <Button className="w-full" type="button" onClick={disconnect}>
-          <Unlink className="mr-2 h-4 w-4" />
-          Disconnect
-        </Button>
-      </div>
     </Card>
   );
 });
