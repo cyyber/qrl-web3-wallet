@@ -5,13 +5,13 @@ import { useStore } from "@/stores/store";
 import { Unlink } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useNavigate } from "react-router-dom";
-import AccountId from "../../AccountList/AccountId/AccountId";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/UI/Tooltip";
 import { Label } from "@/components/UI/Label";
+import AccountId from "../../../AccountList/AccountId/AccountId";
 
 const DAppConnected = observer(() => {
   const navigate = useNavigate();
