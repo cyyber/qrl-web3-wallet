@@ -11,7 +11,21 @@ import { useStore } from "@/stores/store";
 import { cva } from "class-variance-authority";
 import { Unlink } from "lucide-react";
 import { observer } from "mobx-react-lite";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+
+const badgeButtonClasses = cva(
+  "flex items-center gap-1 rounded-full text-xs text-foreground",
+  {
+    variants: {
+      isActive: {
+        true: ["bg-accent"],
+      },
+    },
+    defaultVariants: {
+      isActive: false,
+    },
+  },
+);
 
 const connectivityStatusClasses = cva("h-2 w-2 rounded-full", {
   variants: {
@@ -26,6 +40,8 @@ const connectivityStatusClasses = cva("h-2 w-2 rounded-full", {
 });
 
 const DAppBadge = observer(() => {
+  const location = useLocation();
+  const pathName = location.pathname;
   const { dAppRequestStore } = useStore();
   const { hasDAppConnected, currentTabData } = dAppRequestStore;
 
@@ -36,7 +52,9 @@ const DAppBadge = observer(() => {
           <Button
             variant="outline"
             size="sm"
-            className="flex items-center gap-1 rounded-full text-xs text-foreground"
+            className={badgeButtonClasses({
+              isActive: pathName === ROUTES.DAPP_CONNECTIVITY,
+            })}
           >
             <Card
               className={connectivityStatusClasses({

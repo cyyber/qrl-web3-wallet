@@ -11,7 +11,21 @@ import { useStore } from "@/stores/store";
 import { cva } from "class-variance-authority";
 import { Wifi, WifiOff } from "lucide-react";
 import { observer } from "mobx-react-lite";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+
+const badgeButtonClasses = cva(
+  "flex items-center gap-1 rounded-full text-xs text-foreground",
+  {
+    variants: {
+      isActive: {
+        true: ["bg-accent"],
+      },
+    },
+    defaultVariants: {
+      isActive: false,
+    },
+  },
+);
 
 const connectivityStatusClasses = cva("h-2 w-2 rounded-full", {
   variants: {
@@ -36,6 +50,8 @@ type ChainBadgeProps = {
 
 const ChainBadge = observer(
   ({ isDisabled = false, displayChainName = true }: ChainBadgeProps) => {
+    const location = useLocation();
+    const pathName = location.pathname;
     const { zondStore } = useStore();
     const { zondConnection } = zondStore;
     const { isLoading, isConnected, blockchain } = zondConnection;
@@ -48,7 +64,9 @@ const ChainBadge = observer(
               variant="outline"
               size="sm"
               disabled={isDisabled || isLoading}
-              className="flex items-center gap-1 rounded-full text-xs text-foreground"
+              className={badgeButtonClasses({
+                isActive: pathName === ROUTES.CHAIN_CONNECTIVITY,
+              })}
             >
               <Card
                 className={connectivityStatusClasses({
