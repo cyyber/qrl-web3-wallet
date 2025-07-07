@@ -183,13 +183,13 @@ const ZondSignTypedDataV4Content = observer(() => {
                 <Tooltip delayDuration={0}>
                   <TooltipTrigger asChild>
                     <Button
-                      className="w-10 hover:text-secondary"
+                      className="size-7 hover:text-secondary"
                       variant="outline"
                       size="icon"
                       aria-label="Copy message data"
                       onClick={copyMessageData}
                     >
-                      <Copy size="18" />
+                      <Copy size="16" />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent side="bottom">

@@ -36,12 +36,12 @@ const ActiveAccount = observer(() => {
               <Tooltip delayDuration={0}>
                 <TooltipTrigger asChild>
                   <Button
-                    className="hover:bg-accent hover:text-secondary"
+                    className="size-7 hover:bg-accent hover:text-secondary"
                     variant="outline"
                     size="icon"
                     onClick={copyAccount}
                   >
-                    <Copy size="18" />
+                    <Copy size="16" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="bottom">

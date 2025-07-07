@@ -273,12 +273,12 @@ const ZondSendTransactionForContent = observer(
                   <Tooltip delayDuration={0}>
                     <TooltipTrigger asChild>
                       <Button
-                        className="w-12 hover:text-secondary"
+                        className="h-7 w-8 hover:text-secondary"
                         variant="outline"
                         size="icon"
                         onClick={copyData}
                       >
-                        <Copy size="18" />
+                        <Copy size="16" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent side="bottom">

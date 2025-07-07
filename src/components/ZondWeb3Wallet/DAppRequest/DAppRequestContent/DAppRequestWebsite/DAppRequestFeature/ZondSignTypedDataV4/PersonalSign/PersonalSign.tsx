@@ -127,20 +127,20 @@ const PersonalSign = observer(() => {
         </div>
         <div className="flex flex-col gap-1">
           <div>Message</div>
-          <div className="flex gap-2">
+          <div className="flex justify-between gap-2">
             <div className="max-h-[8rem] w-full overflow-hidden break-words font-bold text-secondary">
               {challenge}
             </div>
             <Tooltip delayDuration={0}>
               <TooltipTrigger asChild>
                 <Button
-                  className="w-12 hover:text-secondary"
+                  className="h-7 w-8 hover:text-secondary"
                   variant="outline"
                   size="icon"
                   aria-label="Copy message"
                   onClick={copyMessage}
                 >
-                  <Copy size="18" />
+                  <Copy size="16" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="bottom">
