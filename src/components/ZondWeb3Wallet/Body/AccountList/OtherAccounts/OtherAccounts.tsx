@@ -9,7 +9,7 @@ import {
 import { ROUTES } from "@/router/router";
 import { useStore } from "@/stores/store";
 import StorageUtil from "@/utilities/storageUtil";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Copy } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useNavigate } from "react-router-dom";
 import AccountId from "../AccountId/AccountId";
@@ -28,6 +28,10 @@ const OtherAccounts = observer(() => {
     ({ accountAddress }) => accountAddress !== activeAccountAddress,
   );
 
+  const copyAccount = (accountAddress: string) => {
+    navigator.clipboard.writeText(accountAddress);
+  };
+
   const onAccountSwitch = async (accountAddress: string) => {
     await StorageUtil.clearTransactionValues(blockchain);
     navigate(ROUTES.HOME);
@@ -45,7 +49,7 @@ const OtherAccounts = observer(() => {
             className="flex gap-3 p-3 font-bold text-foreground"
           >
             <AccountId account={accountAddress} />
-            <span>
+            <div className="flex flex-col gap-2">
               <Tooltip delayDuration={0}>
                 <TooltipTrigger asChild>
                   <Button
@@ -63,7 +67,24 @@ const OtherAccounts = observer(() => {
                   <Label>Switch to this account</Label>
                 </TooltipContent>
               </Tooltip>
-            </span>
+              <Tooltip delayDuration={0}>
+                <TooltipTrigger asChild>
+                  <Button
+                    className="size-7 hover:bg-accent hover:text-secondary"
+                    variant="outline"
+                    size="icon"
+                    onClick={() => {
+                      copyAccount(accountAddress);
+                    }}
+                  >
+                    <Copy size="16" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">
+                  <Label>Copy Address</Label>
+                </TooltipContent>
+              </Tooltip>
+            </div>
           </Card>
         ))}
       </div>

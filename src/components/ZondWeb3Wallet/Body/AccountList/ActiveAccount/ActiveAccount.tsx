@@ -32,7 +32,27 @@ const ActiveAccount = observer(() => {
         <Card className="flex w-full flex-col gap-3 p-3 font-bold text-foreground">
           <div className="flex gap-3">
             <AccountId account={accountAddress} />
-            <span>
+            <div className="flex flex-col gap-2">
+              <Link
+                className="w-full"
+                to={ROUTES.TOKEN_TRANSFER}
+                state={{ shouldStartFresh: true }}
+              >
+                <Tooltip delayDuration={0}>
+                  <TooltipTrigger asChild>
+                    <Button
+                      className="size-7 hover:bg-accent hover:text-secondary"
+                      variant="outline"
+                      size="icon"
+                    >
+                      <Send size="16" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom">
+                    <Label>Send Zond</Label>
+                  </TooltipContent>
+                </Tooltip>
+              </Link>
               <Tooltip delayDuration={0}>
                 <TooltipTrigger asChild>
                   <Button
@@ -48,18 +68,8 @@ const ActiveAccount = observer(() => {
                   <Label>Copy Address</Label>
                 </TooltipContent>
               </Tooltip>
-            </span>
+            </div>
           </div>
-          <Link
-            className="w-full"
-            to={ROUTES.TOKEN_TRANSFER}
-            state={{ shouldStartFresh: true }}
-          >
-            <Button variant="outline" className="w-full hover:text-secondary">
-              <Send className="mr-2 h-4 w-4" />
-              Send Zond
-            </Button>
-          </Link>
         </Card>
       </div>
     )
