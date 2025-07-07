@@ -1,8 +1,14 @@
+import { Button } from "@/components/UI/Button";
 import { Card } from "@/components/UI/Card";
 import { Label } from "@/components/UI/Label";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/UI/Tooltip";
 import { useStore } from "@/stores/store";
 import { cva } from "class-variance-authority";
-import { Wifi, WifiOff } from "lucide-react";
+import { Pencil, Wifi, WifiOff } from "lucide-react";
 import { observer } from "mobx-react-lite";
 
 const connectivityStatusClasses = cva("h-3 w-3 rounded-full", {
@@ -29,7 +35,7 @@ const ActiveChain = observer(() => {
   return (
     <div className="flex flex-col gap-2">
       <Label className="text-lg">Active chain</Label>
-      <Card className="flex flex-col gap-4 p-4">
+      <Card className="flex justify-between gap-4 p-4">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <Card
@@ -54,6 +60,21 @@ const ActiveChain = observer(() => {
             <span className="text-xm opacity-80">localhost:8080</span>
           </div>
         </div>
+        <Tooltip delayDuration={0}>
+          <TooltipTrigger asChild>
+            <Button
+              className="size-7 hover:bg-accent hover:text-secondary"
+              variant="outline"
+              size="icon"
+              onClick={() => {}}
+            >
+              <Pencil size="16" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">
+            <Label>Edit chain</Label>
+          </TooltipContent>
+        </Tooltip>
       </Card>
     </div>
   );
