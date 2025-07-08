@@ -46,11 +46,12 @@ const ActiveChain = observer(() => {
               })}
             />
             {isConnected ? (
-              // <img
-              //   className="h-6 w-6"
-              //   src={currentTabData?.favIconUrl}
-              //   alt={currentTabData?.title}
-              // />
+              // <div className="h-6 w-6">
+              //   <img
+              //     src={currentTabData?.favIconUrl}
+              //     alt={currentTabData?.title}
+              //   />
+              // </div>
               <Wifi className="h-6 w-6" />
             ) : (
               <WifiOff className="h-6 w-6" />
