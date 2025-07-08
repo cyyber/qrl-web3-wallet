@@ -84,7 +84,7 @@ const ChainBadge = observer(
               ) : (
                 <WifiOff className="h-3 w-3" />
               )}
-              {displayChainName && blockchain}
+              {displayChainName && blockchain.chainName}
             </Button>
           </TooltipTrigger>
           <TooltipContent side="bottom">

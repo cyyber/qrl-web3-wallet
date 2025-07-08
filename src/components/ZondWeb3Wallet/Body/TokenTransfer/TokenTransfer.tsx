@@ -59,11 +59,9 @@ const TokenTransfer = observer(() => {
   const {
     activeAccount,
     signAndSendNativeToken,
-    zondConnection,
     fetchAccounts,
     signAndSendZrc20Token,
   } = zondStore;
-  const { blockchain } = zondConnection;
   const { accountAddress } = activeAccount;
 
   const [transactionReceipt, setTransactionReceipt] =
@@ -132,7 +130,7 @@ const TokenTransfer = observer(() => {
   }
 
   const resetForm = async () => {
-    await StorageUtil.clearTransactionValues(blockchain);
+    await StorageUtil.clearTransactionValues();
     reset({ receiverAddress: "", amount: 0, mnemonicPhrases: "" });
   };
 
@@ -146,8 +144,7 @@ const TokenTransfer = observer(() => {
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues: async () => {
-      const storedTransactionValues =
-        await StorageUtil.getTransactionValues(blockchain);
+      const storedTransactionValues = await StorageUtil.getTransactionValues();
       return {
         amount: storedTransactionValues?.amount ?? 0,
         mnemonicPhrases: storedTransactionValues?.mnemonicPhrases ?? "",
@@ -170,7 +167,7 @@ const TokenTransfer = observer(() => {
         await resetForm();
       } else {
         const storedTransactionValues =
-          await StorageUtil.getTransactionValues(blockchain);
+          await StorageUtil.getTransactionValues();
         const tokenDetailsFromStorage = storedTransactionValues?.tokenDetails;
         const tokenDetailsFromState = state?.tokenDetails;
         let tokenDetails = {
@@ -206,7 +203,7 @@ const TokenTransfer = observer(() => {
           tokenDetails = { ...tokenDetailsFromStorage };
         }
 
-        await StorageUtil.setTransactionValues(blockchain, {
+        await StorageUtil.setTransactionValues({
           amount: watch().amount,
           mnemonicPhrases: watch().mnemonicPhrases,
           receiverAddress: watch().receiverAddress,
@@ -218,7 +215,7 @@ const TokenTransfer = observer(() => {
 
   useEffect(() => {
     const formWatchSubscription = watch(async (value) => {
-      await StorageUtil.setTransactionValues(blockchain, {
+      await StorageUtil.setTransactionValues({
         ...value,
         tokenDetails: {
           isZrc20Token,

@@ -38,13 +38,10 @@ let extensionChannel: Substream;
 let hasExtensionConnectSent = false;
 
 const getZondProperties = async () => {
-  const { ipAddress, port, wsRpcIpAddress, wsRpcPort } =
-    await StorageUtil.getBlockChain();
-  const zondHttpProvider = new Web3.providers.HttpProvider(
-    `${ipAddress}:${port}`,
-  );
+  const { defaultRpcUrl, defaultWsRpcUrl } = await StorageUtil.getBlockChain();
+  const zondHttpProvider = new Web3.providers.HttpProvider(defaultRpcUrl);
   const { provider, zond } = new Web3({ provider: zondHttpProvider });
-  return { provider, zond, wsRpcIpAddress, wsRpcPort };
+  return { provider, zond, defaultWsRpcUrl };
 };
 
 const setupPageStreams = () => {
@@ -194,8 +191,7 @@ const prepareListeners = () => {
       }
       return "ZondWeb3Wallet: handled service worker ready message";
     } else if (message.name === EXTENSION_MESSAGES.UNRESTRICTED_METHOD_CALLS) {
-      const { provider, zond, wsRpcIpAddress, wsRpcPort } =
-        await getZondProperties();
+      const { provider, zond, defaultWsRpcUrl } = await getZondProperties();
       const method = message.data.method;
       if (method === UNRESTRICTED_METHODS.ZOND_GET_BLOCK_BY_NUMBER) {
         // @ts-ignore
@@ -236,7 +232,7 @@ const prepareListeners = () => {
       } else if (method === UNRESTRICTED_METHODS.ZOND_UNSUBSCRIBE) {
         const params = message?.data?.params;
         const response = await axios.post(
-          `${wsRpcIpAddress}:${wsRpcPort}/zond_unsubscribe`,
+          `${defaultWsRpcUrl}/zond_unsubscribe`,
           { params },
         );
         const unsubscribed = response?.data?.unsubscribed as boolean;
@@ -315,10 +311,9 @@ const prepareListeners = () => {
         return transactionHash;
       } else if (method === UNRESTRICTED_METHODS.ZOND_SUBSCRIBE) {
         const params = message.data.params;
-        const response = await axios.post(
-          `${wsRpcIpAddress}:${wsRpcPort}/zond_subscribe`,
-          { params },
-        );
+        const response = await axios.post(`${defaultWsRpcUrl}/zond_subscribe`, {
+          params,
+        });
         const subscriptionId = response?.data?.subscriptionId as string;
         return subscriptionId;
       } else if (method === UNRESTRICTED_METHODS.ZOND_GET_TRANSACTION_BY_HASH) {

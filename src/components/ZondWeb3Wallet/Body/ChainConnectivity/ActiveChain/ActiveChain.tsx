@@ -56,7 +56,7 @@ const ActiveChain = observer(() => {
             )}
           </div>
           <div className="flex flex-col">
-            <span className="font-bold">{blockchain}</span>
+            <span className="font-bold">{blockchain.chainName}</span>
             <span className="text-xm opacity-80">localhost:8080</span>
           </div>
         </div>

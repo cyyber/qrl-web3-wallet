@@ -30,10 +30,8 @@ const ZRC20Tokens = observer(
 
     useEffect(() => {
       (async () => {
-        const storedTokens = await StorageUtil.getTokenContractsList(
-          blockchain,
-          accountAddress,
-        );
+        const storedTokens =
+          await StorageUtil.getTokenContractsList(accountAddress);
         setTokenContractsList(storedTokens);
       })();
     }, [blockchain, accountAddress]);

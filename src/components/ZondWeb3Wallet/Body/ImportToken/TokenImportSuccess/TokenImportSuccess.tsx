@@ -26,8 +26,7 @@ const TokenImportSuccess = observer(
   ({ token, onCancelImport, contractAddress }: TokenImportSuccessProps) => {
     const navigate = useNavigate();
     const { zondStore } = useStore();
-    const { zondConnection, activeAccount } = zondStore;
-    const { blockchain } = zondConnection;
+    const { activeAccount } = zondStore;
     const { accountAddress } = activeAccount;
 
     const name = token?.name;
@@ -37,11 +36,7 @@ const TokenImportSuccess = observer(
     const balance = token?.balance;
 
     const onConfirmImport = async () => {
-      await StorageUtil.setTokenContractsList(
-        blockchain,
-        accountAddress,
-        contractAddress,
-      );
+      await StorageUtil.setTokenContractsList(accountAddress, contractAddress);
       navigate(ROUTES.HOME, { state: { hasTokensPreference: true } });
     };
 

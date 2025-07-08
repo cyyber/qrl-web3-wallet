@@ -17,11 +17,9 @@ import AccountId from "../AccountId/AccountId";
 const OtherAccounts = observer(() => {
   const navigate = useNavigate();
   const { zondStore } = useStore();
-  const { zondAccounts, activeAccount, setActiveAccount, zondConnection } =
-    zondStore;
+  const { zondAccounts, activeAccount, setActiveAccount } = zondStore;
   const { accountAddress: activeAccountAddress } = activeAccount;
   const { accounts } = zondAccounts;
-  const { blockchain } = zondConnection;
 
   const otherAccountsLabel = `${activeAccountAddress ? "Other accounts" : "Accounts"} in the wallet`;
   const otherAccounts = accounts.filter(
@@ -33,7 +31,7 @@ const OtherAccounts = observer(() => {
   };
 
   const onAccountSwitch = async (accountAddress: string) => {
-    await StorageUtil.clearTransactionValues(blockchain);
+    await StorageUtil.clearTransactionValues();
     navigate(ROUTES.HOME);
     await setActiveAccount(accountAddress);
   };
