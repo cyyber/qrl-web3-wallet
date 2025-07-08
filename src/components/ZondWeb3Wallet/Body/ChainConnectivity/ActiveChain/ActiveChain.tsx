@@ -31,13 +31,14 @@ const ActiveChain = observer(() => {
   const { zondStore } = useStore();
   const { zondConnection } = zondStore;
   const { isLoading, isConnected, blockchain } = zondConnection;
+  const { chainName, defaultRpcUrl } = blockchain;
 
   return (
     <div className="flex flex-col gap-2">
       <Label className="text-lg">Active chain</Label>
       <Card className="flex justify-between gap-4 p-4">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
+        <div className="flex gap-4">
+          <div className="flex h-min items-center gap-2">
             <Card
               className={connectivityStatusClasses({
                 hasChainConnected: isConnected,
@@ -55,26 +56,28 @@ const ActiveChain = observer(() => {
               <WifiOff className="h-6 w-6" />
             )}
           </div>
-          <div className="flex flex-col">
-            <span className="font-bold">{blockchain.chainName}</span>
-            <span className="text-xm opacity-80">localhost:8080</span>
+          <div className="flex flex-col break-all">
+            <span className="font-bold">{chainName}</span>
+            <span className="text-xm opacity-80">{defaultRpcUrl}</span>
           </div>
         </div>
-        <Tooltip delayDuration={0}>
-          <TooltipTrigger asChild>
-            <Button
-              className="size-7 hover:bg-accent hover:text-secondary"
-              variant="outline"
-              size="icon"
-              onClick={() => {}}
-            >
-              <Pencil size="16" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="bottom">
-            <Label>Edit chain</Label>
-          </TooltipContent>
-        </Tooltip>
+        <div className="size-7">
+          <Tooltip delayDuration={0}>
+            <TooltipTrigger asChild>
+              <Button
+                className="size-7 hover:bg-accent hover:text-secondary"
+                variant="outline"
+                size="icon"
+                onClick={() => {}}
+              >
+                <Pencil size="16" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+              <Label>Edit chain</Label>
+            </TooltipContent>
+          </Tooltip>
+        </div>
       </Card>
     </div>
   );
