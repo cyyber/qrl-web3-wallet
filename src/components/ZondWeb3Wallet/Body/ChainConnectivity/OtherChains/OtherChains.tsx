@@ -57,14 +57,20 @@ const OtherChains = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start">
               <DropdownMenuGroup>
-                <DropdownMenuItem className="cursor-pointer" onClick={() => {}}>
-                  <div className="flex gap-2 hover:text-secondary">
+                <DropdownMenuItem
+                  className="cursor-pointer data-[highlighted]:text-secondary"
+                  onClick={() => {}}
+                >
+                  <div className="flex gap-2">
                     <Pencil size="16" />
                     <span>Edit chain</span>
                   </div>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer" onClick={() => {}}>
-                  <div className="flex gap-2 hover:text-secondary">
+                <DropdownMenuItem
+                  className="cursor-pointer data-[highlighted]:text-secondary"
+                  onClick={() => {}}
+                >
+                  <div className="flex gap-2">
                     <Trash size="16" />
                     <span>Delete chain</span>
                   </div>
