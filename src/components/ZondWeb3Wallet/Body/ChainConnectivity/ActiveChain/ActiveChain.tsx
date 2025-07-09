@@ -62,7 +62,7 @@ const ActiveChain = observer(() => {
             <span className="text-xm opacity-80">{defaultRpcUrl}</span>
           </div>
         </div>
-        <div className="size-7">
+        <div>
           <Tooltip delayDuration={0}>
             <TooltipTrigger asChild>
               <Button
