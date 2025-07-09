@@ -10,9 +10,9 @@ const ChainIcon = ({ src, alt }: ChainIconType) => {
   const [hasSrcError, setHasSrcError] = useState(false);
 
   return hasSrcError ? (
-    <Network className="h-6 w-6" />
+    <Network className="h-6 w-6 flex-shrink-0" />
   ) : (
-    <div className="h-6 w-6">
+    <div className="h-6 w-6 flex-shrink-0">
       <img src={src} alt={alt} onError={() => setHasSrcError(true)} />
     </div>
   );
