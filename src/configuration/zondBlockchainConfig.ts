@@ -8,7 +8,7 @@ const ZOND_MAINNET_DATA = {
     symbol: "ZND",
     decimals: 18,
   },
-  iconUrls: ["https://www.theqrl.org/img/icons/qrl-logo.svg"],
+  iconUrls: ["icons/chains/zond_mainnet.svg"],
 };
 
 const ZOND_TESTNET_DATA = {
@@ -21,7 +21,7 @@ const ZOND_TESTNET_DATA = {
     symbol: "ZND",
     decimals: 18,
   },
-  iconUrls: ["https://www.theqrl.org/img/icons/qrl-logo.svg"],
+  iconUrls: ["icons/chains/zond_testnet.svg"],
 };
 
 export type BlockchainDataType = typeof ZOND_MAINNET_DATA & {
