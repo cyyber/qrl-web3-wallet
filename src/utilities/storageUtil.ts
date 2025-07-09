@@ -1,6 +1,7 @@
 import {
   BlockchainDataType,
   DEFAULT_BLOCKCHAIN,
+  ZOND_BLOCKCHAINS,
 } from "@/configuration/zondBlockchainConfig";
 import {
   ConnectedAccountsDataType,
@@ -9,6 +10,7 @@ import {
 import browser from "webextension-polyfill";
 
 const ACTIVE_PAGE_IDENTIFIER = "ACTIVE_PAGE";
+const ALL_BLOCKCHAINS_IDENTIFIER = "ALL_BLOCKCHAINS_IDENTIFIER";
 const BLOCKCHAIN_SELECTION_IDENTIFIER = "BLOCKCHAIN_SELECTION";
 const ACTIVE_ACCOUNT_IDENTIFIER = "ACTIVE_ACCOUNT";
 const ACCOUNT_LIST_IDENTIFIER = "ACCOUNT_LIST";
@@ -134,6 +136,24 @@ class StorageUtil {
     const { chainId } = await this.getBlockChain();
     const blockChainAccountIdentifier = `${chainId}_${ACTIVE_ACCOUNT_IDENTIFIER}`;
     await browser.storage.local.remove(blockChainAccountIdentifier);
+  }
+
+  /**
+   * A function for storing all the available blockchains.
+   * Call the getAllBlockChains function to retrieve all the stored blockchains.
+   */
+  static async setAllBlockChains(blockchains: BlockchainDataType[]) {
+    await browser.storage.local.set({
+      [ALL_BLOCKCHAINS_IDENTIFIER]: blockchains,
+    });
+  }
+
+  static async getAllBlockChains() {
+    const storedBlockchains = await browser.storage.local.get(
+      ALL_BLOCKCHAINS_IDENTIFIER,
+    );
+    return (storedBlockchains?.[ALL_BLOCKCHAINS_IDENTIFIER] ??
+      ZOND_BLOCKCHAINS) as BlockchainDataType[];
   }
 
   /**
