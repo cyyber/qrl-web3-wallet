@@ -20,10 +20,13 @@ import { useEffect, useState } from "react";
 import { BlockchainDataType } from "@/configuration/zondBlockchainConfig";
 import { observer } from "mobx-react-lite";
 import { useStore } from "@/stores/store";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "@/router/router";
 
 const OtherChains = observer(() => {
+  const navigate = useNavigate();
   const { zondStore } = useStore();
-  const { zondConnection } = zondStore;
+  const { zondConnection, selectBlockchain } = zondStore;
   const { blockchain } = zondConnection;
   const { chainId } = blockchain;
 
@@ -36,11 +39,17 @@ const OtherChains = observer(() => {
     })();
   }, []);
 
+  const connectChain = (chainId: string) => {
+    navigate(ROUTES.HOME);
+    selectBlockchain(chainId);
+  };
+
   return (
     <div className="flex flex-col gap-2">
       <Label className="text-lg">Other chains</Label>
       {otherChains.map((blockchain) => {
-        const { defaultRpcUrl, chainName, defaultIconUrl } = blockchain;
+        const { defaultRpcUrl, chainName, chainId, defaultIconUrl } =
+          blockchain;
         return (
           <Card className="flex justify-between gap-4 p-4">
             <div className="flex gap-4">
@@ -57,7 +66,9 @@ const OtherChains = observer(() => {
                     className="size-7 hover:bg-accent hover:text-secondary"
                     variant="outline"
                     size="icon"
-                    onClick={() => {}}
+                    onClick={() => {
+                      connectChain(chainId);
+                    }}
                   >
                     <Wifi size="16" />
                   </Button>

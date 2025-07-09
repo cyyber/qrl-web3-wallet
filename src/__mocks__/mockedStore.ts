@@ -1,7 +1,4 @@
-import {
-  BlockchainDataType,
-  DEFAULT_BLOCKCHAIN,
-} from "@/configuration/zondBlockchainConfig";
+import { DEFAULT_BLOCKCHAIN } from "@/configuration/zondBlockchainConfig";
 import { StoreType } from "@/stores/store";
 import deepmerge from "deepmerge";
 import { createContext, useContext } from "react";
@@ -30,8 +27,8 @@ const mockedStoreValues: StoreType = {
       return "0.0 ZND";
     },
     initializeBlockchain: async () => {},
-    selectBlockchain: async (selectedBlockchain: BlockchainDataType) => {
-      selectedBlockchain;
+    selectBlockchain: async (chainId: string) => {
+      chainId;
     },
     setActiveAccount: async () => {},
     getNativeTokenGas: async () => {
