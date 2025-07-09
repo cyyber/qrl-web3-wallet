@@ -13,7 +13,8 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/UI/Tooltip";
-import { EllipsisVertical, Pencil, Trash, Wifi, WifiOff } from "lucide-react";
+import { EllipsisVertical, Pencil, Trash, Wifi } from "lucide-react";
+import ChainIcon from "../ChainIcon/ChainIcon";
 
 const OtherChains = () => {
   return (
@@ -21,9 +22,7 @@ const OtherChains = () => {
       <Label className="text-lg">Other chains</Label>
       <Card className="flex justify-between gap-4 p-4">
         <div className="flex gap-4">
-          <div className="flex gap-2">
-            <WifiOff className="h-6 w-6" />
-          </div>
+          <ChainIcon src={"defaultIconUrl"} alt={"chainName"} />
           <div className="flex flex-col break-all">
             <span className="font-bold">chain 1</span>
             <span className="text-xm opacity-80">chain1.chain.com:8081</span>

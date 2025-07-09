@@ -8,8 +8,9 @@ import {
 } from "@/components/UI/Tooltip";
 import { useStore } from "@/stores/store";
 import { cva } from "class-variance-authority";
-import { Pencil, Wifi, WifiOff } from "lucide-react";
+import { Pencil } from "lucide-react";
 import { observer } from "mobx-react-lite";
+import ChainIcon from "../ChainIcon/ChainIcon";
 
 const connectivityStatusClasses = cva("h-3 w-3 rounded-full", {
   variants: {
@@ -31,7 +32,7 @@ const ActiveChain = observer(() => {
   const { zondStore } = useStore();
   const { zondConnection } = zondStore;
   const { isLoading, isConnected, blockchain } = zondConnection;
-  const { chainName, defaultRpcUrl } = blockchain;
+  const { chainName, defaultRpcUrl, defaultIconUrl } = blockchain;
 
   return (
     <div className="flex flex-col gap-2">
@@ -45,17 +46,7 @@ const ActiveChain = observer(() => {
                 isLoading,
               })}
             />
-            {isConnected ? (
-              // <div className="h-6 w-6">
-              //   <img
-              //     src={currentTabData?.favIconUrl}
-              //     alt={currentTabData?.title}
-              //   />
-              // </div>
-              <Wifi className="h-6 w-6" />
-            ) : (
-              <WifiOff className="h-6 w-6" />
-            )}
+            <ChainIcon src={defaultIconUrl} alt={chainName} />
           </div>
           <div className="flex flex-col break-all">
             <span className="font-bold">{chainName}</span>
