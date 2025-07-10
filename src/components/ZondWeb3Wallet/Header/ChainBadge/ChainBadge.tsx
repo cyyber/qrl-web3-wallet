@@ -65,7 +65,9 @@ const ChainBadge = observer(
               size="sm"
               disabled={isDisabled || isLoading}
               className={badgeButtonClasses({
-                isActive: pathName === ROUTES.CHAIN_CONNECTIVITY,
+                isActive:
+                  pathName === ROUTES.CHAIN_CONNECTIVITY ||
+                  pathName === ROUTES.ADD_CHAIN,
               })}
             >
               <Card

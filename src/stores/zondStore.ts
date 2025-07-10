@@ -1,4 +1,7 @@
-import { DEFAULT_BLOCKCHAIN } from "@/configuration/zondBlockchainConfig";
+import {
+  BlockchainDataType,
+  DEFAULT_BLOCKCHAIN,
+} from "@/configuration/zondBlockchainConfig";
 import { NATIVE_TOKEN_UNITS_OF_GAS } from "@/constants/nativeToken";
 import {
   ZRC_20_CONTRACT_ABI,
@@ -83,6 +86,19 @@ class ZondStore {
         DEFAULT_BLOCKCHAIN,
     );
     await this.initializeBlockchain();
+  }
+
+  async addBlockchain(blockchain: BlockchainDataType) {
+    const { chainId } = blockchain;
+    const blockchains = await StorageUtil.getAllBlockChains();
+    const filteredBlockchains = blockchains.filter(
+      (chain) => chain.chainId !== chainId,
+    );
+    await StorageUtil.setAllBlockChains([...filteredBlockchains, blockchain]);
+  }
+
+  async editBlockchain(blockchain: BlockchainDataType) {
+    await this.addBlockchain(blockchain);
   }
 
   async setActiveAccount(activeAccount?: string) {
