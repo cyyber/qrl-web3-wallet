@@ -88,13 +88,18 @@ class ZondStore {
     await this.initializeBlockchain();
   }
 
-  async addBlockchain(blockchain: BlockchainDataType) {
-    const { chainId } = blockchain;
+  async addBlockchain(newChain: BlockchainDataType) {
+    const { chainId } = newChain;
     const blockchains = await StorageUtil.getAllBlockChains();
-    const filteredBlockchains = blockchains.filter(
-      (chain) => chain.chainId !== chainId,
+    const zondChains = blockchains.filter((chain) => chain.isZondChain);
+    const customChains = blockchains.filter(
+      (chain) => !chain.isZondChain && chain.chainId !== chainId,
     );
-    await StorageUtil.setAllBlockChains([...filteredBlockchains, blockchain]);
+    await StorageUtil.setAllBlockChains([
+      ...zondChains,
+      ...customChains,
+      newChain,
+    ]);
   }
 
   async editBlockchain(blockchain: BlockchainDataType) {
