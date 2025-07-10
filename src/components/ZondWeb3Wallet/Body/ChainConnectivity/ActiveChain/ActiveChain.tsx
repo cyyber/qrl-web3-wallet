@@ -11,6 +11,8 @@ import { cva } from "class-variance-authority";
 import { Pencil } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import ChainIcon from "../ChainIcon/ChainIcon";
+import { Link } from "react-router-dom";
+import { ROUTES } from "@/router/router";
 
 const connectivityStatusClasses = cva("h-3 w-3 rounded-full", {
   variants: {
@@ -32,7 +34,7 @@ const ActiveChain = observer(() => {
   const { zondStore } = useStore();
   const { zondConnection } = zondStore;
   const { isLoading, isConnected, blockchain } = zondConnection;
-  const { chainName, defaultRpcUrl, defaultIconUrl } = blockchain;
+  const { chainId, chainName, defaultRpcUrl, defaultIconUrl } = blockchain;
 
   return (
     <div className="flex flex-col gap-2">
@@ -56,14 +58,16 @@ const ActiveChain = observer(() => {
         <div>
           <Tooltip delayDuration={0}>
             <TooltipTrigger asChild>
-              <Button
-                className="size-7 hover:bg-accent hover:text-secondary"
-                variant="outline"
-                size="icon"
-                onClick={() => {}}
-              >
-                <Pencil size="16" />
-              </Button>
+              <Link to={ROUTES.ADD_CHAIN} state={{ hasState: true, chainId }}>
+                <Button
+                  className="size-7 hover:bg-accent hover:text-secondary"
+                  variant="outline"
+                  size="icon"
+                  onClick={() => {}}
+                >
+                  <Pencil size="16" />
+                </Button>
+              </Link>
             </TooltipTrigger>
             <TooltipContent side="bottom">
               <Label>Edit chain</Label>

@@ -20,7 +20,7 @@ import { useEffect, useState } from "react";
 import { BlockchainDataType } from "@/configuration/zondBlockchainConfig";
 import { observer } from "mobx-react-lite";
 import { useStore } from "@/stores/store";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "@/router/router";
 
 const OtherChains = observer(() => {
@@ -91,15 +91,17 @@ const OtherChains = observer(() => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start">
                   <DropdownMenuGroup>
-                    <DropdownMenuItem
-                      className="cursor-pointer data-[highlighted]:text-secondary"
-                      onClick={() => {}}
+                    <Link
+                      to={ROUTES.ADD_CHAIN}
+                      state={{ hasState: true, chainId }}
                     >
-                      <div className="flex gap-2">
-                        <Pencil size="16" />
-                        <span>Edit chain</span>
-                      </div>
-                    </DropdownMenuItem>
+                      <DropdownMenuItem className="cursor-pointer data-[highlighted]:text-secondary">
+                        <div className="flex gap-2">
+                          <Pencil size="16" />
+                          <span>Edit chain</span>
+                        </div>
+                      </DropdownMenuItem>
+                    </Link>
                     <DropdownMenuItem
                       className="cursor-pointer data-[highlighted]:text-secondary"
                       onClick={() => {}}
