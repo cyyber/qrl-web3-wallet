@@ -41,7 +41,7 @@ const ActiveBrowserTab = observer(() => {
       <Label className="text-lg">Active browser tab</Label>
       <Card className="flex justify-between gap-4 p-4">
         <div className="flex gap-4">
-          <div className="flex h-min items-center gap-2">
+          <div className="flex h-min items-center gap-2 pt-1">
             <Card
               className={connectivityStatusClasses({
                 hasDAppConnected,
