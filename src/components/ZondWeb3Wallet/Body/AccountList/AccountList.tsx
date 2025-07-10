@@ -2,11 +2,12 @@ import ActiveAccount from "@/components/ZondWeb3Wallet/Body/AccountList/ActiveAc
 import NewAccount from "@/components/ZondWeb3Wallet/Body/AccountList/NewAccount/NewAccount";
 import OtherAccounts from "@/components/ZondWeb3Wallet/Body/AccountList/OtherAccounts/OtherAccounts";
 import BackButton from "../Shared/BackButton/BackButton";
+import { ROUTES } from "@/router/router";
 
 const AccountList = () => {
   return (
     <div className="flex flex-col gap-2 p-8">
-      <BackButton />
+      <BackButton navigationRoute={ROUTES.HOME} />
       <div className="flex flex-col gap-8">
         <NewAccount />
         <ActiveAccount />
