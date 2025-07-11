@@ -91,15 +91,19 @@ class ZondStore {
   async addBlockchain(newChain: BlockchainDataType) {
     const { chainId } = newChain;
     const blockchains = await StorageUtil.getAllBlockChains();
-    const mainChains = blockchains.filter((chain) => !chain.isTestnet);
-    const customChains = blockchains.filter(
-      (chain) => chain.isTestnet && chain.chainId !== chainId,
-    );
-    await StorageUtil.setAllBlockChains([
-      ...mainChains,
-      ...customChains,
-      newChain,
-    ]);
+    const chainFound = blockchains.find((chain) => chain.chainId === chainId);
+
+    if (chainFound) {
+      return {
+        isSuccess: false,
+        error: {
+          message: `A blockchain with the chain ID ${chainId} already exist.`,
+        },
+      };
+    }
+
+    await StorageUtil.setAllBlockChains([...blockchains, newChain]);
+    return { isSuccess: true };
   }
 
   async editBlockchain(blockchain: BlockchainDataType) {

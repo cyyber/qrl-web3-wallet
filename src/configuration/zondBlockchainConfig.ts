@@ -30,6 +30,7 @@ export type BlockchainDataType = typeof ZOND_MAINNET_DATA & {
   defaultIconUrl: string;
   isTestnet: boolean;
   defaultWsRpcUrl: string;
+  isCustomChain: boolean;
 };
 
 export const ZOND_BLOCKCHAINS: BlockchainDataType[] = [
@@ -40,6 +41,7 @@ export const ZOND_BLOCKCHAINS: BlockchainDataType[] = [
     defaultIconUrl: ZOND_MAINNET_DATA.iconUrls[0],
     isTestnet: false,
     defaultWsRpcUrl: "http://localhost:3000",
+    isCustomChain: false,
   },
   {
     ...ZOND_TESTNET_DATA,
@@ -48,6 +50,7 @@ export const ZOND_BLOCKCHAINS: BlockchainDataType[] = [
     defaultIconUrl: ZOND_TESTNET_DATA.iconUrls[0],
     isTestnet: true,
     defaultWsRpcUrl: "http://localhost:3000",
+    isCustomChain: false,
   },
 ];
 

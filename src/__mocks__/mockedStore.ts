@@ -93,6 +93,7 @@ const mockedStoreValues: StoreType = {
     },
     addBlockchain: async (blockchain: BlockchainDataType) => {
       blockchain;
+      return { isSuccess: true };
     },
     editBlockchain: async (blockchain: BlockchainDataType) => {
       blockchain;

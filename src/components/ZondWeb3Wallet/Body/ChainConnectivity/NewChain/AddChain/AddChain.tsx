@@ -19,7 +19,7 @@ import { DEFAULT_BLOCKCHAIN } from "@/configuration/zondBlockchainConfig";
 import { ROUTES } from "@/router/router";
 import { useStore } from "@/stores/store";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus } from "lucide-react";
+import { Loader, Plus } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -50,6 +50,9 @@ const AddChain = observer(() => {
   const chainIdToEdit: string = state?.chainId;
   const hasChainIdToEdit = !!chainIdToEdit;
   const labelText = hasChainIdToEdit ? "Edit chain" : "Add chain";
+  const buttonSubmittingText = hasChainIdToEdit
+    ? "Editing chain"
+    : "Adding chain";
 
   // const [blockchain, setBlockchain] = useState<BlockchainDataType>({
   //   chainName: "",
@@ -91,8 +94,7 @@ const AddChain = observer(() => {
   } = form;
 
   async function onSubmit(formData: z.infer<typeof FormSchema>) {
-    console.log(">>>>formData", formData);
-    await addBlockchain({
+    const result = await addBlockchain({
       ...DEFAULT_BLOCKCHAIN,
       chainName: "Binance",
       chainId: "0x5",
@@ -121,6 +123,7 @@ const AddChain = observer(() => {
                         <Input
                           {...field}
                           aria-label={field.name}
+                          autoComplete="off"
                           disabled={isSubmitting}
                           placeholder="Zond customnet"
                           type="text"
@@ -141,6 +144,7 @@ const AddChain = observer(() => {
                         <Input
                           {...field}
                           aria-label={field.name}
+                          autoComplete="off"
                           disabled={isSubmitting}
                           placeholder="111"
                           type="number"
@@ -161,6 +165,7 @@ const AddChain = observer(() => {
                         <Input
                           {...field}
                           aria-label={field.name}
+                          autoComplete="off"
                           disabled={isSubmitting}
                           placeholder="ZND"
                           type="text"
@@ -224,8 +229,12 @@ const AddChain = observer(() => {
                   className="w-full"
                   type="submit"
                 >
-                  <Plus className="mr-2 h-4 w-4" />
-                  {labelText}
+                  {isSubmitting ? (
+                    <Loader className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Plus className="mr-2 h-4 w-4" />
+                  )}
+                  {isSubmitting ? buttonSubmittingText : labelText}
                 </Button>
               </CardFooter>
             </Card>

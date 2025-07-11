@@ -52,6 +52,7 @@ const ActiveChain = observer(() => {
           </div>
           <div className="flex flex-col break-all">
             <span className="font-bold">{chainName}</span>
+            <span className="text-xm opacity-80">{chainId}</span>
             <span className="text-xm opacity-80">{defaultRpcUrl}</span>
           </div>
         </div>
