@@ -98,6 +98,7 @@ const AddChain = observer(() => {
       ...DEFAULT_BLOCKCHAIN,
       chainName: "Binance",
       chainId: "0x5",
+      isCustomChain: true,
     });
   }
 

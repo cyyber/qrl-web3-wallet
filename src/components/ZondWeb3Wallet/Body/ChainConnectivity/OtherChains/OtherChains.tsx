@@ -12,6 +12,7 @@ const OtherChains = observer(() => {
   const { blockchain } = zondConnection;
   const { chainId } = blockchain;
 
+  const [reRender, setReRender] = useState(0);
   const [otherChains, setOtherChains] = useState<BlockchainDataType[]>([]);
 
   useEffect(() => {
@@ -19,13 +20,22 @@ const OtherChains = observer(() => {
       const blockchains = await StorageUtil.getAllBlockChains();
       setOtherChains(blockchains.filter((chain) => chain.chainId !== chainId));
     })();
-  }, []);
+  }, [reRender]);
+
+  const triggerReRender = () => {
+    setReRender(reRender + 1);
+  };
 
   return (
     <div className="flex flex-col gap-2">
       <Label className="text-lg">Other chains</Label>
       {otherChains.map((blockchain) => {
-        return <OtherChainItem blockchain={blockchain} />;
+        return (
+          <OtherChainItem
+            blockchain={blockchain}
+            triggerReRender={triggerReRender}
+          />
+        );
       })}
     </div>
   );
