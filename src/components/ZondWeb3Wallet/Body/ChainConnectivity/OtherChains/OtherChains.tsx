@@ -13,15 +13,15 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/UI/Tooltip";
-import { EllipsisVertical, Pencil, Trash, Wifi } from "lucide-react";
-import ChainIcon from "../ChainIcon/ChainIcon";
-import StorageUtil from "@/utilities/storageUtil";
-import { useEffect, useState } from "react";
 import { BlockchainDataType } from "@/configuration/zondBlockchainConfig";
-import { observer } from "mobx-react-lite";
-import { useStore } from "@/stores/store";
-import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "@/router/router";
+import { useStore } from "@/stores/store";
+import StorageUtil from "@/utilities/storageUtil";
+import { EllipsisVertical, Pencil, Trash, Wifi } from "lucide-react";
+import { observer } from "mobx-react-lite";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import ChainIcon from "../ChainIcon/ChainIcon";
 
 const OtherChains = observer(() => {
   const navigate = useNavigate();
@@ -48,8 +48,13 @@ const OtherChains = observer(() => {
     <div className="flex flex-col gap-2">
       <Label className="text-lg">Other chains</Label>
       {otherChains.map((blockchain) => {
-        const { defaultRpcUrl, chainName, chainId, defaultIconUrl } =
-          blockchain;
+        const {
+          defaultRpcUrl,
+          chainName,
+          chainId,
+          defaultIconUrl,
+          isCustomChain,
+        } = blockchain;
         return (
           <Card className="flex justify-between gap-4 p-4">
             <div className="flex gap-4">
@@ -104,6 +109,7 @@ const OtherChains = observer(() => {
                       </DropdownMenuItem>
                     </Link>
                     <DropdownMenuItem
+                      disabled={!isCustomChain}
                       className="cursor-pointer data-[highlighted]:text-secondary"
                       onClick={() => {}}
                     >

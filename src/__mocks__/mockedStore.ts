@@ -98,6 +98,9 @@ const mockedStoreValues: StoreType = {
     editBlockchain: async (blockchain: BlockchainDataType) => {
       blockchain;
     },
+    deleteBlockchain: async (chainId: string) => {
+      chainId;
+    },
   },
   dAppRequestStore: {
     dAppRequestData: {
