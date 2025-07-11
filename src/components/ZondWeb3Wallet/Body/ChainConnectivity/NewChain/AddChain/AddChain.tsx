@@ -23,7 +23,7 @@ const AddChain = observer(() => {
       (async () => {
         const blockchains = await StorageUtil.getAllBlockChains();
         setChainToEdit(
-          blockchains.find((chain) => chain.chainId !== chainIdToEdit),
+          blockchains.find((chain) => chain.chainId === chainIdToEdit),
         );
       })();
     }

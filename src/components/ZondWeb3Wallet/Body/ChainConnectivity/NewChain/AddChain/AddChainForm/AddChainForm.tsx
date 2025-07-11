@@ -16,16 +16,15 @@ import {
 } from "@/components/UI/Form";
 import { Input } from "@/components/UI/Input";
 import { Label } from "@/components/UI/Label";
-import {
-  BlockchainDataType,
-  DEFAULT_BLOCKCHAIN,
-} from "@/configuration/zondBlockchainConfig";
+import { BlockchainDataType } from "@/configuration/zondBlockchainConfig";
+import { ROUTES } from "@/router/router";
 import { useStore } from "@/stores/store";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader, Plus } from "lucide-react";
+import { Loader, Pencil, Plus } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 
 type AddChainFormType = {
@@ -45,28 +44,15 @@ const FormSchema = z.object({
 // });
 
 const AddChainForm = observer(({ chainToEdit }: AddChainFormType) => {
+  const navigate = useNavigate();
   const { zondStore } = useStore();
   const { addBlockchain } = zondStore;
-  const hasChainIdToEdit = !!chainToEdit;
-  const labelText = hasChainIdToEdit ? "Edit chain" : "Add chain";
-  const buttonSubmittingText = hasChainIdToEdit
+  const hasChainToEdit = !!chainToEdit;
+  const labelText = hasChainToEdit ? "Edit chain" : "Add chain";
+  const buttonSubmittingText = hasChainToEdit
     ? "Editing chain"
     : "Adding chain";
-  const isCustomChain = chainToEdit?.isCustomChain;
-  // const [blockchain, setBlockchain] = useState<BlockchainDataType>({
-  //   chainName: "",
-  //   chainId: "",
-  //   rpcUrls: [],
-  //   blockExplorerUrls: [],
-  //   iconUrls: [],
-  //   nativeCurrency: { name: "", symbol: "", decimals: 18 },
-  //   isTestnet: true,
-  //   defaultRpcUrl: "",
-  //   defaultBlockExplorerUrl: "",
-  //   defaultIconUrl: "",
-  //   defaultWsRpcUrl: "",
-  //   isZondChain: false,
-  // });
+  const isCustomChain = chainToEdit?.isCustomChain ?? true;
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -87,7 +73,7 @@ const AddChainForm = observer(({ chainToEdit }: AddChainFormType) => {
   } = form;
 
   useEffect(() => {
-    if (hasChainIdToEdit) {
+    if (hasChainToEdit) {
       form.reset({
         chainName: chainToEdit.chainName,
         chainId: parseInt(chainToEdit.chainId, 16),
@@ -96,15 +82,30 @@ const AddChainForm = observer(({ chainToEdit }: AddChainFormType) => {
         currencyDecimals: chainToEdit.nativeCurrency.decimals,
       });
     }
-  }, [hasChainIdToEdit, chainToEdit, form]);
+  }, [hasChainToEdit, chainToEdit, form]);
 
   async function onSubmit(formData: z.infer<typeof FormSchema>) {
     const result = await addBlockchain({
-      ...DEFAULT_BLOCKCHAIN,
-      chainName: "Binance",
-      chainId: "0x5",
+      chainName: formData.chainName,
+      chainId: "0x".concat(formData.chainId.toString(16)),
+      nativeCurrency: {
+        name: formData.currencyName,
+        symbol: formData.currencySymbol,
+        decimals: formData.currencyDecimals,
+      },
       isCustomChain: true,
+      isTestnet: false,
+      rpcUrls: [],
+      blockExplorerUrls: [],
+      iconUrls: [],
+      defaultRpcUrl: "",
+      defaultBlockExplorerUrl: "",
+      defaultIconUrl: "",
+      defaultWsRpcUrl: "",
     });
+    if (result.isSuccess) {
+      navigate(ROUTES.CHAIN_CONNECTIVITY);
+    }
   }
 
   return (
@@ -231,6 +232,8 @@ const AddChainForm = observer(({ chainToEdit }: AddChainFormType) => {
             >
               {isSubmitting ? (
                 <Loader className="mr-2 h-4 w-4 animate-spin" />
+              ) : hasChainToEdit ? (
+                <Pencil className="mr-2 h-4 w-4" />
               ) : (
                 <Plus className="mr-2 h-4 w-4" />
               )}
