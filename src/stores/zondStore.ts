@@ -91,12 +91,12 @@ class ZondStore {
   async addBlockchain(newChain: BlockchainDataType) {
     const { chainId } = newChain;
     const blockchains = await StorageUtil.getAllBlockChains();
-    const zondChains = blockchains.filter((chain) => chain.isZondChain);
+    const mainChains = blockchains.filter((chain) => !chain.isTestnet);
     const customChains = blockchains.filter(
-      (chain) => !chain.isZondChain && chain.chainId !== chainId,
+      (chain) => chain.isTestnet && chain.chainId !== chainId,
     );
     await StorageUtil.setAllBlockChains([
-      ...zondChains,
+      ...mainChains,
       ...customChains,
       newChain,
     ]);
