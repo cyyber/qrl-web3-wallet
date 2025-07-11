@@ -110,6 +110,14 @@ class ZondStore {
     await this.addBlockchain(blockchain);
   }
 
+  async deleteBlockchain(chainId: string) {
+    const blockchains = await StorageUtil.getAllBlockChains();
+    const updatedChains = blockchains.filter(
+      (chain) => chain.chainId !== chainId,
+    );
+    await StorageUtil.setAllBlockChains(updatedChains);
+  }
+
   async setActiveAccount(activeAccount?: string) {
     await StorageUtil.setActiveAccount(activeAccount);
     this.activeAccount = {
