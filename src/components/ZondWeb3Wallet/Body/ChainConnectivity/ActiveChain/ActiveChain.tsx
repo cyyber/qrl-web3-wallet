@@ -61,12 +61,14 @@ const ActiveChain = observer(() => {
         <div>
           <Tooltip delayDuration={0}>
             <TooltipTrigger asChild>
-              <Link to={ROUTES.ADD_CHAIN} state={{ hasState: true, chainId }}>
+              <Link
+                to={ROUTES.ADD_EDIT_CHAIN}
+                state={{ hasState: true, chainId }}
+              >
                 <Button
                   className="size-7 hover:bg-accent hover:text-secondary"
                   variant="outline"
                   size="icon"
-                  onClick={() => {}}
                 >
                   <Pencil size="16" />
                 </Button>

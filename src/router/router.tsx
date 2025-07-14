@@ -47,11 +47,11 @@ const ChainConnectivity = withSuspense(
       ),
   ),
 );
-const AddChain = withSuspense(
+const AddEditChain = withSuspense(
   lazy(
     () =>
       import(
-        "@/components/ZondWeb3Wallet/Body/ChainConnectivity/NewChain/AddChain/AddChain"
+        "@/components/ZondWeb3Wallet/Body/ChainConnectivity/NewChain/AddEditChain/AddEditChain"
       ),
   ),
 );
@@ -72,7 +72,7 @@ export const ROUTES = {
   ACCOUNT_LIST: "/account-list",
   DAPP_CONNECTIVITY: "/dapp-connectivity",
   CHAIN_CONNECTIVITY: "/chain-connectivity",
-  ADD_CHAIN: "/add-chain",
+  ADD_EDIT_CHAIN: "/add-edit-chain",
   DEFAULT: "*",
 };
 
@@ -118,8 +118,8 @@ const router = createMemoryRouter([
         element: <ChainConnectivity />,
       },
       {
-        path: ROUTES.ADD_CHAIN,
-        element: <AddChain />,
+        path: ROUTES.ADD_EDIT_CHAIN,
+        element: <AddEditChain />,
       },
     ],
   },

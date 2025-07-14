@@ -67,7 +67,7 @@ const ChainBadge = observer(
               className={badgeButtonClasses({
                 isActive:
                   pathName === ROUTES.CHAIN_CONNECTIVITY ||
-                  pathName === ROUTES.ADD_CHAIN,
+                  pathName === ROUTES.ADD_EDIT_CHAIN,
               })}
             >
               <Card

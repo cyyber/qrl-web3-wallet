@@ -6,9 +6,9 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import BackButton from "../../../Shared/BackButton/BackButton";
 import CircuitBackground from "../../../Shared/CircuitBackground/CircuitBackground";
-import AddChainForm from "./AddChainForm/AddChainForm";
+import AddEditChainForm from "./AddEditChainForm/AddEditChainForm";
 
-const AddChain = observer(() => {
+const AddEditChain = observer(() => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const hasState = !!state?.hasState;
@@ -40,10 +40,10 @@ const AddChain = observer(() => {
       <CircuitBackground />
       <div className="relative z-10 p-8">
         <BackButton />
-        <AddChainForm chainToEdit={chainToEdit} />
+        <AddEditChainForm chainToEdit={chainToEdit} />
       </div>
     </>
   );
 });
 
-export default AddChain;
+export default AddEditChain;

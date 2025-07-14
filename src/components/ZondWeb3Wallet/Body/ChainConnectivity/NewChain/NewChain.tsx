@@ -3,9 +3,9 @@ import { ROUTES } from "@/router/router";
 import { Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const NewAccount = () => {
+const NewChain = () => {
   return (
-    <Link to={ROUTES.ADD_CHAIN} state={{ hasState: true }}>
+    <Link to={ROUTES.ADD_EDIT_CHAIN} state={{ hasState: true }}>
       <Button className="flex w-full gap-2">
         <Plus size="18" /> Add a custom blockchain
       </Button>
@@ -13,4 +13,4 @@ const NewAccount = () => {
   );
 };
 
-export default NewAccount;
+export default NewChain;

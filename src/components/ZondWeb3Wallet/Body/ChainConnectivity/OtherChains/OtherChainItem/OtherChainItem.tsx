@@ -101,7 +101,10 @@ const OtherChainItem = observer(
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start">
               <DropdownMenuGroup>
-                <Link to={ROUTES.ADD_CHAIN} state={{ hasState: true, chainId }}>
+                <Link
+                  to={ROUTES.ADD_EDIT_CHAIN}
+                  state={{ hasState: true, chainId }}
+                >
                   <DropdownMenuItem className="cursor-pointer data-[highlighted]:text-secondary">
                     <div className="flex gap-2">
                       <Pencil size="16" />

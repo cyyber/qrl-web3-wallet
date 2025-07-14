@@ -27,7 +27,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 
-type AddChainFormType = {
+type AddEditChainFormType = {
   chainToEdit?: BlockchainDataType;
 };
 
@@ -43,7 +43,7 @@ const FormSchema = z.object({
 //   path: ["reEnteredPassword"],
 // });
 
-const AddChainForm = observer(({ chainToEdit }: AddChainFormType) => {
+const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
   const navigate = useNavigate();
   const { zondStore } = useStore();
   const { addBlockchain } = zondStore;
@@ -246,4 +246,4 @@ const AddChainForm = observer(({ chainToEdit }: AddChainFormType) => {
   );
 });
 
-export default AddChainForm;
+export default AddEditChainForm;
