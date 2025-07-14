@@ -61,7 +61,7 @@ const OtherAccounts = observer(() => {
                     <ArrowRight size="18" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent side="bottom">
+                <TooltipContent side="left">
                   <Label>Switch to this account</Label>
                 </TooltipContent>
               </Tooltip>
@@ -78,7 +78,7 @@ const OtherAccounts = observer(() => {
                     <Copy size="16" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent side="bottom">
+                <TooltipContent side="left">
                   <Label>Copy Address</Label>
                 </TooltipContent>
               </Tooltip>

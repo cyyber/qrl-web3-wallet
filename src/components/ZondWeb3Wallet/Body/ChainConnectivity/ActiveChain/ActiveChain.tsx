@@ -72,7 +72,7 @@ const ActiveChain = observer(() => {
                 </Button>
               </Link>
             </TooltipTrigger>
-            <TooltipContent side="bottom">
+            <TooltipContent side="left">
               <Label>Edit chain</Label>
             </TooltipContent>
           </Tooltip>

@@ -192,7 +192,7 @@ const ZondSignTypedDataV4Content = observer(() => {
                       <Copy size="16" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent side="bottom">
+                  <TooltipContent side="left">
                     <Label>Copy Message Data</Label>
                   </TooltipContent>
                 </Tooltip>

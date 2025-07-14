@@ -48,7 +48,7 @@ const ActiveAccount = observer(() => {
                       <Send size="16" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent side="bottom">
+                  <TooltipContent side="left">
                     <Label>Send Zond</Label>
                   </TooltipContent>
                 </Tooltip>
@@ -64,7 +64,7 @@ const ActiveAccount = observer(() => {
                     <Copy size="16" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent side="bottom">
+                <TooltipContent side="left">
                   <Label>Copy Address</Label>
                 </TooltipContent>
               </Tooltip>

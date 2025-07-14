@@ -85,7 +85,7 @@ const OtherChainItem = observer(
                 <Wifi size="16" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent side="bottom">
+            <TooltipContent side="left">
               <Label>Connect chain</Label>
             </TooltipContent>
           </Tooltip>

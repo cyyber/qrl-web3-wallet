@@ -76,7 +76,7 @@ const ActiveBrowserTab = observer(() => {
                   <Unlink size="16" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom">
+              <TooltipContent side="left">
                 <Label>Disconnect</Label>
               </TooltipContent>
             </Tooltip>

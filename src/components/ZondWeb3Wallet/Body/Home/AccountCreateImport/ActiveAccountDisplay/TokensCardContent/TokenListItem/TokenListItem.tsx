@@ -76,7 +76,7 @@ const TokenListItem = ({
             <Send size="16" />
           </Button>
         </TooltipTrigger>
-        <TooltipContent side="bottom">
+        <TooltipContent side="left">
           <Label>Send {symbol}</Label>
         </TooltipContent>
       </Tooltip>

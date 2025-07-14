@@ -281,7 +281,7 @@ const ZondSendTransactionForContent = observer(
                         <Copy size="16" />
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent side="bottom">
+                    <TooltipContent side="left">
                       <Label>Copy Data</Label>
                     </TooltipContent>
                   </Tooltip>
