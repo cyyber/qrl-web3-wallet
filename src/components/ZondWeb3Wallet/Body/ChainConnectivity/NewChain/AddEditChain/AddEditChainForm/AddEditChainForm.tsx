@@ -18,11 +18,11 @@ import { Input } from "@/components/UI/Input";
 import { Label } from "@/components/UI/Label";
 import { BlockchainDataType } from "@/configuration/zondBlockchainConfig";
 import { ROUTES } from "@/router/router";
-import { useStore } from "@/stores/store";
+import StorageUtil from "@/utilities/storageUtil";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader, Pencil, Plus } from "lucide-react";
 import { observer } from "mobx-react-lite";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
@@ -38,20 +38,15 @@ const FormSchema = z.object({
   currencySymbol: z.string().min(1, "Currency symbol is required"),
   currencyDecimals: z.coerce.number().gt(0, "Decimals should be positive"),
 });
-// .refine((fields) => fields.password === fields.reEnteredPassword, {
-//   message: "Passwords doesn't match",
-//   path: ["reEnteredPassword"],
-// });
 
 const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
   const navigate = useNavigate();
-  const { zondStore } = useStore();
-  const { addBlockchain } = zondStore;
-  const hasChainToEdit = !!chainToEdit;
-  const labelText = hasChainToEdit ? "Edit chain" : "Add chain";
-  const buttonSubmittingText = hasChainToEdit
-    ? "Editing chain"
-    : "Adding chain";
+
+  const [error, setError] = useState("");
+
+  const isChainEdit = !!chainToEdit;
+  const labelText = isChainEdit ? "Edit chain" : "Add chain";
+  const buttonSubmittingText = isChainEdit ? "Editing chain" : "Adding chain";
   const isCustomChain = chainToEdit?.isCustomChain ?? true;
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -73,7 +68,7 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
   } = form;
 
   useEffect(() => {
-    if (hasChainToEdit) {
+    if (isChainEdit) {
       form.reset({
         chainName: chainToEdit.chainName,
         chainId: parseInt(chainToEdit.chainId, 16),
@@ -82,10 +77,10 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
         currencyDecimals: chainToEdit.nativeCurrency.decimals,
       });
     }
-  }, [hasChainToEdit, chainToEdit, form]);
+  }, [isChainEdit, chainToEdit, form]);
 
-  async function onSubmit(formData: z.infer<typeof FormSchema>) {
-    const result = await addBlockchain({
+  const addchain = async (formData: z.infer<typeof FormSchema>) => {
+    const newChain = {
       chainName: formData.chainName,
       chainId: "0x".concat(formData.chainId.toString(16)),
       nativeCurrency: {
@@ -102,9 +97,32 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
       defaultBlockExplorerUrl: "",
       defaultIconUrl: "",
       defaultWsRpcUrl: "",
-    });
-    if (result.isSuccess) {
+    };
+    const blockchains = await StorageUtil.getAllBlockChains();
+    const chainFound = blockchains.find(
+      (chain) => chain.chainId === newChain.chainId,
+    );
+    if (chainFound) {
+      setError(
+        `A blockchain with the chain ID ${formData.chainId} already exist.`,
+      );
+      return;
+    } else {
+      await StorageUtil.setAllBlockChains([...blockchains, newChain]);
       navigate(ROUTES.CHAIN_CONNECTIVITY);
+    }
+  };
+
+  const editChain = async (formData: z.infer<typeof FormSchema>) => {
+    formData;
+  };
+
+  async function onSubmit(formData: z.infer<typeof FormSchema>) {
+    setError("");
+    if (isChainEdit) {
+      await editChain(formData);
+    } else {
+      await addchain(formData);
     }
   }
 
@@ -169,7 +187,7 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
                       {...field}
                       aria-label={field.name}
                       autoComplete="off"
-                      disabled={isSubmitting}
+                      disabled={isSubmitting || !isCustomChain}
                       placeholder="ZND"
                       type="text"
                     />
@@ -191,7 +209,7 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
                         {...field}
                         aria-label={field.name}
                         autoComplete="off"
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || !isCustomChain}
                         placeholder="ZND"
                         type="text"
                       />
@@ -212,7 +230,7 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
                         {...field}
                         aria-label={field.name}
                         autoComplete="off"
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || !isCustomChain}
                         placeholder="18"
                         type="number"
                       />
@@ -223,6 +241,9 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
                 )}
               />
             </div>
+            {error && (
+              <div className="text-sm font-bold text-destructive">{error}</div>
+            )}
           </CardContent>
           <CardFooter>
             <Button
@@ -232,7 +253,7 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
             >
               {isSubmitting ? (
                 <Loader className="mr-2 h-4 w-4 animate-spin" />
-              ) : hasChainToEdit ? (
+              ) : isChainEdit ? (
                 <Pencil className="mr-2 h-4 w-4" />
               ) : (
                 <Plus className="mr-2 h-4 w-4" />

@@ -88,36 +88,6 @@ class ZondStore {
     await this.initializeBlockchain();
   }
 
-  async addBlockchain(newChain: BlockchainDataType) {
-    const { chainId } = newChain;
-    const blockchains = await StorageUtil.getAllBlockChains();
-    const chainFound = blockchains.find((chain) => chain.chainId === chainId);
-
-    if (chainFound) {
-      return {
-        isSuccess: false,
-        error: {
-          message: `A blockchain with the chain ID ${chainId} already exist.`,
-        },
-      };
-    }
-
-    await StorageUtil.setAllBlockChains([...blockchains, newChain]);
-    return { isSuccess: true };
-  }
-
-  async editBlockchain(blockchain: BlockchainDataType) {
-    await this.addBlockchain(blockchain);
-  }
-
-  async deleteBlockchain(chainId: string) {
-    const blockchains = await StorageUtil.getAllBlockChains();
-    const updatedChains = blockchains.filter(
-      (chain) => chain.chainId !== chainId,
-    );
-    await StorageUtil.setAllBlockChains(updatedChains);
-  }
-
   async setActiveAccount(activeAccount?: string) {
     await StorageUtil.setActiveAccount(activeAccount);
     this.activeAccount = {

@@ -30,6 +30,7 @@ import { observer } from "mobx-react-lite";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ChainIcon from "../../ChainIcon/ChainIcon";
+import StorageUtil from "@/utilities/storageUtil";
 
 type OtherChainItemProps = {
   blockchain: BlockchainDataType;
@@ -40,7 +41,7 @@ const OtherChainItem = observer(
   ({ blockchain, triggerReRender }: OtherChainItemProps) => {
     const navigate = useNavigate();
     const { zondStore } = useStore();
-    const { selectBlockchain, deleteBlockchain } = zondStore;
+    const { selectBlockchain } = zondStore;
     const { defaultRpcUrl, chainName, chainId, defaultIconUrl, isCustomChain } =
       blockchain;
 
@@ -53,7 +54,11 @@ const OtherChainItem = observer(
 
     const deleteChain = async (chainId: string) => {
       setDeleteDialogOpen(false);
-      await deleteBlockchain(chainId);
+      const blockchains = await StorageUtil.getAllBlockChains();
+      const updatedChains = blockchains.filter(
+        (chain) => chain.chainId !== chainId,
+      );
+      await StorageUtil.setAllBlockChains(updatedChains);
       triggerReRender();
     };
 

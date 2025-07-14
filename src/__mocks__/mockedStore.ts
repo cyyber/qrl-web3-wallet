@@ -1,7 +1,4 @@
-import {
-  BlockchainDataType,
-  DEFAULT_BLOCKCHAIN,
-} from "@/configuration/zondBlockchainConfig";
+import { DEFAULT_BLOCKCHAIN } from "@/configuration/zondBlockchainConfig";
 import { StoreType } from "@/stores/store";
 import deepmerge from "deepmerge";
 import { createContext, useContext } from "react";
@@ -90,16 +87,6 @@ const mockedStoreValues: StoreType = {
       contractAddress;
       decimals;
       return { transactionReceipt: undefined, error: "" };
-    },
-    addBlockchain: async (blockchain: BlockchainDataType) => {
-      blockchain;
-      return { isSuccess: true };
-    },
-    editBlockchain: async (blockchain: BlockchainDataType) => {
-      blockchain;
-    },
-    deleteBlockchain: async (chainId: string) => {
-      chainId;
     },
   },
   dAppRequestStore: {
