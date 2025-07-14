@@ -160,18 +160,23 @@ class StorageUtil {
    * A function for storing the blockchain selection.
    * Call the getBlockChain function to retrieve the stored value.
    */
-  static async setBlockChain(selectedBlockchain: BlockchainDataType) {
+  static async setBlockChain(selectedBlockchainId: string) {
     await browser.storage.local.set({
-      [BLOCKCHAIN_SELECTION_IDENTIFIER]: selectedBlockchain,
+      [BLOCKCHAIN_SELECTION_IDENTIFIER]: selectedBlockchainId,
     });
   }
 
   static async getBlockChain() {
-    const storedBlockchainDetails = await browser.storage.local.get(
+    const storedBlockchainId = await browser.storage.local.get(
       BLOCKCHAIN_SELECTION_IDENTIFIER,
     );
-    return (storedBlockchainDetails?.[BLOCKCHAIN_SELECTION_IDENTIFIER] ??
-      DEFAULT_BLOCKCHAIN) as BlockchainDataType;
+    const blockchains = await this.getAllBlockChains();
+    const existingChain = blockchains.find(
+      (chain) =>
+        chain.chainId.toLowerCase() ===
+        storedBlockchainId?.[BLOCKCHAIN_SELECTION_IDENTIFIER]?.toLowerCase(),
+    );
+    return existingChain ?? DEFAULT_BLOCKCHAIN;
   }
 
   /**

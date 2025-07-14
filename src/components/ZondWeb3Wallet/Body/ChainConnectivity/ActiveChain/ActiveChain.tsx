@@ -13,6 +13,9 @@ import { observer } from "mobx-react-lite";
 import ChainIcon from "../ChainIcon/ChainIcon";
 import { Link } from "react-router-dom";
 import { ROUTES } from "@/router/router";
+import { useEffect, useState } from "react";
+import { BlockchainDataType } from "@/configuration/zondBlockchainConfig";
+import StorageUtil from "@/utilities/storageUtil";
 
 const connectivityStatusClasses = cva("h-3 w-3 rounded-full", {
   variants: {
@@ -34,7 +37,20 @@ const ActiveChain = observer(() => {
   const { zondStore } = useStore();
   const { zondConnection } = zondStore;
   const { isLoading, isConnected, blockchain } = zondConnection;
-  const { chainId, chainName, defaultRpcUrl, defaultIconUrl } = blockchain;
+  const { chainId } = blockchain;
+
+  const [activeChain, setActiveChain] = useState<
+    BlockchainDataType | undefined
+  >();
+
+  useEffect(() => {
+    (async () => {
+      const blockchains = await StorageUtil.getAllBlockChains();
+      setActiveChain(blockchains.find((chain) => chain.chainId === chainId));
+    })();
+  }, [chainId]);
+
+  if (!activeChain) return;
 
   return (
     <div className="flex flex-col gap-2">
@@ -48,14 +64,19 @@ const ActiveChain = observer(() => {
                 isLoading,
               })}
             />
-            <ChainIcon src={defaultIconUrl} alt={chainName} />
+            <ChainIcon
+              src={activeChain?.defaultIconUrl}
+              alt={activeChain?.chainName}
+            />
           </div>
           <div className="flex flex-col break-all">
-            <span className="font-bold">{chainName}</span>
+            <span className="font-bold">{activeChain?.chainName}</span>
             <span className="text-xm opacity-80">
               Chain ID {parseInt(chainId, 16)}
             </span>
-            <span className="text-xm opacity-80">{defaultRpcUrl}</span>
+            <span className="text-xm opacity-80">
+              {activeChain?.defaultRpcUrl}
+            </span>
           </div>
         </div>
         <div>

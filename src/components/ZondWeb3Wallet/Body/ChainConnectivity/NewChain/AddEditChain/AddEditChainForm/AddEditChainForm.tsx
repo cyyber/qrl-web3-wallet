@@ -80,6 +80,16 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
   }, [isChainEdit, chainToEdit, form]);
 
   const addchain = async (formData: z.infer<typeof FormSchema>) => {
+    const blockchains = await StorageUtil.getAllBlockChains();
+    const chainFound = blockchains.find(
+      (chain) => chain.chainId.toLowerCase() === newChain.chainId.toLowerCase(),
+    );
+    if (chainFound) {
+      setError(
+        `A blockchain with the chain ID ${formData.chainId} already exist.`,
+      );
+      return;
+    }
     const newChain = {
       chainName: formData.chainName,
       chainId: "0x".concat(formData.chainId.toString(16)),
@@ -98,23 +108,30 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
       defaultIconUrl: "",
       defaultWsRpcUrl: "",
     };
-    const blockchains = await StorageUtil.getAllBlockChains();
-    const chainFound = blockchains.find(
-      (chain) => chain.chainId === newChain.chainId,
-    );
-    if (chainFound) {
-      setError(
-        `A blockchain with the chain ID ${formData.chainId} already exist.`,
-      );
-      return;
-    } else {
-      await StorageUtil.setAllBlockChains([...blockchains, newChain]);
-      navigate(ROUTES.CHAIN_CONNECTIVITY);
-    }
+
+    await StorageUtil.setAllBlockChains([...blockchains, newChain]);
+    navigate(ROUTES.CHAIN_CONNECTIVITY);
   };
 
   const editChain = async (formData: z.infer<typeof FormSchema>) => {
-    formData;
+    const editedChain = {
+      chainName: formData.chainName,
+      chainId: "0x".concat(formData.chainId.toString(16)),
+      nativeCurrency: {
+        name: formData.currencyName,
+        symbol: formData.currencySymbol,
+        decimals: formData.currencyDecimals,
+      },
+    };
+    const blockchains = await StorageUtil.getAllBlockChains();
+    const updatedChains = blockchains.map((chain) =>
+      chain.chainId.toLowerCase() === editedChain.chainId.toLowerCase()
+        ? { ...chain, ...editedChain }
+        : chain,
+    );
+
+    await StorageUtil.setAllBlockChains(updatedChains);
+    navigate(ROUTES.CHAIN_CONNECTIVITY);
   };
 
   async function onSubmit(formData: z.infer<typeof FormSchema>) {
@@ -166,7 +183,7 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
                       {...field}
                       aria-label={field.name}
                       autoComplete="off"
-                      disabled={isSubmitting || !isCustomChain}
+                      disabled={isSubmitting || isChainEdit}
                       placeholder="111"
                       type="number"
                     />
