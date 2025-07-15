@@ -26,6 +26,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
+import UrlSelections from "./UrlSelections/UrlSelections";
 
 type AddEditChainFormType = {
   chainToEdit?: BlockchainDataType;
@@ -192,6 +193,24 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
                   <FormMessage />
                 </FormItem>
               )}
+            />
+            <UrlSelections
+              title="RPC URLs"
+              canBeEmpty={false}
+              urls={chainToEdit?.rpcUrls ?? []}
+              defaultUrl={chainToEdit?.defaultRpcUrl ?? ""}
+            />
+            <UrlSelections
+              title="Block Explorer URLs"
+              canBeEmpty={true}
+              urls={chainToEdit?.blockExplorerUrls ?? []}
+              defaultUrl={chainToEdit?.defaultBlockExplorerUrl ?? ""}
+            />
+            <UrlSelections
+              title="Icon URLs"
+              canBeEmpty={true}
+              urls={chainToEdit?.iconUrls ?? []}
+              defaultUrl={chainToEdit?.defaultIconUrl ?? ""}
             />
             <FormField
               control={control}
