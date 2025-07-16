@@ -43,6 +43,12 @@ const FormSchema = z.object({
 const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
   const navigate = useNavigate();
 
+  const [rpcUrls, setRpcUrls] = useState<string[]>([]);
+  const [defaultRpcUrl, setDefaultRpcUrl] = useState("");
+  const [blockExplorerUrls, setBlockExplorerUrls] = useState<string[]>([]);
+  const [defaultBlockExplorerUrl, setDefaultBlockExplorerUrl] = useState("");
+  const [iconUrls, setIconUrls] = useState<string[]>([]);
+  const [defaultIconUrl, setDefaultIconUrl] = useState("");
   const [error, setError] = useState("");
 
   const isChainEdit = !!chainToEdit;
@@ -77,10 +83,57 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
         currencySymbol: chainToEdit.nativeCurrency.symbol,
         currencyDecimals: chainToEdit.nativeCurrency.decimals,
       });
+      setRpcUrls(chainToEdit.rpcUrls);
+      setDefaultRpcUrl(chainToEdit.defaultRpcUrl);
+      setBlockExplorerUrls(chainToEdit.blockExplorerUrls);
+      setDefaultBlockExplorerUrl(chainToEdit.defaultBlockExplorerUrl);
+      setIconUrls(chainToEdit.iconUrls);
+      setDefaultIconUrl(chainToEdit.defaultIconUrl);
     }
   }, [isChainEdit, chainToEdit, form]);
 
+  useEffect(() => {
+    const firstItem = rpcUrls.at(0) ?? "";
+    setDefaultRpcUrl(
+      rpcUrls.find((urlItem) => urlItem === defaultRpcUrl) ?? firstItem,
+    );
+  }, [rpcUrls]);
+
+  useEffect(() => {
+    const firstItem = blockExplorerUrls.at(0) ?? "";
+    setDefaultBlockExplorerUrl(
+      blockExplorerUrls.find(
+        (urlItem) => urlItem === defaultBlockExplorerUrl,
+      ) ?? firstItem,
+    );
+  }, [blockExplorerUrls]);
+
+  useEffect(() => {
+    const firstItem = iconUrls.at(0) ?? "";
+    setDefaultIconUrl(
+      iconUrls.find((urlItem) => urlItem === defaultIconUrl) ?? firstItem,
+    );
+  }, [iconUrls]);
+
   const addchain = async (formData: z.infer<typeof FormSchema>) => {
+    const newChain: BlockchainDataType = {
+      chainName: formData.chainName,
+      chainId: "0x".concat(formData.chainId.toString(16)),
+      nativeCurrency: {
+        name: formData.currencyName,
+        symbol: formData.currencySymbol,
+        decimals: formData.currencyDecimals,
+      },
+      isCustomChain: true,
+      isTestnet: false,
+      defaultWsRpcUrl: "http://127.0.0.1:8545",
+      rpcUrls,
+      defaultRpcUrl,
+      blockExplorerUrls,
+      defaultBlockExplorerUrl,
+      iconUrls,
+      defaultIconUrl,
+    };
     const blockchains = await StorageUtil.getAllBlockChains();
     const chainFound = blockchains.find(
       (chain) => chain.chainId.toLowerCase() === newChain.chainId.toLowerCase(),
@@ -91,24 +144,6 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
       );
       return;
     }
-    const newChain = {
-      chainName: formData.chainName,
-      chainId: "0x".concat(formData.chainId.toString(16)),
-      nativeCurrency: {
-        name: formData.currencyName,
-        symbol: formData.currencySymbol,
-        decimals: formData.currencyDecimals,
-      },
-      isCustomChain: true,
-      isTestnet: false,
-      rpcUrls: [],
-      blockExplorerUrls: [],
-      iconUrls: [],
-      defaultRpcUrl: "",
-      defaultBlockExplorerUrl: "",
-      defaultIconUrl: "",
-      defaultWsRpcUrl: "",
-    };
 
     await StorageUtil.setAllBlockChains([...blockchains, newChain]);
     navigate(ROUTES.CHAIN_CONNECTIVITY);
@@ -123,10 +158,16 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
         symbol: formData.currencySymbol,
         decimals: formData.currencyDecimals,
       },
+      rpcUrls,
+      defaultRpcUrl,
+      blockExplorerUrls,
+      defaultBlockExplorerUrl,
+      iconUrls,
+      defaultIconUrl,
     };
     const blockchains = await StorageUtil.getAllBlockChains();
-    const updatedChains = blockchains.map((chain) =>
-      chain.chainId.toLowerCase() === editedChain.chainId.toLowerCase()
+    const updatedChains: BlockchainDataType[] = blockchains.map((chain) =>
+      chain.chainId.toLowerCase() === editedChain?.chainId?.toLowerCase()
         ? { ...chain, ...editedChain }
         : chain,
     );
@@ -197,20 +238,26 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
             <UrlSelections
               title="RPC URLs"
               canBeEmpty={false}
-              urls={chainToEdit?.rpcUrls ?? []}
-              defaultUrl={chainToEdit?.defaultRpcUrl ?? ""}
+              urls={rpcUrls}
+              setUrls={setRpcUrls}
+              defaultUrl={defaultRpcUrl}
+              setDefaultUrl={setDefaultRpcUrl}
             />
             <UrlSelections
               title="Block Explorer URLs"
               canBeEmpty={true}
-              urls={chainToEdit?.blockExplorerUrls ?? []}
-              defaultUrl={chainToEdit?.defaultBlockExplorerUrl ?? ""}
+              urls={blockExplorerUrls}
+              setUrls={setBlockExplorerUrls}
+              defaultUrl={defaultBlockExplorerUrl}
+              setDefaultUrl={setDefaultBlockExplorerUrl}
             />
             <UrlSelections
               title="Icon URLs"
               canBeEmpty={true}
-              urls={chainToEdit?.iconUrls ?? []}
-              defaultUrl={chainToEdit?.defaultIconUrl ?? ""}
+              urls={iconUrls}
+              setUrls={setIconUrls}
+              defaultUrl={defaultIconUrl}
+              setDefaultUrl={setDefaultIconUrl}
             />
             <FormField
               control={control}

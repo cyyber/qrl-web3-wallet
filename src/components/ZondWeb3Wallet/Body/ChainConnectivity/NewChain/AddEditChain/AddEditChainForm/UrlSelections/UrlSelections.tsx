@@ -8,7 +8,6 @@ import {
 } from "@/components/UI/Tooltip";
 import { cva } from "class-variance-authority";
 import { Star, Trash } from "lucide-react";
-import { useEffect, useState } from "react";
 import AddUrlItem from "./AddUrlItem/AddUrlItem";
 
 const defaultIconClasses = cva("", {
@@ -25,38 +24,28 @@ const defaultIconClasses = cva("", {
 type UrlSelectionsProps = {
   title: string;
   urls: string[];
+  setUrls: (urls: string[]) => void;
   defaultUrl: string;
+  setDefaultUrl: (url: string) => void;
   canBeEmpty: boolean;
 };
 
 const UrlSelections = ({
   title,
   urls,
+  setUrls,
   defaultUrl,
+  setDefaultUrl,
   canBeEmpty,
 }: UrlSelectionsProps) => {
-  const [urlList, setUrlList] = useState<string[]>([]);
-  const [defaultSelection, setDefaultSelection] = useState("");
-
-  useEffect(() => {
-    setUrlList(urls);
-  }, [urls]);
-
-  useEffect(() => {
-    setDefaultSelection(defaultUrl);
-  }, [defaultUrl]);
-
   const addUrl = (url: string) => {
-    setUrlList([...urlList, url]);
+    const updatedList = urls.filter((urlItem) => urlItem !== url);
+    setUrls([...updatedList, url]);
   };
 
   const deleteUrl = (url: string) => {
-    const updatedList = urlList.filter((urlItem) => urlItem !== url);
-    setUrlList(updatedList);
-    const firstItem = updatedList.at(0) ?? "";
-    setDefaultSelection(
-      updatedList.find((urlItem) => urlItem === defaultSelection) ?? firstItem,
-    );
+    const updatedList = urls.filter((urlItem) => urlItem !== url);
+    setUrls(updatedList);
   };
 
   return (
@@ -64,9 +53,9 @@ const UrlSelections = ({
       <Label>{title}</Label>
       <div className="flex flex-col gap-2">
         <AddUrlItem addUrl={addUrl} />
-        {urlList.map((urlItem) => {
+        {urls.map((urlItem) => {
           return (
-            <Card className="flex justify-between gap-2 rounded-md p-2">
+            <Card className="flex items-center justify-between gap-2 rounded-md p-2">
               <div className="break-all">{urlItem}</div>
               <div className="flex shrink-0 gap-2">
                 <Tooltip delayDuration={0}>
@@ -76,12 +65,12 @@ const UrlSelections = ({
                       variant="outline"
                       size="icon"
                       type="button"
-                      onClick={() => setDefaultSelection(urlItem)}
+                      onClick={() => setDefaultUrl(urlItem)}
                     >
                       <Star
                         size="16"
                         className={defaultIconClasses({
-                          isDefault: urlItem === defaultSelection,
+                          isDefault: urlItem === defaultUrl,
                         })}
                       />
                     </Button>
@@ -95,7 +84,7 @@ const UrlSelections = ({
                     <Button
                       className="size-7 hover:bg-accent hover:text-secondary"
                       variant="outline"
-                      disabled={!canBeEmpty && urlList.length === 1}
+                      disabled={!canBeEmpty && urls.length === 1}
                       size="icon"
                       type="button"
                       onClick={() => {
