@@ -15,9 +15,14 @@ const ChainBadgeIcon = observer(() => {
     setHasUrlError(false);
   }, [defaultIconUrl]);
 
-  if (isLoading) return <Loader className="h-3 w-3 animate-spin" />;
-  if (!isConnected) return <WifiOff className="h-3 w-3" />;
-  if (hasUrlError) return <Network className="h-3 w-3" />;
+  if (isLoading)
+    return (
+      <Loader className="h-3 w-3 animate-spin" data-testid="loader-icon" />
+    );
+  if (!isConnected)
+    return <WifiOff className="h-3 w-3" data-testid="wifi-off-icon" />;
+  if (hasUrlError)
+    return <Network className="h-3 w-3" data-testid="network-icon" />;
 
   return (
     <img
