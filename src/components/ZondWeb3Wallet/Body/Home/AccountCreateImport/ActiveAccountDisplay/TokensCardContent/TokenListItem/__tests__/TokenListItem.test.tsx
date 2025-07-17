@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it } from "@jest/globals";
 import { cleanup, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import TokenListItem from "../TokenListItem";
+import { TooltipProvider } from "@/components/UI/Tooltip";
 
 describe("TokenListItem", () => {
   afterEach(cleanup);
@@ -12,14 +13,16 @@ describe("TokenListItem", () => {
     render(
       <StoreProvider value={mockedStoreValues}>
         <MemoryRouter>
-          <TokenListItem
-            balance="25 ZND"
-            name="ZND TOKEN"
-            symbol="ZND"
-            contractAddress="0x0db3981cb93db985e4e3a62ff695f7a1b242dd7c"
-            decimals={18}
-            isZrc20Token={false}
-          />
+          <TooltipProvider>
+            <TokenListItem
+              balance="25 ZND"
+              name="ZND TOKEN"
+              symbol="ZND"
+              contractAddress="0x0db3981cb93db985e4e3a62ff695f7a1b242dd7c"
+              decimals={18}
+              isZrc20Token={false}
+            />
+          </TooltipProvider>
         </MemoryRouter>
       </StoreProvider>,
     );

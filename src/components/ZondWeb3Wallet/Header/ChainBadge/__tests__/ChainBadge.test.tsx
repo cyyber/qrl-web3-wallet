@@ -2,250 +2,106 @@ import { mockedStore } from "@/__mocks__/mockedStore";
 import { StoreProvider } from "@/stores/store";
 import { afterEach, describe, expect, it, jest } from "@jest/globals";
 import { cleanup, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { ComponentProps } from "react";
 import { MemoryRouter } from "react-router-dom";
 import ChainBadge from "../ChainBadge";
+import { TooltipProvider } from "@/components/UI/Tooltip";
+import { ROUTES } from "@/router/router";
+
+jest.mock("../ChainBadgeIcon/ChainBadgeIcon", () => () => (
+  <div>Mocked Chain Badge Icon</div>
+));
+
+const mockedUseLocation = jest.fn(() => ({ pathname: "/" }));
+jest.mock("react-router-dom", () => {
+  const originalModule =
+    jest.requireActual<typeof import("react-router-dom")>("react-router-dom");
+  return {
+    __esModule: true,
+    ...originalModule,
+    useLocation: () => mockedUseLocation,
+  };
+});
 
 describe("ChainBadge", () => {
   afterEach(cleanup);
 
-  const renderComponent = (mockedStoreValues = mockedStore()) =>
+  const renderComponent = (
+    mockedStoreValues = mockedStore(),
+    mockedProps: ComponentProps<typeof ChainBadge> = {
+      displayChainName: true,
+      isDisabled: false,
+    },
+  ) =>
     render(
       <StoreProvider value={mockedStoreValues}>
         <MemoryRouter>
-          <ChainBadge />
+          <TooltipProvider>
+            <ChainBadge {...mockedProps} />
+          </TooltipProvider>
         </MemoryRouter>
       </StoreProvider>,
     );
 
-  it("should display the local node name if the network selected is local", () => {
+  it("should render the badge button", () => {
     renderComponent(
       mockedStore({
         zondStore: {
           zondConnection: {
-            blockchain: "LOCAL",
+            isLoading: false,
+            isConnected: true,
+            blockchain: { chainName: "Test Chain Name" },
           },
         },
       }),
     );
 
-    expect(screen.getByRole("button", { name: "Local" })).toBeInTheDocument();
-  });
-
-  it("should display the testnet name if the network selected is testnet", () => {
-    renderComponent(
-      mockedStore({
-        zondStore: {
-          zondConnection: {
-            blockchain: "TEST_NET",
-          },
-        },
-      }),
-    );
-
-    expect(screen.getByRole("button", { name: "Testnet" })).toBeInTheDocument();
-  });
-
-  it("should display the mainnet name if the network selected is mainnet", () => {
-    renderComponent(
-      mockedStore({
-        zondStore: {
-          zondConnection: {
-            blockchain: "MAIN_NET",
-          },
-        },
-      }),
-    );
-
-    expect(screen.getByRole("button", { name: "Mainnet" })).toBeInTheDocument();
-  });
-
-  it("should display the network selection popup on clicking the network badge button", async () => {
-    renderComponent();
-    document.body.style.pointerEvents = "auto";
-    const chainBadge = screen.getByRole("button", {
-      name: "Local",
+    const link = screen.getByRole("link", {
+      name: "Mocked Chain Badge Icon Test Chain Name",
     });
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute("href", ROUTES.CHAIN_CONNECTIVITY);
+    const button = screen.getByRole("button", {
+      name: "Mocked Chain Badge Icon Test Chain Name",
+    });
+    expect(button).toBeInTheDocument();
+    expect(button).toBeEnabled();
+    expect(screen.getByText("Mocked Chain Badge Icon")).toBeInTheDocument();
+    expect(screen.getByText("Test Chain Name")).toBeInTheDocument();
+  });
 
-    await userEvent.click(chainBadge);
-
-    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
-      "Select Blockchain",
+  it("should be disabled if the badge is in loading state", () => {
+    renderComponent(
+      mockedStore({
+        zondStore: {
+          zondConnection: {
+            isLoading: true,
+            blockchain: { chainName: "Test Chain Name" },
+          },
+        },
+      }),
     );
+
     expect(
-      screen.getByText(
-        "Connect to a locally running zond blockchain node. You should have a blockchain running in your machine.",
-      ),
-    ).toBeInTheDocument();
-    const cancelButton = screen.getByRole("button", { name: "Cancel" });
-    const connectButton = screen.getByRole("button", { name: "Connect" });
-    expect(cancelButton).toBeInTheDocument();
-    expect(connectButton).toBeInTheDocument();
-    expect(cancelButton).toBeEnabled();
-    expect(connectButton).toBeEnabled();
+      screen.getByRole("button", {
+        name: "Mocked Chain Badge Icon Test Chain Name",
+      }),
+    ).toBeDisabled();
   });
 
-  it("should display the network selection popup content for test network", async () => {
+  it("should not display the chain name if displayChainName is false", () => {
     renderComponent(
       mockedStore({
         zondStore: {
           zondConnection: {
-            blockchain: "TEST_NET",
+            isLoading: true,
+            blockchain: { chainName: "Test Chain Name" },
           },
         },
       }),
+      { displayChainName: false },
     );
-    document.body.style.pointerEvents = "auto";
-    const chainBadge = screen.getByRole("button", {
-      name: "Testnet",
-    });
-    await userEvent.click(chainBadge);
-    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
-      "Select Blockchain",
-    );
-    expect(
-      screen.getByText(
-        "Connect to the zond testnet. Specify the IP address and port number of the testnet.",
-      ),
-    ).toBeInTheDocument();
-    const cancelButton = screen.getByRole("button", { name: "Cancel" });
-    const connectButton = screen.getByRole("button", { name: "Connect" });
-    expect(cancelButton).toBeInTheDocument();
-    expect(connectButton).toBeInTheDocument();
-    expect(cancelButton).toBeEnabled();
-    expect(connectButton).toBeEnabled();
-  });
 
-  it("should display the network selection popup content for main network", async () => {
-    renderComponent(
-      mockedStore({
-        zondStore: {
-          zondConnection: {
-            blockchain: "MAIN_NET",
-          },
-        },
-      }),
-    );
-    document.body.style.pointerEvents = "auto";
-    const chainBadge = screen.getByRole("button", {
-      name: "Mainnet",
-    });
-    await userEvent.click(chainBadge);
-    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
-      "Select Blockchain",
-    );
-    expect(
-      screen.getByText(
-        "Connect to the zond mainnet. The real zond blockchain network.",
-      ),
-    ).toBeInTheDocument();
-    const cancelButton = screen.getByRole("button", { name: "Cancel" });
-    const connectButton = screen.getByRole("button", { name: "Connect" });
-    expect(cancelButton).toBeInTheDocument();
-    expect(connectButton).toBeInTheDocument();
-    expect(cancelButton).toBeEnabled();
-    expect(connectButton).toBeEnabled();
-  });
-
-  it("should enable the connect button if form is valid for local network", async () => {
-    renderComponent(
-      mockedStore({
-        zondStore: {
-          zondConnection: {
-            blockchain: "LOCAL",
-          },
-        },
-      }),
-    );
-    document.body.style.pointerEvents = "auto";
-    const chainBadge = screen.getByRole("button", {
-      name: "Local",
-    });
-    await userEvent.click(chainBadge);
-    const ipAddressField = screen.getByLabelText("ipAddress");
-    await userEvent.clear(ipAddressField);
-    const portField = screen.getByLabelText("port");
-    await userEvent.clear(portField);
-    const connectButton = screen.getByRole("button", { name: "Connect" });
-    expect(connectButton).toBeInTheDocument();
-    expect(connectButton).toBeDisabled();
-    await userEvent.type(ipAddressField, "http://127.0.0.1");
-    await userEvent.type(portField, "3272");
-    expect(connectButton).toBeEnabled();
-  });
-
-  it("should enable the connect button if form is valid for testnet network", async () => {
-    renderComponent(
-      mockedStore({
-        zondStore: {
-          zondConnection: {
-            blockchain: "TEST_NET",
-          },
-        },
-      }),
-    );
-    document.body.style.pointerEvents = "auto";
-    const chainBadge = screen.getByRole("button", {
-      name: "Testnet",
-    });
-    await userEvent.click(chainBadge);
-    const ipAddressField = screen.getByLabelText("ipAddress");
-    await userEvent.clear(ipAddressField);
-    const portField = screen.getByLabelText("port");
-    await userEvent.clear(portField);
-    const connectButton = screen.getByRole("button", { name: "Connect" });
-    expect(connectButton).toBeInTheDocument();
-    expect(connectButton).toBeDisabled();
-    await userEvent.type(ipAddressField, "http://255.245.3.3");
-    await userEvent.type(portField, "3334");
-    expect(connectButton).toBeEnabled();
-  });
-
-  it("should enable the connect button if form is valid for mainnet network", async () => {
-    renderComponent(
-      mockedStore({
-        zondStore: {
-          zondConnection: {
-            blockchain: "MAIN_NET",
-          },
-        },
-      }),
-    );
-    document.body.style.pointerEvents = "auto";
-    const chainBadge = screen.getByRole("button", {
-      name: "Mainnet",
-    });
-    await userEvent.click(chainBadge);
-    const ipAddressField = screen.queryByLabelText("ipAddress");
-    expect(ipAddressField).not.toBeInTheDocument();
-    const portField = screen.queryByLabelText("port");
-    expect(portField).not.toBeInTheDocument();
-    const connectButton = screen.getByRole("button", { name: "Connect" });
-    expect(connectButton).toBeInTheDocument();
-    expect(connectButton).toBeEnabled();
-  });
-
-  it("should invoke the selectBlockchain method on clicking the connect button", async () => {
-    const mockedSelectBlockchain = jest.fn(async () => {});
-    renderComponent(
-      mockedStore({
-        zondStore: {
-          zondConnection: {
-            blockchain: "MAIN_NET",
-          },
-          selectBlockchain: mockedSelectBlockchain,
-        },
-      }),
-    );
-    document.body.style.pointerEvents = "auto";
-    const chainBadge = screen.getByRole("button", { name: "Mainnet" });
-    await userEvent.click(chainBadge);
-    const connectButton = await screen.findByRole("button", {
-      name: "Connect",
-    });
-    mockedSelectBlockchain.mockClear();
-    await userEvent.click(connectButton);
-
-    expect(mockedSelectBlockchain).toHaveBeenCalledTimes(1);
+    expect(screen.queryByText("Test Chain Name")).not.toBeInTheDocument();
   });
 });
