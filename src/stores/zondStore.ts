@@ -44,6 +44,7 @@ class ZondStore {
       zondConnection: observable.struct,
       zondAccounts: observable.struct,
       activeAccount: observable.struct,
+      refreshBlockchainData: action.bound,
       selectBlockchain: action.bound,
       setActiveAccount: action.bound,
       fetchZondConnection: action.bound,
@@ -60,13 +61,9 @@ class ZondStore {
   }
 
   async initializeBlockchain() {
-    const blockchain = await StorageUtil.getBlockChain();
-    this.zondConnection = {
-      ...this.zondConnection,
-      blockchain,
-    };
+    await this.refreshBlockchainData();
     const zondHttpProvider = new Web3.providers.HttpProvider(
-      blockchain.defaultRpcUrl,
+      this.zondConnection.blockchain.defaultRpcUrl,
     );
     const { zond } = new Web3({ provider: zondHttpProvider });
     this.zondInstance = zond;
@@ -74,6 +71,11 @@ class ZondStore {
     await this.fetchZondConnection();
     await this.fetchAccounts();
     await this.validateActiveAccount();
+  }
+
+  async refreshBlockchainData() {
+    const blockchain = await StorageUtil.getBlockChain();
+    this.zondConnection = { ...this.zondConnection, blockchain };
   }
 
   async selectBlockchain(chainId: string) {

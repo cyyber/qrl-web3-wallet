@@ -27,6 +27,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import UrlSelections from "./UrlSelections/UrlSelections";
+import { useStore } from "@/stores/store";
 
 type AddEditChainFormType = {
   chainToEdit?: BlockchainDataType;
@@ -42,6 +43,8 @@ const FormSchema = z.object({
 
 const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
   const navigate = useNavigate();
+  const { zondStore } = useStore();
+  const { refreshBlockchainData } = zondStore;
 
   const [rpcUrls, setRpcUrls] = useState<string[]>([]);
   const [defaultRpcUrl, setDefaultRpcUrl] = useState("");
@@ -174,6 +177,7 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
 
     await StorageUtil.setAllBlockChains(updatedChains);
     navigate(ROUTES.CHAIN_CONNECTIVITY);
+    await refreshBlockchainData();
   };
 
   async function onSubmit(formData: z.infer<typeof FormSchema>) {
