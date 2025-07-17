@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it } from "@jest/globals";
 import { cleanup, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import NativeToken from "../NativeToken";
+import { TooltipProvider } from "@/components/UI/Tooltip";
 
 describe("NativeToken", () => {
   afterEach(cleanup);
@@ -12,7 +13,9 @@ describe("NativeToken", () => {
     render(
       <StoreProvider value={mockedStoreValues}>
         <MemoryRouter>
-          <NativeToken />
+          <TooltipProvider>
+            <NativeToken />
+          </TooltipProvider>
         </MemoryRouter>
       </StoreProvider>,
     );

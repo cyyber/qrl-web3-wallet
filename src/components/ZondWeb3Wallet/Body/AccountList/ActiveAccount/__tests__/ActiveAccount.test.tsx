@@ -5,8 +5,12 @@ import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import ActiveAccount from "../ActiveAccount";
+import { TooltipProvider } from "@/components/UI/Tooltip";
+import { ROUTES } from "@/router/router";
 
-jest.mock("../../AccountId/AccountId", () => () => <div>Mocked Active Id</div>);
+jest.mock("../../AccountId/AccountId", () => () => (
+  <div>Mocked Account Id</div>
+));
 
 describe("ActiveAccount", () => {
   afterEach(cleanup);
@@ -15,7 +19,9 @@ describe("ActiveAccount", () => {
     render(
       <StoreProvider value={mockedStoreValues}>
         <MemoryRouter>
-          <ActiveAccount />
+          <TooltipProvider>
+            <ActiveAccount />
+          </TooltipProvider>
         </MemoryRouter>
       </StoreProvider>,
     );
@@ -32,12 +38,14 @@ describe("ActiveAccount", () => {
     );
 
     expect(screen.getByText("Active account")).toBeInTheDocument();
-    expect(screen.getByText("Mocked Active Id")).toBeInTheDocument();
-    const buttons = screen.getAllByRole("button");
-    const copyButton = buttons[0];
-    const sendZondButton = buttons[1];
-    expect(copyButton).toBeInTheDocument();
+    expect(screen.getByText("Mocked Account Id")).toBeInTheDocument();
+    const link = screen.getByRole("link", { name: "" });
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute("href", ROUTES.TOKEN_TRANSFER);
+    const sendZondButton = screen.getByRole("button", { name: "Send Zond" });
     expect(sendZondButton).toBeInTheDocument();
+    const copyButton = screen.getByRole("button", { name: "Copy Address" });
+    expect(copyButton).toBeInTheDocument();
   });
 
   it("should call the copyAccount function on clicking the copy button", async () => {
@@ -58,7 +66,7 @@ describe("ActiveAccount", () => {
       },
       writable: true,
     });
-    const copyButton = screen.getAllByRole("button")[0];
+    const copyButton = screen.getByRole("button", { name: "Copy Address" });
     expect(copyButton).toBeInTheDocument();
     await userEvent.click(copyButton);
     expect(mockedWriteText).toBeCalledTimes(1);

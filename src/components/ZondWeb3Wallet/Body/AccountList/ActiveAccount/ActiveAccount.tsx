@@ -44,6 +44,7 @@ const ActiveAccount = observer(() => {
                       className="size-7 hover:bg-accent hover:text-secondary"
                       variant="outline"
                       size="icon"
+                      aria-label="Send Zond"
                     >
                       <Send size="16" />
                     </Button>
@@ -59,6 +60,7 @@ const ActiveAccount = observer(() => {
                     className="size-7 hover:bg-accent hover:text-secondary"
                     variant="outline"
                     size="icon"
+                    aria-label="Copy Address"
                     onClick={copyAccount}
                   >
                     <Copy size="16" />

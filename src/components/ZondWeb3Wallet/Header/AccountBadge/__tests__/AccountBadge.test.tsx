@@ -4,13 +4,16 @@ import { describe, expect, it } from "@jest/globals";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import AccountBadge from "../AccountBadge";
+import { TooltipProvider } from "@/components/UI/Tooltip";
 
 describe("AccountBadge", () => {
   const renderComponent = (mockedStoreValues = mockedStore()) =>
     render(
       <StoreProvider value={mockedStoreValues}>
         <MemoryRouter>
-          <AccountBadge />
+          <TooltipProvider>
+            <AccountBadge />
+          </TooltipProvider>
         </MemoryRouter>
       </StoreProvider>,
     );

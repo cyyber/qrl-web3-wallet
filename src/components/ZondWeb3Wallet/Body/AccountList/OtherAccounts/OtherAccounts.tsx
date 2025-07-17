@@ -54,6 +54,7 @@ const OtherAccounts = observer(() => {
                     className="size-7 hover:bg-accent hover:text-secondary"
                     variant="outline"
                     size="icon"
+                    aria-label="Switch to this account"
                     onClick={() => {
                       onAccountSwitch(accountAddress);
                     }}
@@ -71,6 +72,7 @@ const OtherAccounts = observer(() => {
                     className="size-7 hover:bg-accent hover:text-secondary"
                     variant="outline"
                     size="icon"
+                    aria-label="Copy Address"
                     onClick={() => {
                       copyAccount(accountAddress);
                     }}

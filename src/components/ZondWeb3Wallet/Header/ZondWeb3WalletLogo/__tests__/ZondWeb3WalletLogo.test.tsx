@@ -2,12 +2,15 @@ import { describe, expect, it } from "@jest/globals";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import ZondWeb3WalletLogo from "../ZondWeb3WalletLogo";
+import { TooltipProvider } from "@/components/UI/Tooltip";
 
 describe("ZondWeb3WalletLogo", () => {
   const renderComponent = () =>
     render(
       <MemoryRouter>
-        <ZondWeb3WalletLogo />
+        <TooltipProvider>
+          <ZondWeb3WalletLogo />
+        </TooltipProvider>
       </MemoryRouter>,
     );
 

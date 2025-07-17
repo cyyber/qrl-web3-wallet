@@ -5,6 +5,7 @@ import { act, cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import OtherAccounts from "../OtherAccounts";
+import { TooltipProvider } from "@/components/UI/Tooltip";
 
 jest.mock("../../AccountId/AccountId", () => () => (
   <div>Mocked Account Id</div>
@@ -17,7 +18,9 @@ describe("OtherAccounts", () => {
     render(
       <StoreProvider value={mockedStoreValues}>
         <MemoryRouter>
-          <OtherAccounts />
+          <TooltipProvider>
+            <OtherAccounts />
+          </TooltipProvider>
         </MemoryRouter>
       </StoreProvider>,
     );
@@ -50,7 +53,12 @@ describe("OtherAccounts", () => {
       screen.getByText("Other accounts in the wallet"),
     ).toBeInTheDocument();
     expect(screen.getByText("Mocked Account Id")).toBeInTheDocument();
-    expect(screen.getByRole("button")).toBeInTheDocument();
+    const switchToThisAccountButton = screen.getByRole("button", {
+      name: "Switch to this account",
+    });
+    expect(switchToThisAccountButton).toBeInTheDocument();
+    const copyButton = screen.getByRole("button", { name: "Copy Address" });
+    expect(copyButton).toBeInTheDocument();
   });
 
   it("should call the setActiveAccount function on click of button", async () => {
@@ -81,11 +89,53 @@ describe("OtherAccounts", () => {
       }),
     );
 
-    const accountSelectionButton = screen.getByRole("button");
-    expect(accountSelectionButton).toBeInTheDocument();
+    const switchToThisAccountButton = screen.getByRole("button", {
+      name: "Switch to this account",
+    });
+    expect(switchToThisAccountButton).toBeInTheDocument();
     await act(async () => {
-      await userEvent.click(accountSelectionButton);
+      await userEvent.click(switchToThisAccountButton);
     });
     expect(mockedSetActiveAccount).toBeCalledTimes(1);
+  });
+
+  it("should call the copyAccount function on clicking the copy button", async () => {
+    renderComponent(
+      mockedStore({
+        zondStore: {
+          activeAccount: {
+            accountAddress: "Z205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
+          },
+          zondAccounts: {
+            isLoading: false,
+            accounts: [
+              {
+                accountAddress: "Z205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
+                accountBalance: "2.4568 ZND",
+              },
+              {
+                accountAddress: "Z20fB08fF1f1376A14C055E9F56df80563E16722b",
+                accountBalance: "0.3695 ZND",
+              },
+            ],
+          },
+        },
+      }),
+    );
+
+    const mockedWriteText = jest.fn();
+    Object.defineProperty(navigator, "clipboard", {
+      value: {
+        writeText: mockedWriteText,
+      },
+      writable: true,
+    });
+    const copyButton = screen.getByRole("button", { name: "Copy Address" });
+    expect(copyButton).toBeInTheDocument();
+    await userEvent.click(copyButton);
+    expect(mockedWriteText).toBeCalledTimes(1);
+    expect(mockedWriteText).toBeCalledWith(
+      "Z20fB08fF1f1376A14C055E9F56df80563E16722b",
+    );
   });
 });
