@@ -9,9 +9,9 @@ import {
 import { ROUTES } from "@/router/router";
 import { useStore } from "@/stores/store";
 import { cva } from "class-variance-authority";
-import { Wifi, WifiOff } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { Link, useLocation } from "react-router-dom";
+import ChainBadgeIcon from "./ChainBadgeIcon/ChainBadgeIcon";
 
 const badgeButtonClasses = cva(
   "flex items-center gap-1 rounded-full text-xs text-foreground",
@@ -76,16 +76,7 @@ const ChainBadge = observer(
                   isLoading,
                 })}
               />
-              {isConnected ? (
-                // <img
-                //   className="h-3 w-3"
-                //   src={currentTabData?.favIconUrl}
-                //   alt={currentTabData?.title}
-                // />
-                <Wifi className="h-3 w-3" />
-              ) : (
-                <WifiOff className="h-3 w-3" />
-              )}
+              <ChainBadgeIcon />
               {displayChainName && blockchain.chainName}
             </Button>
           </TooltipTrigger>
