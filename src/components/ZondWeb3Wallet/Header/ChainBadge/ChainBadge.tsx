@@ -55,6 +55,7 @@ const ChainBadge = observer(
     const { zondStore } = useStore();
     const { zondConnection } = zondStore;
     const { isLoading, isConnected, blockchain } = zondConnection;
+    const { chainName } = blockchain;
 
     return (
       <Link to={ROUTES.CHAIN_CONNECTIVITY}>
@@ -77,7 +78,7 @@ const ChainBadge = observer(
                 })}
               />
               <ChainBadgeIcon />
-              {displayChainName && blockchain.chainName}
+              {displayChainName && chainName}
             </Button>
           </TooltipTrigger>
           <TooltipContent side="bottom">
