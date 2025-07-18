@@ -7,9 +7,10 @@ import { MemoryRouter } from "react-router-dom";
 import OtherAccounts from "../OtherAccounts";
 import { TooltipProvider } from "@/components/UI/Tooltip";
 
-jest.mock("../../AccountId/AccountId", () => () => (
-  <div>Mocked Account Id</div>
-));
+jest.mock(
+  "@/components/ZondWeb3Wallet/Body/AccountList/AccountId/AccountId",
+  () => () => <div>Mocked Account Id</div>,
+);
 
 describe("OtherAccounts", () => {
   afterEach(cleanup);

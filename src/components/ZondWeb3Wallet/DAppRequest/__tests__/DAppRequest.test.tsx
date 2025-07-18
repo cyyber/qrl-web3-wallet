@@ -6,9 +6,10 @@ import { cleanup, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import DAppRequest from "../DAppRequest";
 
-jest.mock("../DAppRequestContent/DAppRequestContent", () => () => (
-  <div>Mocked DApp Request Content</div>
-));
+jest.mock(
+  "@/components/ZondWeb3Wallet/DAppRequest/DAppRequestContent/DAppRequestContent",
+  () => () => <div>Mocked DApp Request Content</div>,
+);
 
 describe("DAppRequest", () => {
   afterEach(cleanup);

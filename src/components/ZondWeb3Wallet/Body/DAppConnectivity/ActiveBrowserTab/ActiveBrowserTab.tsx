@@ -71,6 +71,7 @@ const ActiveBrowserTab = observer(() => {
                   className="size-7 hover:bg-accent hover:text-secondary"
                   variant="outline"
                   size="icon"
+                  aria-label="Disconnect"
                   onClick={disconnect}
                 >
                   <Unlink size="16" />

@@ -17,9 +17,10 @@ jest.mock(
   "@/components/ZondWeb3Wallet/Body/Home/AccountCreateImport/AccountCreateImport",
   () => () => <div>Mocked Account Create Import</div>,
 );
-jest.mock("../ConnectionFailed/ConnectionFailed", () => () => (
-  <div>Mocked Connection Failed</div>
-));
+jest.mock(
+  "@/components/ZondWeb3Wallet/Body/Home/ConnectionFailed/ConnectionFailed",
+  () => () => <div>Mocked Connection Failed</div>,
+);
 
 describe("Home", () => {
   afterEach(cleanup);

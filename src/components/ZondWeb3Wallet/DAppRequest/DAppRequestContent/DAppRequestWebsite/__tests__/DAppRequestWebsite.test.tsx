@@ -5,9 +5,10 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import DAppRequestWebsite from "../DAppRequestWebsite";
 
-jest.mock("../DAppRequestFeature/DAppRequestFeature", () => () => (
-  <div>Mocked DApp Request Feature</div>
-));
+jest.mock(
+  "@/components/ZondWeb3Wallet/DAppRequest/DAppRequestContent/DAppRequestWebsite/DAppRequestFeature/DAppRequestFeature",
+  () => () => <div>Mocked DApp Request Feature</div>,
+);
 
 describe("DAppRequestWebsite", () => {
   const renderComponent = (mockedStoreValues = mockedStore()) =>

@@ -6,9 +6,10 @@ import { MemoryRouter } from "react-router-dom";
 import AccountCreateImport from "../AccountCreateImport";
 import { TooltipProvider } from "@/components/UI/Tooltip";
 
-jest.mock("../ActiveAccountDisplay/ActiveAccountDisplay", () => () => (
-  <div>Mocked Active Account Display</div>
-));
+jest.mock(
+  "@/components/ZondWeb3Wallet/Body/Home/AccountCreateImport/ActiveAccountDisplay/ActiveAccountDisplay",
+  () => () => <div>Mocked Active Account Display</div>,
+);
 
 describe("AccountCreateImport", () => {
   afterEach(cleanup);

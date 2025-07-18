@@ -5,12 +5,14 @@ import { cleanup, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import TokensCardContent from "../TokensCardContent";
 
-jest.mock("./../NativeToken/NativeToken", () => () => (
-  <div>Mocked Native token</div>
-));
-jest.mock("./../ZRC20Tokens/ZRC20Tokens", () => () => (
-  <div>Mocked ZRC 20 token</div>
-));
+jest.mock(
+  "@/components/ZondWeb3Wallet/Body/Home/AccountCreateImport/ActiveAccountDisplay/TokensCardContent/NativeToken/NativeToken",
+  () => () => <div>Mocked Native token</div>,
+);
+jest.mock(
+  "@/components/ZondWeb3Wallet/Body/Home/AccountCreateImport/ActiveAccountDisplay/TokensCardContent/ZRC20Tokens/ZRC20Tokens",
+  () => () => <div>Mocked ZRC 20 token</div>,
+);
 
 describe("TokensCardContent", () => {
   afterEach(cleanup);

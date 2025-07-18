@@ -9,9 +9,9 @@ import {
 import { ROUTES } from "@/router/router";
 import { useStore } from "@/stores/store";
 import { cva } from "class-variance-authority";
-import { Unlink } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { Link, useLocation } from "react-router-dom";
+import DAppBadgeIcon from "./DAppBadgeIcon/DAppBadgeIcon";
 
 const badgeButtonClasses = cva(
   "flex items-center gap-1 rounded-full text-xs text-foreground",
@@ -43,7 +43,7 @@ const DAppBadge = observer(() => {
   const location = useLocation();
   const pathName = location.pathname;
   const { dAppRequestStore } = useStore();
-  const { hasDAppConnected, currentTabData } = dAppRequestStore;
+  const { hasDAppConnected } = dAppRequestStore;
 
   return (
     <Link to={ROUTES.DAPP_CONNECTIVITY}>
@@ -61,15 +61,7 @@ const DAppBadge = observer(() => {
                 hasDAppConnected,
               })}
             />
-            {hasDAppConnected && currentTabData?.favIconUrl ? (
-              <img
-                className="h-3 w-3"
-                src={currentTabData?.favIconUrl}
-                alt={currentTabData?.title}
-              />
-            ) : (
-              <Unlink className="h-3 w-3" />
-            )}
+            <DAppBadgeIcon />
           </Button>
         </TooltipTrigger>
         <TooltipContent side="bottom">

@@ -6,12 +6,14 @@ import { cleanup, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import DAppRequestFeature from "../DAppRequestFeature";
 
-jest.mock("../ZondRequestAccount/ZondRequestAccount", () => () => (
-  <div>Mocked Zond Request Account</div>
-));
-jest.mock("../ZondSendTransaction/ZondSendTransaction", () => () => (
-  <div>Mocked Zond Send Transaction</div>
-));
+jest.mock(
+  "@/components/ZondWeb3Wallet/DAppRequest/DAppRequestContent/DAppRequestWebsite/DAppRequestFeature/ZondRequestAccount/ZondRequestAccount",
+  () => () => <div>Mocked Zond Request Account</div>,
+);
+jest.mock(
+  "@/components/ZondWeb3Wallet/DAppRequest/DAppRequestContent/DAppRequestWebsite/DAppRequestFeature/ZondSendTransaction/ZondSendTransaction",
+  () => () => <div>Mocked Zond Send Transaction</div>,
+);
 
 describe("DAppRequestFeature", () => {
   afterEach(cleanup);

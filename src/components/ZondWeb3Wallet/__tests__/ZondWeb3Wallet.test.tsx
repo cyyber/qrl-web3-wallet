@@ -33,7 +33,7 @@ jest.mock("@/components/ZondWeb3Wallet/Body/Body", () => () => (
 jest.mock("@/components/ZondWeb3Wallet/RouteMonitor/RouteMonitor", () => () => (
   <div>Mocked Route Monitor</div>
 ));
-jest.mock("../DAppRequest/DAppRequest", () => () => (
+jest.mock("@/components/ZondWeb3Wallet/DAppRequest/DAppRequest", () => () => (
   <div>Mocked DApp Request</div>
 ));
 

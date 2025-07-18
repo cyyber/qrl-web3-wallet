@@ -14,6 +14,14 @@ jest.mock(
   "@/components/ZondWeb3Wallet/Header/AccountBadge/AccountBadge",
   () => () => <div>Mocked Account Badge</div>,
 );
+jest.mock(
+  "@/components/ZondWeb3Wallet/Header/ChainBadge/ChainBadge",
+  () => () => <div>Mocked Chain Badge</div>,
+);
+jest.mock(
+  "@/components/ZondWeb3Wallet/Header/DAppBadge/DAppBadge",
+  () => () => <div>Mocked DApp Badge</div>,
+);
 
 describe("Header", () => {
   afterEach(cleanup);
@@ -37,10 +45,12 @@ describe("Header", () => {
         screen.getByText("Mocked Zond Web3 Wallet Logo"),
       ).toBeInTheDocument();
       expect(screen.getByText("Mocked Account Badge")).toBeInTheDocument();
+      expect(screen.getByText("Mocked Chain Badge")).toBeInTheDocument();
+      expect(screen.getByText("Mocked DApp Badge")).toBeInTheDocument();
     });
   });
 
-  it("should not render the chain badge component if the connection status is false", async () => {
+  it("should not render the account badge and dapp badge if the connection status is false", async () => {
     const mockedStoreValues = mockedStore({
       zondStore: { zondConnection: { isConnected: false } },
     });
@@ -53,6 +63,8 @@ describe("Header", () => {
       expect(
         screen.queryByText("Mocked Account Badge"),
       ).not.toBeInTheDocument();
+      expect(screen.queryByText("Mocked DApp Badge")).not.toBeInTheDocument();
+      expect(screen.getByText("Mocked Chain Badge")).toBeInTheDocument();
     });
   });
 });

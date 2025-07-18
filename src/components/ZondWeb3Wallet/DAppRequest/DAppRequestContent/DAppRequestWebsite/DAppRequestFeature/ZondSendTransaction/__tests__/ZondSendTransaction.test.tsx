@@ -6,7 +6,7 @@ import { MemoryRouter } from "react-router-dom";
 import ZondSendTransaction from "../ZondSendTransaction";
 
 jest.mock(
-  "../ZondSendTransactionForContent/ZondSendTransactionForContent",
+  "@/components/ZondWeb3Wallet/DAppRequest/DAppRequestContent/DAppRequestWebsite/DAppRequestFeature/ZondSendTransaction/ZondSendTransactionForContent/ZondSendTransactionForContent",
   () => () => <div>Mocked Zond Send Transaction For Content</div>,
 );
 

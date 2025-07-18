@@ -8,9 +8,10 @@ import ActiveAccount from "../ActiveAccount";
 import { TooltipProvider } from "@/components/UI/Tooltip";
 import { ROUTES } from "@/router/router";
 
-jest.mock("../../AccountId/AccountId", () => () => (
-  <div>Mocked Account Id</div>
-));
+jest.mock(
+  "@/components/ZondWeb3Wallet/Body/AccountList/AccountId/AccountId",
+  () => () => <div>Mocked Account Id</div>,
+);
 
 describe("ActiveAccount", () => {
   afterEach(cleanup);

@@ -8,9 +8,10 @@ import ChainBadge from "../ChainBadge";
 import { TooltipProvider } from "@/components/UI/Tooltip";
 import { ROUTES } from "@/router/router";
 
-jest.mock("../ChainBadgeIcon/ChainBadgeIcon", () => () => (
-  <div>Mocked Chain Badge Icon</div>
-));
+jest.mock(
+  "@/components/ZondWeb3Wallet/Header/ChainBadge/ChainBadgeIcon/ChainBadgeIcon",
+  () => () => <div>Mocked Chain Badge Icon</div>,
+);
 
 const mockedUseLocation = jest.fn(() => ({ pathname: "/" }));
 jest.mock("react-router-dom", () => {

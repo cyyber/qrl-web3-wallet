@@ -7,15 +7,17 @@ import DAppRequestContent from "../DAppRequestContent";
 import { TooltipProvider } from "@/components/UI/Tooltip";
 
 jest.mock(
-  "../DAppRequestConnectionNotAvailable/DAppRequestConnectionNotAvailable",
+  "@/components/ZondWeb3Wallet/DAppRequest/DAppRequestContent/DAppRequestConnectionNotAvailable/DAppRequestConnectionNotAvailable",
   () => () => <div>Mocked DApp Request Connection Not Available</div>,
 );
-jest.mock("../DAppRequestCompleted/DAppRequestCompleted", () => () => (
-  <div>Mocked DApp Request Completed</div>
-));
-jest.mock("../../../Header/ChainBadge/ChainBadge", () => () => (
-  <div>Mocked ChainBadge</div>
-));
+jest.mock(
+  "@/components/ZondWeb3Wallet/DAppRequest/DAppRequestContent/DAppRequestCompleted/DAppRequestCompleted",
+  () => () => <div>Mocked DApp Request Completed</div>,
+);
+jest.mock(
+  "@/components/ZondWeb3Wallet/Header/ChainBadge/ChainBadge",
+  () => () => <div>Mocked ChainBadge</div>,
+);
 
 describe("DAppRequestContent", () => {
   const renderComponent = (mockedStoreValues = mockedStore()) =>
