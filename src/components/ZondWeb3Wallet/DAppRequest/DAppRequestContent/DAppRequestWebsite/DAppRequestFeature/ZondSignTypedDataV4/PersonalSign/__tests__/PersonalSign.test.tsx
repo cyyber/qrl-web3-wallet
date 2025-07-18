@@ -5,6 +5,7 @@ import { cleanup, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import PersonalSign from "../PersonalSign";
 import userEvent from "@testing-library/user-event";
+import { TooltipProvider } from "@/components/UI/Tooltip";
 
 describe("PersonalSign", () => {
   afterEach(cleanup);
@@ -17,7 +18,9 @@ describe("PersonalSign", () => {
     render(
       <StoreProvider value={mockedStoreValues}>
         <MemoryRouter>
-          <PersonalSign />
+          <TooltipProvider>
+            <PersonalSign />
+          </TooltipProvider>
         </MemoryRouter>
       </StoreProvider>,
     );

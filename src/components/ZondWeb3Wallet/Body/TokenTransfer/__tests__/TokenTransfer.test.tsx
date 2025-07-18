@@ -31,18 +31,14 @@ describe("TokenTransfer", () => {
   it("should render the account details component", () => {
     renderComponent();
 
-    expect(screen.getAllByRole("heading", { level: 3 })[0]).toHaveTextContent(
-      "Active account",
-    );
+    expect(screen.getByText("Active account")).toBeInTheDocument();
     expect(screen.getByText("Account address")).toBeInTheDocument();
     expect(
       screen.getByText("Z 20B71 4091c F2a62 DADda 28478 03e3f 1B9D2 D3779"),
     ).toBeInTheDocument();
     expect(screen.getByText("Balance")).toBeInTheDocument();
     expect(screen.getByText("0.0 ZND")).toBeInTheDocument();
-    expect(screen.getAllByRole("heading", { level: 3 })[1]).toHaveTextContent(
-      "Make a transaction",
-    );
+    expect(screen.getByText("Make a transaction")).toBeInTheDocument();
     expect(screen.getByText("Send to")).toBeInTheDocument();
     const receiverAddressField = screen.getByRole("textbox", {
       name: "receiverAddress",

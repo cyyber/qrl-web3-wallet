@@ -7,6 +7,7 @@ import { ComponentProps } from "react";
 import { MemoryRouter } from "react-router-dom";
 import { SEND_TRANSACTION_TYPES } from "../../ZondSendTransaction";
 import ZondSendTransactionForContent from "../ZondSendTransactionForContent";
+import { TooltipProvider } from "@/components/UI/Tooltip";
 
 describe("ZondSendTransactionForContent", () => {
   afterEach(cleanup);
@@ -20,7 +21,9 @@ describe("ZondSendTransactionForContent", () => {
     render(
       <StoreProvider value={mockedStoreValues}>
         <MemoryRouter>
-          <ZondSendTransactionForContent {...mockedProps} />
+          <TooltipProvider>
+            <ZondSendTransactionForContent {...mockedProps} />
+          </TooltipProvider>
         </MemoryRouter>
       </StoreProvider>,
     );

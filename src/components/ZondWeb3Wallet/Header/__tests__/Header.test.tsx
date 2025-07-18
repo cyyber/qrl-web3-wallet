@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, jest } from "@jest/globals";
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import Header from "../Header";
+import { TooltipProvider } from "@/components/UI/Tooltip";
 
 jest.mock(
   "@/components/ZondWeb3Wallet/Header/ZondWeb3WalletLogo/ZondWeb3WalletLogo",
@@ -21,7 +22,9 @@ describe("Header", () => {
     render(
       <StoreProvider value={mockedStoreValues}>
         <MemoryRouter>
-          <Header />
+          <TooltipProvider>
+            <Header />
+          </TooltipProvider>
         </MemoryRouter>
       </StoreProvider>,
     );

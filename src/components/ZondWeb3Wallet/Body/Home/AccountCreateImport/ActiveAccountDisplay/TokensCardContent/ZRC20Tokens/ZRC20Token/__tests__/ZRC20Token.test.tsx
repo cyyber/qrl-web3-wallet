@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it } from "@jest/globals";
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import ZRC20Token from "../ZRC20Token";
+import { TooltipProvider } from "@/components/UI/Tooltip";
 
 describe("ERC20Token", () => {
   afterEach(cleanup);
@@ -12,7 +13,9 @@ describe("ERC20Token", () => {
     render(
       <StoreProvider value={mockedStoreValues}>
         <MemoryRouter>
-          <ZRC20Token contractAddress="0x0db3981cb93db985e4e3a62ff695f7a1b242dd7c" />
+          <TooltipProvider>
+            <ZRC20Token contractAddress="0x0db3981cb93db985e4e3a62ff695f7a1b242dd7c" />
+          </TooltipProvider>
         </MemoryRouter>
       </StoreProvider>,
     );

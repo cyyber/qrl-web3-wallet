@@ -1,16 +1,30 @@
 import { mockedStore } from "@/__mocks__/mockedStore";
 import { StoreProvider } from "@/stores/store";
-import { describe, expect, it } from "@jest/globals";
+import { describe, expect, it, jest } from "@jest/globals";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import DAppRequestContent from "../DAppRequestContent";
+import { TooltipProvider } from "@/components/UI/Tooltip";
+
+jest.mock(
+  "../DAppRequestConnectionNotAvailable/DAppRequestConnectionNotAvailable",
+  () => () => <div>Mocked DApp Request Connection Not Available</div>,
+);
+jest.mock("../DAppRequestCompleted/DAppRequestCompleted", () => () => (
+  <div>Mocked DApp Request Completed</div>
+));
+jest.mock("../../../Header/ChainBadge/ChainBadge", () => () => (
+  <div>Mocked ChainBadge</div>
+));
 
 describe("DAppRequestContent", () => {
   const renderComponent = (mockedStoreValues = mockedStore()) =>
     render(
       <StoreProvider value={mockedStoreValues}>
         <MemoryRouter>
-          <DAppRequestContent />
+          <TooltipProvider>
+            <DAppRequestContent />
+          </TooltipProvider>
         </MemoryRouter>
       </StoreProvider>,
     );
@@ -22,13 +36,28 @@ describe("DAppRequestContent", () => {
       }),
     );
 
-    expect(screen.getByText("Connection not available!")).toBeInTheDocument();
+    expect(
+      screen.getByText("Mocked DApp Request Connection Not Available"),
+    ).toBeInTheDocument();
+  });
+
+  it("should display dapp request completed component if the request has completed", async () => {
+    renderComponent(
+      mockedStore({
+        zondStore: { zondConnection: { isConnected: true } },
+        dAppRequestStore: { approvalProcessingStatus: { hasCompleted: true } },
+      }),
+    );
+
+    expect(
+      screen.getByText("Mocked DApp Request Completed"),
+    ).toBeInTheDocument();
   });
 
   it("should render the dapp request content component", async () => {
     renderComponent();
 
-    expect(screen.getByRole("button", { name: "Local" })).toBeInTheDocument();
+    expect(screen.getByText("Mocked ChainBadge")).toBeInTheDocument();
     expect(screen.getByText("Your permission required")).toBeInTheDocument();
     expect(
       screen.getByText(

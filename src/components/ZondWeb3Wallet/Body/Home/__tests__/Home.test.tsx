@@ -14,10 +14,6 @@ jest.mock("lucide-react", () => {
   };
 });
 jest.mock(
-  "@/components/ZondWeb3Wallet/Header/ChainBadge/ChainBadge",
-  () => () => <div>Mocked Chain Badge</div>,
-);
-jest.mock(
   "@/components/ZondWeb3Wallet/Body/Home/AccountCreateImport/AccountCreateImport",
   () => () => <div>Mocked Account Create Import</div>,
 );
@@ -37,6 +33,14 @@ describe("Home", () => {
       </StoreProvider>,
     );
 
+  it("should render the zond web3 wallet text", () => {
+    renderComponent();
+
+    expect(screen.getByText("Zond")).toBeInTheDocument();
+    expect(screen.getByText("Web3")).toBeInTheDocument();
+    expect(screen.getByText("Wallet")).toBeInTheDocument();
+  });
+
   it("should render the loader component if the connection is loading", () => {
     renderComponent(
       mockedStore({ zondStore: { zondConnection: { isLoading: true } } }),
@@ -45,19 +49,10 @@ describe("Home", () => {
     expect(screen.getByText("Mocked Loader")).toBeInTheDocument();
   });
 
-  it("should always render the chain badge component once the loading is completed", async () => {
-    renderComponent();
-
-    await waitFor(() => {
-      expect(screen.getByText("Mocked Chain Badge")).toBeInTheDocument();
-    });
-  });
-
   it("should render the account create import component if connected to the blockchain", async () => {
     renderComponent();
 
     await waitFor(() => {
-      expect(screen.getByText("Mocked Chain Badge")).toBeInTheDocument();
       expect(
         screen.getByText("Mocked Account Create Import"),
       ).toBeInTheDocument();
@@ -73,7 +68,6 @@ describe("Home", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText("Mocked Chain Badge")).toBeInTheDocument();
       expect(
         screen.queryByText("Mocked Account Create Import"),
       ).not.toBeInTheDocument();

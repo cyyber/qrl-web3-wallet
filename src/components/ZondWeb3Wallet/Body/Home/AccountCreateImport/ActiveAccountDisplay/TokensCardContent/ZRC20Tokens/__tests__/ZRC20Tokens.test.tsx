@@ -5,6 +5,7 @@ import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import { ComponentProps } from "react";
 import { MemoryRouter } from "react-router-dom";
 import ZRC20Tokens from "../ZRC20Tokens";
+import { TooltipProvider } from "@/components/UI/Tooltip";
 
 jest.mock("@/utilities/storageUtil", () => {
   const originalModule = jest.requireActual<
@@ -70,7 +71,9 @@ describe("ZRC20Tokens", () => {
     render(
       <StoreProvider value={mockedStoreValues}>
         <MemoryRouter>
-          <ZRC20Tokens {...mockedProps} />
+          <TooltipProvider>
+            <ZRC20Tokens {...mockedProps} />
+          </TooltipProvider>
         </MemoryRouter>
       </StoreProvider>,
     );

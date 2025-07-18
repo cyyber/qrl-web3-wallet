@@ -5,6 +5,7 @@ import { cleanup, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 import ZondSignTypedDataV4Content from "../ZondSignTypedDataV4Content";
+import { TooltipProvider } from "@/components/UI/Tooltip";
 
 describe("ZondSignTypedDataV4Content", () => {
   afterEach(cleanup);
@@ -79,7 +80,9 @@ describe("ZondSignTypedDataV4Content", () => {
     render(
       <StoreProvider value={mockedStoreValues}>
         <MemoryRouter>
-          <ZondSignTypedDataV4Content />
+          <TooltipProvider>
+            <ZondSignTypedDataV4Content />
+          </TooltipProvider>
         </MemoryRouter>
       </StoreProvider>,
     );
