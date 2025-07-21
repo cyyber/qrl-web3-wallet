@@ -83,6 +83,7 @@ const OtherChainItem = observer(
                 className="size-7 hover:bg-accent hover:text-secondary"
                 variant="outline"
                 size="icon"
+                aria-label="Connect chain"
                 onClick={() => {
                   connectChain(chainId);
                 }}
@@ -100,6 +101,7 @@ const OtherChainItem = observer(
                 className="size-7 hover:bg-accent hover:text-secondary"
                 variant="outline"
                 size="icon"
+                aria-label="More"
               >
                 <EllipsisVertical size="16" />
               </Button>
@@ -109,11 +111,12 @@ const OtherChainItem = observer(
                 <Link
                   to={ROUTES.ADD_EDIT_CHAIN}
                   state={{ hasState: true, chainId }}
+                  aria-label="Edit chain"
                 >
                   <DropdownMenuItem className="cursor-pointer data-[highlighted]:text-secondary">
                     <div className="flex gap-2">
                       <Pencil size="16" />
-                      <span>Edit chain</span>
+                      <button aria-label="Edit chain">Edit chain</button>
                     </div>
                   </DropdownMenuItem>
                 </Link>
@@ -126,7 +129,7 @@ const OtherChainItem = observer(
                 >
                   <div className="flex gap-2">
                     <Trash size="16" />
-                    <span>Delete chain</span>
+                    <button aria-label="Delete chain">Delete chain</button>
                   </div>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
@@ -142,7 +145,12 @@ const OtherChainItem = observer(
               </DialogHeader>
               <DialogFooter className="flex flex-row gap-4">
                 <DialogClose asChild>
-                  <Button className="w-full" type="button" variant="outline">
+                  <Button
+                    className="w-full"
+                    type="button"
+                    variant="outline"
+                    aria-label="Cancel Delete"
+                  >
                     <X className="mr-2 h-4 w-4" />
                     No
                   </Button>
@@ -150,6 +158,7 @@ const OtherChainItem = observer(
                 <Button
                   className="w-full"
                   type="button"
+                  aria-label="Confirm Delete"
                   onClick={() => {
                     deleteChain(chainId);
                   }}

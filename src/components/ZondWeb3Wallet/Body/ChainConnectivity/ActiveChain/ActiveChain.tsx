@@ -64,11 +64,13 @@ const ActiveChain = observer(() => {
               <Link
                 to={ROUTES.ADD_EDIT_CHAIN}
                 state={{ hasState: true, chainId }}
+                aria-label="Edit chain"
               >
                 <Button
                   className="size-7 hover:bg-accent hover:text-secondary"
                   variant="outline"
                   size="icon"
+                  aria-label="Edit chain"
                 >
                   <Pencil size="16" />
                 </Button>

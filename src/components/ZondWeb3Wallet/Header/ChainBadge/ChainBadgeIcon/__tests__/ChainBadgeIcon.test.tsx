@@ -78,6 +78,7 @@ describe("ChainBadgeIcon", () => {
 
     const img = screen.getByRole("img");
     fireEvent.error(img);
+    expect(img).not.toBeInTheDocument();
     expect(screen.queryByTestId("loader-icon")).not.toBeInTheDocument();
     expect(screen.queryByTestId("wifi-off-icon")).not.toBeInTheDocument();
     expect(screen.getByTestId("network-icon")).toBeInTheDocument();

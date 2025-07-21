@@ -37,6 +37,7 @@ const ActiveAccount = observer(() => {
                 className="w-full"
                 to={ROUTES.TOKEN_TRANSFER}
                 state={{ shouldStartFresh: true }}
+                aria-label="Send Zond"
               >
                 <Tooltip delayDuration={0}>
                   <TooltipTrigger asChild>
