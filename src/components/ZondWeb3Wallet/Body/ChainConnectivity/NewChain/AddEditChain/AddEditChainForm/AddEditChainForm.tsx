@@ -279,7 +279,7 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
                       type="text"
                     />
                   </FormControl>
-                  <FormDescription>Curreny of this blockchain</FormDescription>
+                  <FormDescription>Currency of this blockchain</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -337,6 +337,7 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
               disabled={isSubmitting || !isValid}
               className="w-full"
               type="submit"
+              aria-label="Add/edit chain"
             >
               {isSubmitting ? (
                 <Loader className="mr-2 h-4 w-4 animate-spin" />
