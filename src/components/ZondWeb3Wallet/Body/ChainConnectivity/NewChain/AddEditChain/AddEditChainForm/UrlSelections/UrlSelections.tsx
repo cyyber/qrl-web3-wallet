@@ -65,6 +65,7 @@ const UrlSelections = ({
                       variant="outline"
                       size="icon"
                       type="button"
+                      aria-label="Default URL"
                       onClick={() => setDefaultUrl(urlItem)}
                     >
                       <Star
@@ -87,6 +88,7 @@ const UrlSelections = ({
                       disabled={!canBeEmpty && urls.length === 1}
                       size="icon"
                       type="button"
+                      aria-label="Delete URL"
                       onClick={() => {
                         deleteUrl(urlItem);
                       }}

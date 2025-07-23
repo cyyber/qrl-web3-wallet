@@ -1,20 +1,14 @@
 import { mockedStore } from "@/__mocks__/mockedStore";
+import { TooltipProvider } from "@/components/UI/Tooltip";
+import { BlockchainDataType } from "@/configuration/zondBlockchainConfig";
 import { StoreProvider } from "@/stores/store";
 import { afterEach, describe, expect, it, jest } from "@jest/globals";
-import {
-  cleanup,
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-} from "@testing-library/react";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { ComponentProps } from "react";
 import { MemoryRouter } from "react-router-dom";
 import AddEditChainForm from "../AddEditChainForm";
-import { TooltipProvider } from "@/components/UI/Tooltip";
-import { ComponentProps } from "react";
-import userEvent from "@testing-library/user-event";
 import StorageUtil from "@/utilities/storageUtil";
-import { BlockchainDataType } from "@/configuration/zondBlockchainConfig";
 
 jest.mock("@/utilities/storageUtil", () => {
   const originalModule = jest.requireActual<

@@ -75,6 +75,7 @@ const AddUrlItem = ({ addUrl }: AddUrlItemProps) => {
                     variant="outline"
                     size="icon"
                     type="button"
+                    aria-label="Add URL"
                     onClick={() => {
                       setOpen(true);
                     }}
@@ -114,7 +115,12 @@ const AddUrlItem = ({ addUrl }: AddUrlItemProps) => {
               />
               <DialogFooter className="flex flex-row gap-4">
                 <DialogClose asChild>
-                  <Button className="w-full" type="button" variant="outline">
+                  <Button
+                    className="w-full"
+                    type="button"
+                    variant="outline"
+                    aria-label="Cancel"
+                  >
                     <X className="mr-2 h-4 w-4" />
                     Cancel
                   </Button>
@@ -123,6 +129,7 @@ const AddUrlItem = ({ addUrl }: AddUrlItemProps) => {
                   className="w-full"
                   type="button"
                   disabled={isSubmitting || !isValid}
+                  aria-label="Add"
                   onClick={handleSubmit(onSubmit)}
                 >
                   <Plus className="mr-2 h-4 w-4" />
