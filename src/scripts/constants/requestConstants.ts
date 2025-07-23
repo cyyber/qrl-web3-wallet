@@ -44,6 +44,7 @@ export const UNRESTRICTED_METHODS = Object.freeze({
 // List of methods that require user interaction (Approval/Rejection by the user)
 export const RESTRICTED_METHODS = Object.freeze({
   PERSONAL_SIGN: "personal_sign",
+  WALLET_ADD_ZOND_CHAIN: "wallet_addZondChain",
   ZOND_REQUEST_ACCOUNTS: "zond_requestAccounts",
   ZOND_SEND_TRANSACTION: "zond_sendTransaction",
   ZOND_SIGN_TYPED_DATA_V4: "zond_signTypedData_v4",

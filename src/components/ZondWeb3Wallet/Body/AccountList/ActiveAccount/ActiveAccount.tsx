@@ -37,7 +37,7 @@ const ActiveAccount = observer(() => {
                 className="w-full"
                 to={ROUTES.TOKEN_TRANSFER}
                 state={{ shouldStartFresh: true }}
-                aria-label="Send Zond"
+                aria-label="Send Quanta"
               >
                 <Tooltip delayDuration={0}>
                   <TooltipTrigger asChild>
@@ -45,13 +45,13 @@ const ActiveAccount = observer(() => {
                       className="size-7 hover:bg-accent hover:text-secondary"
                       variant="outline"
                       size="icon"
-                      aria-label="Send Zond"
+                      aria-label="Send Quanta"
                     >
                       <Send size="16" />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent side="left">
-                    <Label>Send Zond</Label>
+                    <Label>Send Quanta</Label>
                   </TooltipContent>
                 </Tooltip>
               </Link>

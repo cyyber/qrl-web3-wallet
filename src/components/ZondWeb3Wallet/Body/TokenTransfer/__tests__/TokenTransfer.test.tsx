@@ -57,14 +57,14 @@ describe("TokenTransfer", () => {
     const cancelButton = screen.getByRole("button", { name: "Cancel" });
     expect(cancelButton).toBeInTheDocument();
     expect(cancelButton).toBeEnabled();
-    const sendZondButton = screen.getByRole("button", {
+    const sendQuantaButton = screen.getByRole("button", {
       name: "Send ZND",
     });
-    expect(sendZondButton).toBeInTheDocument();
-    expect(sendZondButton).toBeDisabled();
+    expect(sendQuantaButton).toBeInTheDocument();
+    expect(sendQuantaButton).toBeDisabled();
   });
 
-  it("should enable the send zond button once receiver address, amount and mnemonic phrases are entered", async () => {
+  it("should enable the send quanta button once receiver address, amount and mnemonic phrases are entered", async () => {
     renderComponent();
 
     const receiverAddressField = screen.getByRole("textbox", {
@@ -88,11 +88,11 @@ describe("TokenTransfer", () => {
       },
       { timeout: 5000 },
     );
-    const sendZondButton = screen.getByRole("button", {
+    const sendQuantaButton = screen.getByRole("button", {
       name: "Send ZND",
     });
-    expect(sendZondButton).toBeInTheDocument();
-    expect(sendZondButton).toBeEnabled();
+    expect(sendQuantaButton).toBeInTheDocument();
+    expect(sendQuantaButton).toBeEnabled();
   });
 
   it("should display the error message if amount is not valid", async () => {
@@ -176,13 +176,13 @@ describe("TokenTransfer", () => {
         "knight paddy action glow play chew lame mature sock ill deadly olive blink marble breach mile hey mature tacit mean polo crawl khaya stud number speed viking windy jump subtle mildew sewage",
       );
     });
-    const sendZondButton = screen.getByRole("button", {
+    const sendQuantaButton = screen.getByRole("button", {
       name: "Send ZND",
     });
-    expect(sendZondButton).toBeInTheDocument();
-    expect(sendZondButton).toBeEnabled();
+    expect(sendQuantaButton).toBeInTheDocument();
+    expect(sendQuantaButton).toBeEnabled();
     await act(async () => {
-      await userEvent.click(sendZondButton);
+      await userEvent.click(sendQuantaButton);
     });
     expect(screen.getByText("Transaction completed")).toBeInTheDocument();
   });

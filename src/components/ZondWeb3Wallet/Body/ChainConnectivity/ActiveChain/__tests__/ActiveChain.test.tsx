@@ -37,7 +37,7 @@ describe("ActiveChain", () => {
     const link = screen.getByRole("link", { name: "Edit chain" });
     expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute("href", ROUTES.ADD_EDIT_CHAIN);
-    const sendZondButton = screen.getByRole("button", { name: "Edit chain" });
-    expect(sendZondButton).toBeInTheDocument();
+    const editChainButton = screen.getByRole("button", { name: "Edit chain" });
+    expect(editChainButton).toBeInTheDocument();
   });
 });

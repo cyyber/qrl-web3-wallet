@@ -32,7 +32,7 @@ describe("AccountCreateImport", () => {
 
     expect(screen.queryByText("Active account")).not.toBeInTheDocument();
     expect(
-      screen.queryByRole("button", { name: "Send Zond" }),
+      screen.queryByRole("button", { name: "Send Quanta" }),
     ).not.toBeInTheDocument();
     expect(screen.getByRole("heading", { level: 3 })).toHaveTextContent(
       "Let's start",
@@ -78,8 +78,8 @@ describe("AccountCreateImport", () => {
     expect(screen.getByRole("paragraph")).toHaveTextContent(
       "You are connected to the blockchain. Create a new account or import an existing account.",
     );
-    const sendZondButton = screen.getByRole("button", {
-      name: "Send Zond",
+    const sendQuantaButton = screen.getByRole("button", {
+      name: "Send Quanta",
     });
     const createNewButton = screen.getByRole("button", {
       name: "Create a new account",
@@ -87,8 +87,8 @@ describe("AccountCreateImport", () => {
     const importButton = screen.getByRole("button", {
       name: "Import an existing account",
     });
-    expect(sendZondButton).toBeInTheDocument();
-    expect(sendZondButton).toBeEnabled();
+    expect(sendQuantaButton).toBeInTheDocument();
+    expect(sendQuantaButton).toBeEnabled();
     expect(createNewButton).toBeInTheDocument();
     expect(createNewButton).toBeEnabled();
     expect(importButton).toBeInTheDocument();

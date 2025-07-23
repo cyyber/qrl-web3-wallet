@@ -63,7 +63,7 @@ class ZondStore {
   async initializeBlockchain() {
     await this.refreshBlockchainData();
     const zondHttpProvider = new Web3.providers.HttpProvider(
-      this.zondConnection.blockchain.defaultRpcUrl,
+      this.zondConnection.blockchain.defaultRpcUrl || "http://localhost",
     );
     const { zond } = new Web3({ provider: zondHttpProvider });
     this.zondInstance = zond;

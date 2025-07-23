@@ -69,7 +69,7 @@ const AccountCreateImport = observer(() => {
               >
                 <Button className="w-full" type="button">
                   <Send className="mr-2 h-4 w-4" />
-                  Send Zond
+                  Send Quanta
                 </Button>
               </Link>
             </CardFooter>

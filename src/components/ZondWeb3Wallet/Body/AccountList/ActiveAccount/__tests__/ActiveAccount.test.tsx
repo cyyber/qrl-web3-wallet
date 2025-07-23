@@ -40,11 +40,13 @@ describe("ActiveAccount", () => {
 
     expect(screen.getByText("Active account")).toBeInTheDocument();
     expect(screen.getByText("Mocked Account Id")).toBeInTheDocument();
-    const link = screen.getByRole("link", { name: "Send Zond" });
+    const link = screen.getByRole("link", { name: "Send Quanta" });
     expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute("href", ROUTES.TOKEN_TRANSFER);
-    const sendZondButton = screen.getByRole("button", { name: "Send Zond" });
-    expect(sendZondButton).toBeInTheDocument();
+    const sendQuantaButton = screen.getByRole("button", {
+      name: "Send Quanta",
+    });
+    expect(sendQuantaButton).toBeInTheDocument();
     const copyButton = screen.getByRole("button", { name: "Copy Address" });
     expect(copyButton).toBeInTheDocument();
   });
