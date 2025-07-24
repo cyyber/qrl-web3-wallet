@@ -20,7 +20,7 @@ import { BlockchainDataType } from "@/configuration/zondBlockchainConfig";
 import { ROUTES } from "@/router/router";
 import StorageUtil from "@/utilities/storageUtil";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader, Pencil, Plus } from "lucide-react";
+import { Loader, Pencil, Plus, X } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -333,7 +333,18 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
               <div className="text-sm font-bold text-destructive">{error}</div>
             )}
           </CardContent>
-          <CardFooter>
+          <CardFooter className="gap-4">
+            <Button
+              className="w-full"
+              type="button"
+              variant="outline"
+              onClick={() => {
+                navigate(ROUTES.CHAIN_CONNECTIVITY);
+              }}
+            >
+              <X className="mr-2 h-4 w-4" />
+              Cancel
+            </Button>
             <Button
               disabled={isSubmitting || !isValid}
               className="w-full"
