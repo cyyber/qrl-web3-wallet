@@ -24,7 +24,9 @@ const ZOND_TESTNET_DATA = {
   iconUrls: ["icons/chains/zond_testnet.svg"],
 };
 
-export type BlockchainDataType = typeof ZOND_MAINNET_DATA & {
+export type BlockchainBaseDataType = typeof ZOND_MAINNET_DATA;
+
+export type BlockchainAdditionalDataType = {
   defaultRpcUrl: string;
   defaultBlockExplorerUrl: string;
   defaultIconUrl: string;
@@ -32,6 +34,9 @@ export type BlockchainDataType = typeof ZOND_MAINNET_DATA & {
   defaultWsRpcUrl: string;
   isCustomChain: boolean;
 };
+
+export type BlockchainDataType = BlockchainBaseDataType &
+  BlockchainAdditionalDataType;
 
 export const ZOND_BLOCKCHAINS: BlockchainDataType[] = [
   {

@@ -1,4 +1,9 @@
-import { DEFAULT_BLOCKCHAIN } from "@/configuration/zondBlockchainConfig";
+import {
+  BlockchainAdditionalDataType,
+  BlockchainBaseDataType,
+  BlockchainDataType,
+  DEFAULT_BLOCKCHAIN,
+} from "@/configuration/zondBlockchainConfig";
 import { NATIVE_TOKEN_UNITS_OF_GAS } from "@/constants/nativeToken";
 import {
   ZRC_20_CONTRACT_ABI,
@@ -71,6 +76,38 @@ class ZondStore {
     await this.fetchZondConnection();
     await this.fetchAccounts();
     await this.validateActiveAccount();
+  }
+
+  async addChain(
+    chainData: BlockchainBaseDataType,
+    additionalChainData: BlockchainAdditionalDataType,
+  ) {
+    const newChain: BlockchainDataType = {
+      ...chainData,
+      ...additionalChainData,
+    };
+    const blockchains = await StorageUtil.getAllBlockChains();
+    const chainFound = !!blockchains.find(
+      (chain) => chain.chainId.toLowerCase() === newChain.chainId.toLowerCase(),
+    );
+    return { chainFound, updatedChainList: [...blockchains, newChain] };
+  }
+
+  async editChain(
+    chainData: BlockchainBaseDataType,
+    additionalChainData: BlockchainAdditionalDataType,
+  ) {
+    const editedChain = {
+      ...chainData,
+      ...additionalChainData,
+    };
+    const blockchains = await StorageUtil.getAllBlockChains();
+    const updatedChainList: BlockchainDataType[] = blockchains.map((chain) =>
+      chain.chainId.toLowerCase() === editedChain?.chainId?.toLowerCase()
+        ? { ...chain, ...editedChain }
+        : chain,
+    );
+    return { updatedChainList };
   }
 
   async refreshBlockchainData() {

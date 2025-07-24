@@ -44,7 +44,7 @@ const FormSchema = z.object({
 const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
   const navigate = useNavigate();
   const { zondStore } = useStore();
-  const { refreshBlockchainData } = zondStore;
+  const { refreshBlockchainData, addChain, editChain } = zondStore;
 
   const [rpcUrls, setRpcUrls] = useState<string[]>([]);
   const [defaultRpcUrl, setDefaultRpcUrl] = useState("");
@@ -118,28 +118,28 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
     );
   }, [iconUrls]);
 
-  const addchain = async (formData: z.infer<typeof FormSchema>) => {
-    const newChain: BlockchainDataType = {
-      chainName: formData.chainName,
-      chainId: "0x".concat(formData.chainId.toString(16)),
-      nativeCurrency: {
-        name: formData.currencyName,
-        symbol: formData.currencySymbol,
-        decimals: formData.currencyDecimals,
+  const addBlockchain = async (formData: z.infer<typeof FormSchema>) => {
+    const { chainFound, updatedChainList } = await addChain(
+      {
+        chainName: formData.chainName,
+        chainId: "0x".concat(formData.chainId.toString(16)),
+        nativeCurrency: {
+          name: formData.currencyName,
+          symbol: formData.currencySymbol,
+          decimals: formData.currencyDecimals,
+        },
+        rpcUrls,
+        blockExplorerUrls,
+        iconUrls,
       },
-      isCustomChain: true,
-      isTestnet: false,
-      defaultWsRpcUrl: "http://127.0.0.1:8545",
-      rpcUrls,
-      defaultRpcUrl,
-      blockExplorerUrls,
-      defaultBlockExplorerUrl,
-      iconUrls,
-      defaultIconUrl,
-    };
-    const blockchains = await StorageUtil.getAllBlockChains();
-    const chainFound = blockchains.find(
-      (chain) => chain.chainId.toLowerCase() === newChain.chainId.toLowerCase(),
+      {
+        defaultRpcUrl,
+        defaultBlockExplorerUrl,
+        defaultIconUrl,
+        isTestnet: false,
+        defaultWsRpcUrl: "http://127.0.0.1:8545",
+        isCustomChain: true,
+      },
     );
     if (chainFound) {
       setError(
@@ -148,34 +148,35 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
       return;
     }
 
-    await StorageUtil.setAllBlockChains([...blockchains, newChain]);
+    await StorageUtil.setAllBlockChains(updatedChainList);
     navigate(ROUTES.CHAIN_CONNECTIVITY);
   };
 
-  const editChain = async (formData: z.infer<typeof FormSchema>) => {
-    const editedChain = {
-      chainName: formData.chainName,
-      chainId: "0x".concat(formData.chainId.toString(16)),
-      nativeCurrency: {
-        name: formData.currencyName,
-        symbol: formData.currencySymbol,
-        decimals: formData.currencyDecimals,
+  const editBlockchain = async (formData: z.infer<typeof FormSchema>) => {
+    const { updatedChainList } = await editChain(
+      {
+        chainName: formData.chainName,
+        chainId: "0x".concat(formData.chainId.toString(16)),
+        nativeCurrency: {
+          name: formData.currencyName,
+          symbol: formData.currencySymbol,
+          decimals: formData.currencyDecimals,
+        },
+        rpcUrls,
+        blockExplorerUrls,
+        iconUrls,
       },
-      rpcUrls,
-      defaultRpcUrl,
-      blockExplorerUrls,
-      defaultBlockExplorerUrl,
-      iconUrls,
-      defaultIconUrl,
-    };
-    const blockchains = await StorageUtil.getAllBlockChains();
-    const updatedChains: BlockchainDataType[] = blockchains.map((chain) =>
-      chain.chainId.toLowerCase() === editedChain?.chainId?.toLowerCase()
-        ? { ...chain, ...editedChain }
-        : chain,
+      {
+        defaultRpcUrl,
+        defaultBlockExplorerUrl,
+        defaultIconUrl,
+        isTestnet: false,
+        defaultWsRpcUrl: "http://127.0.0.1:8545",
+        isCustomChain: true,
+      },
     );
 
-    await StorageUtil.setAllBlockChains(updatedChains);
+    await StorageUtil.setAllBlockChains(updatedChainList);
     navigate(ROUTES.CHAIN_CONNECTIVITY);
     await refreshBlockchainData();
   };
@@ -183,9 +184,9 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
   async function onSubmit(formData: z.infer<typeof FormSchema>) {
     setError("");
     if (isChainEdit) {
-      await editChain(formData);
+      await editBlockchain(formData);
     } else {
-      await addchain(formData);
+      await addBlockchain(formData);
     }
   }
 
