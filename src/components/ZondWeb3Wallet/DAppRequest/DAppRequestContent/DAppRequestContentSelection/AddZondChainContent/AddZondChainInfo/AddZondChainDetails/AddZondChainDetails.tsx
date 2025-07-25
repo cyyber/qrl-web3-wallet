@@ -2,6 +2,7 @@ import { BlockchainBaseDataType } from "@/configuration/zondBlockchainConfig";
 import { useStore } from "@/stores/store";
 import { observer } from "mobx-react-lite";
 import AddZondChainUrlList from "./AddZondChainUrlList/AddZondChainUrlList";
+import CurrencyImagePreload from "./CurrencyImagePreload/CurrencyImagePreload";
 
 const AddZondChainDetails = observer(() => {
   const { dAppRequestStore } = useStore();
@@ -13,15 +14,15 @@ const AddZondChainDetails = observer(() => {
   const currencyDecimal = blockchain?.nativeCurrency?.decimals;
   const chainName = blockchain?.chainName;
   const chainId = blockchain?.chainId;
-  const rpcUrls = blockchain?.rpcUrls;
-  const blockExplorerUrls = blockchain?.blockExplorerUrls;
-  const iconUrls = blockchain?.iconUrls;
+  const rpcUrls = blockchain?.rpcUrls ?? [];
+  const blockExplorerUrls = blockchain?.blockExplorerUrls ?? [];
+  const iconUrls = blockchain?.iconUrls ?? [];
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex gap-4">
-        <img className="mt-1 h-8 w-8" src="icons/qrl/default.png" />
-        <div className="flex flex-col gap-1">
+      <div className="flex gap-0">
+        <CurrencyImagePreload iconUrls={iconUrls} />
+        <div className="flex flex-col gap-1 transition-all duration-1000">
           <div>Currency name</div>
           <div className="font-bold text-secondary">{currencyName}</div>
         </div>
