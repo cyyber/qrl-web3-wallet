@@ -4,16 +4,17 @@ type AddZondChainUrlListProps = {
 };
 
 const AddZondChainUrlList = ({ title, urlList }: AddZondChainUrlListProps) => {
-  return (
-    <div className="flex flex-col gap-1">
-      <div>{title}</div>
-      {urlList.map((url, index) => (
-        <div className="font-bold text-secondary">
-          {index + 1}. {url}
-        </div>
-      ))}
-    </div>
-  );
+  if (!!urlList.length)
+    return (
+      <div className="flex flex-col gap-1">
+        <div>{title}</div>
+        {urlList.map((url, index) => (
+          <div className="font-bold text-secondary">
+            {index + 1}. {url}
+          </div>
+        ))}
+      </div>
+    );
 };
 
 export default AddZondChainUrlList;
