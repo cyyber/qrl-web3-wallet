@@ -2,9 +2,9 @@ import { useStore } from "@/stores/store";
 import { Loader } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import CircuitBackground from "../../Body/Shared/CircuitBackground/CircuitBackground";
-import DAppRequestCompleted from "./DAppRequestCompleted/DAppRequestCompleted";
 import DAppRequestConnectionNotAvailable from "./DAppRequestConnectionNotAvailable/DAppRequestConnectionNotAvailable";
 import DAppRequestContentSelection from "./DAppRequestContentSelection/DAppRequestContentSelection";
+import { useEffect } from "react";
 
 const DAppRequestContent = observer(() => {
   const { zondStore, dAppRequestStore } = useStore();
@@ -12,6 +12,12 @@ const DAppRequestContent = observer(() => {
   const { isLoading, isConnected } = zondConnection;
   const { approvalProcessingStatus } = dAppRequestStore;
   const { hasCompleted } = approvalProcessingStatus;
+
+  useEffect(() => {
+    if (hasCompleted) {
+      window.close();
+    }
+  }, [hasCompleted]);
 
   if (isLoading) {
     return (
@@ -29,11 +35,7 @@ const DAppRequestContent = observer(() => {
     <>
       <CircuitBackground />
       <div className="relative z-10 flex flex-col items-center space-y-4 p-4">
-        {hasCompleted ? (
-          <DAppRequestCompleted />
-        ) : (
-          <DAppRequestContentSelection />
-        )}
+        <DAppRequestContentSelection />
       </div>
     </>
   );
