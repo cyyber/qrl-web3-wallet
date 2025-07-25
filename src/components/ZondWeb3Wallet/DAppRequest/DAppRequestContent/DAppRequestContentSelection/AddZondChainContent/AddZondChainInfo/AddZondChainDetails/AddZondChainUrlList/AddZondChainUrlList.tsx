@@ -7,8 +7,10 @@ const AddZondChainUrlList = ({ title, urlList }: AddZondChainUrlListProps) => {
   return (
     <div className="flex flex-col gap-1">
       <div>{title}</div>
-      {urlList.map((url) => (
-        <div className="font-bold text-secondary">{url}</div>
+      {urlList.map((url, index) => (
+        <div className="font-bold text-secondary">
+          {index + 1}. {url}
+        </div>
       ))}
     </div>
   );

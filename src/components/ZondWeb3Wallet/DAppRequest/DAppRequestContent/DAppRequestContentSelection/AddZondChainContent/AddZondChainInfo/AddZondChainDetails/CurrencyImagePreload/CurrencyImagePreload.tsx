@@ -8,8 +8,8 @@ type CurrencyImagePreloadProps = {
 const currencyImageClasses = cva("mt-1 transition-all duration-1000", {
   variants: {
     hasValidUrl: {
-      true: ["h-8 w-8 mr-4"],
-      false: ["h-0 w-0"],
+      true: ["h-8 w-8 mr-4 opacity-100"],
+      false: ["h-8 w-0 opacity-0"],
     },
   },
   defaultVariants: {
