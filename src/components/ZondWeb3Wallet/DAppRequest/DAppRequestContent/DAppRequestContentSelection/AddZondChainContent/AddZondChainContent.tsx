@@ -9,7 +9,7 @@ import StorageUtil from "@/utilities/storageUtil";
 
 const AddZondChainContent = observer(() => {
   const { dAppRequestStore, zondStore } = useStore();
-  const { addChain } = zondStore;
+  const { addChain, selectBlockchain } = zondStore;
   const {
     dAppRequestData,
     onPermission,
@@ -41,7 +41,11 @@ const AddZondChainContent = observer(() => {
             isCustomChain: true,
           },
         );
-        if (!chainFound) await StorageUtil.setAllBlockChains(updatedChainList);
+        if (!chainFound) {
+          await StorageUtil.setAllBlockChains(updatedChainList);
+          await StorageUtil.clearDAppRequestData();
+          await selectBlockchain(blockchain?.chainId);
+        }
       }
     };
     setOnPermissionCallBack(onPermissionCallBack);
