@@ -3,10 +3,7 @@ import { JsonRpcMiddleware } from "@theqrl/zond-wallet-provider/json-rpc-engine"
 import { providerErrors } from "@theqrl/zond-wallet-provider/rpc-errors";
 import { Json, JsonRpcRequest } from "@theqrl/zond-wallet-provider/utils";
 import browser from "webextension-polyfill";
-import {
-  METHOD_ERROR_CODES,
-  RESTRICTED_METHODS,
-} from "../constants/requestConstants";
+import { RESTRICTED_METHODS } from "../constants/requestConstants";
 import { EXTENSION_MESSAGES } from "../constants/streamConstants";
 import { DAppRequestType, DAppResponseType } from "./middlewareTypes";
 
@@ -27,6 +24,19 @@ const getFromAddress = (req: JsonRpcRequest<JsonRpcRequest>) => {
 // a precheck to determine if the request can proceed
 const checkRequestCanProceed = async (req: JsonRpcRequest<JsonRpcRequest>) => {
   switch (req.method) {
+    case RESTRICTED_METHODS.WALLET_ADD_ZOND_CHAIN:
+      try {
+        // @ts-ignore
+        const [chainData] = req.params;
+      } catch (error) {
+        return {
+          canProceed: false,
+          proceedError: providerErrors.unsupportedMethod(),
+        };
+      }
+      return {
+        canProceed: true,
+      };
     case RESTRICTED_METHODS.ZOND_SEND_TRANSACTION:
     case RESTRICTED_METHODS.ZOND_SIGN_TYPED_DATA_V4:
     case RESTRICTED_METHODS.PERSONAL_SIGN:
@@ -38,13 +48,14 @@ const checkRequestCanProceed = async (req: JsonRpcRequest<JsonRpcRequest>) => {
         connectedAccounts?.accounts.includes(fromAddress) ?? false;
       return {
         canProceed: hasAddressConnected,
-        proceedError: {
-          code: METHOD_ERROR_CODES.UNAUTHORIZED_ACCOUNT,
+        proceedError: providerErrors.unauthorized({
           message: `The requested account ${fromAddress} has not been authorized by the user.`,
-        },
+        }),
       };
     default:
-      return { canProceed: true, proceedError: { code: 0, message: "" } };
+      return {
+        canProceed: true,
+      };
   }
 };
 
@@ -106,10 +117,8 @@ export const restrictedMethodsMiddleware: JsonRpcMiddleware<
       // check if the request can proceed
       const { canProceed, proceedError } = await checkRequestCanProceed(req);
       if (!canProceed) {
-        res.error = providerErrors.custom({
-          code: proceedError?.code ?? METHOD_ERROR_CODES.UNSUPPORTED_METHOD,
-          message: proceedError?.message,
-        });
+        // @ts-ignore
+        res.error = proceedError;
         end();
         return;
       }
@@ -128,6 +137,10 @@ export const restrictedMethodsMiddleware: JsonRpcMiddleware<
         const hasApproved = restrictedMethodResult?.hasApproved;
         if (hasApproved) {
           switch (restrictedMethodResult?.method) {
+            case RESTRICTED_METHODS.WALLET_ADD_ZOND_CHAIN:
+              const hasApproved = restrictedMethodResult?.hasApproved;
+              res.result = hasApproved ? null : false;
+              break;
             case RESTRICTED_METHODS.ZOND_REQUEST_ACCOUNTS:
               const urlOrigin = new URL(req?.senderData?.url ?? "").origin;
               const accounts: string[] =
