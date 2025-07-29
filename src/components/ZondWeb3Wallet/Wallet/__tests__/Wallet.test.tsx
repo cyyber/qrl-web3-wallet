@@ -1,7 +1,7 @@
 import { mockedStore } from "@/__mocks__/mockedStore";
 import { StoreProvider } from "@/stores/store";
 import { describe, expect, it, jest } from "@jest/globals";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import Wallet from "../Wallet";
 
@@ -22,10 +22,12 @@ describe("Wallet", () => {
       </StoreProvider>,
     );
 
-  it("should render the wallet component", () => {
+  it("should render the wallet component", async () => {
     renderComponent();
 
-    expect(screen.getByText("Mocked Header")).toBeInTheDocument();
-    expect(screen.getByText("Mocked Body")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText("Mocked Header")).toBeInTheDocument();
+      expect(screen.getByText("Mocked Body")).toBeInTheDocument();
+    });
   });
 });

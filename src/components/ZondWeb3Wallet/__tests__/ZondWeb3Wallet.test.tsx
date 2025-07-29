@@ -24,12 +24,6 @@ jest.mock("@/utilities/storageUtil", () => {
     })),
   };
 });
-jest.mock("@/components/ZondWeb3Wallet/Header/Header", () => () => (
-  <div>Mocked Header</div>
-));
-jest.mock("@/components/ZondWeb3Wallet/Body/Body", () => () => (
-  <div>Mocked Body</div>
-));
 jest.mock("@/components/ZondWeb3Wallet/RouteMonitor/RouteMonitor", () => () => (
   <div>Mocked Route Monitor</div>
 ));
