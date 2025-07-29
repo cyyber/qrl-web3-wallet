@@ -1,6 +1,6 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/UI/Alert";
 import { Checkbox } from "@/components/UI/Checkbox";
-import AccountId from "@/components/ZondWeb3Wallet/Body/AccountList/AccountId/AccountId";
+import AccountId from "@/components/ZondWeb3Wallet/Wallet/Body/AccountList/AccountId/AccountId";
 import { useStore } from "@/stores/store";
 import { ShieldAlert } from "lucide-react";
 import { observer } from "mobx-react-lite";

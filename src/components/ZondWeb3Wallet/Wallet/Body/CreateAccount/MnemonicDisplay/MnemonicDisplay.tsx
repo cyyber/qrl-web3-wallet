@@ -28,7 +28,7 @@ const MnemonicWordListing = withSuspense(
   lazy(
     () =>
       import(
-        "@/components/ZondWeb3Wallet/Body/CreateAccount/MnemonicDisplay/MnemonicWordListing/MnemonicWordListing"
+        "@/components/ZondWeb3Wallet/Wallet/Body/CreateAccount/MnemonicDisplay/MnemonicWordListing/MnemonicWordListing"
       ),
   ),
 );

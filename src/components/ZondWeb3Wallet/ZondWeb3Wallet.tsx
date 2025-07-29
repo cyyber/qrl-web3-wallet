@@ -6,11 +6,8 @@ import { lazy, useEffect, useState } from "react";
 import DAppRequest from "./DAppRequest/DAppRequest";
 import { TooltipProvider } from "../UI/Tooltip";
 
-const Header = withSuspense(
-  lazy(() => import("@/components/ZondWeb3Wallet/Header/Header")),
-);
-const Body = withSuspense(
-  lazy(() => import("@/components/ZondWeb3Wallet/Body/Body")),
+const Wallet = withSuspense(
+  lazy(() => import("@/components/ZondWeb3Wallet/Wallet/Wallet")),
 );
 
 const ZondWeb3Wallet = observer(() => {
@@ -27,14 +24,7 @@ const ZondWeb3Wallet = observer(() => {
     <div className="flex min-h-[48rem] w-[23rem] flex-col overflow-x-hidden bg-background text-foreground">
       <RouteMonitor />
       <TooltipProvider>
-        {hasDAppRequest ? (
-          <DAppRequest />
-        ) : (
-          <>
-            <Header />
-            <Body />
-          </>
-        )}
+        {hasDAppRequest ? <DAppRequest /> : <Wallet />}
       </TooltipProvider>
     </div>
   );

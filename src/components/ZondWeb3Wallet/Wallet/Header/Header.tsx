@@ -7,22 +7,28 @@ const ZondWeb3WalletLogo = withSuspense(
   lazy(
     () =>
       import(
-        "@/components/ZondWeb3Wallet/Header/ZondWeb3WalletLogo/ZondWeb3WalletLogo"
+        "@/components/ZondWeb3Wallet/Wallet/Header/ZondWeb3WalletLogo/ZondWeb3WalletLogo"
       ),
   ),
 );
 const AccountBadge = withSuspense(
   lazy(
     () =>
-      import("@/components/ZondWeb3Wallet/Header/AccountBadge/AccountBadge"),
+      import(
+        "@/components/ZondWeb3Wallet/Wallet/Header/AccountBadge/AccountBadge"
+      ),
   ),
 );
 const DAppBadge = withSuspense(
-  lazy(() => import("@/components/ZondWeb3Wallet/Header/DAppBadge/DAppBadge")),
+  lazy(
+    () =>
+      import("@/components/ZondWeb3Wallet/Wallet/Header/DAppBadge/DAppBadge"),
+  ),
 );
 const ChainBadge = withSuspense(
   lazy(
-    () => import("@/components/ZondWeb3Wallet/Header/ChainBadge/ChainBadge"),
+    () =>
+      import("@/components/ZondWeb3Wallet/Wallet/Header/ChainBadge/ChainBadge"),
   ),
 );
 

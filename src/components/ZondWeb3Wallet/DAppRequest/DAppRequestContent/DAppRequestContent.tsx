@@ -1,10 +1,10 @@
 import { useStore } from "@/stores/store";
 import { Loader } from "lucide-react";
 import { observer } from "mobx-react-lite";
-import CircuitBackground from "../../Body/Shared/CircuitBackground/CircuitBackground";
 import DAppRequestConnectionNotAvailable from "./DAppRequestConnectionNotAvailable/DAppRequestConnectionNotAvailable";
 import DAppRequestContentSelection from "./DAppRequestContentSelection/DAppRequestContentSelection";
 import { useEffect } from "react";
+import CircuitBackground from "../../Wallet/Body/Shared/CircuitBackground/CircuitBackground";
 
 const DAppRequestContent = observer(() => {
   const { zondStore, dAppRequestStore } = useStore();
