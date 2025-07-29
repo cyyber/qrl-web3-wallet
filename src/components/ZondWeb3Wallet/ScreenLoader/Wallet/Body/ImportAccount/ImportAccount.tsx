@@ -32,7 +32,7 @@ const MnemonicWordListing = withSuspense(
   lazy(
     () =>
       import(
-        "@/components/ZondWeb3Wallet/Wallet/Body/CreateAccount/MnemonicDisplay/MnemonicWordListing/MnemonicWordListing"
+        "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/CreateAccount/MnemonicDisplay/MnemonicWordListing/MnemonicWordListing"
       ),
   ),
 );
@@ -40,7 +40,7 @@ const AccountImportSuccess = withSuspense(
   lazy(
     () =>
       import(
-        "@/components/ZondWeb3Wallet/Wallet/Body/ImportAccount/AccountImportSuccess/AccountImportSuccess"
+        "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/ImportAccount/AccountImportSuccess/AccountImportSuccess"
       ),
   ),
 );

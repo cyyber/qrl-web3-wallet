@@ -3,7 +3,7 @@ import { useStore } from "@/stores/store";
 import { Loader } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { lazy, useEffect, useState } from "react";
-import CircuitBackground from "../Wallet/Body/Shared/CircuitBackground/CircuitBackground";
+import CircuitBackground from "./Wallet/Body/Shared/CircuitBackground/CircuitBackground";
 
 const SCREENS = {
   LOADING: "LOADING",
@@ -12,10 +12,15 @@ const SCREENS = {
 };
 
 const DAppRequest = withSuspense(
-  lazy(() => import("@/components/ZondWeb3Wallet/DAppRequest/DAppRequest")),
+  lazy(
+    () =>
+      import(
+        "@/components/ZondWeb3Wallet/ScreenLoader/DAppRequest/DAppRequest"
+      ),
+  ),
 );
 const Wallet = withSuspense(
-  lazy(() => import("@/components/ZondWeb3Wallet/Wallet/Wallet")),
+  lazy(() => import("@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Wallet")),
 );
 
 const ScreenLoader = observer(() => {

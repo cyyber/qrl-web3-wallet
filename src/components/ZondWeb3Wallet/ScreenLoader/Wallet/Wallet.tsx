@@ -2,10 +2,15 @@ import withSuspense from "@/functions/withSuspense";
 import { lazy } from "react";
 
 const Header = withSuspense(
-  lazy(() => import("@/components/ZondWeb3Wallet/Wallet/Header/Header")),
+  lazy(
+    () =>
+      import("@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Header/Header"),
+  ),
 );
 const Body = withSuspense(
-  lazy(() => import("@/components/ZondWeb3Wallet/Wallet/Body/Body")),
+  lazy(
+    () => import("@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/Body"),
+  ),
 );
 
 const Wallet = () => {

@@ -7,7 +7,7 @@ const ZondWeb3WalletLogo = withSuspense(
   lazy(
     () =>
       import(
-        "@/components/ZondWeb3Wallet/Wallet/Header/ZondWeb3WalletLogo/ZondWeb3WalletLogo"
+        "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Header/ZondWeb3WalletLogo/ZondWeb3WalletLogo"
       ),
   ),
 );
@@ -15,20 +15,24 @@ const AccountBadge = withSuspense(
   lazy(
     () =>
       import(
-        "@/components/ZondWeb3Wallet/Wallet/Header/AccountBadge/AccountBadge"
+        "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Header/AccountBadge/AccountBadge"
       ),
   ),
 );
 const DAppBadge = withSuspense(
   lazy(
     () =>
-      import("@/components/ZondWeb3Wallet/Wallet/Header/DAppBadge/DAppBadge"),
+      import(
+        "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Header/DAppBadge/DAppBadge"
+      ),
   ),
 );
 const ChainBadge = withSuspense(
   lazy(
     () =>
-      import("@/components/ZondWeb3Wallet/Wallet/Header/ChainBadge/ChainBadge"),
+      import(
+        "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Header/ChainBadge/ChainBadge"
+      ),
   ),
 );
 

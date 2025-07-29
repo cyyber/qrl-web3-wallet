@@ -11,7 +11,7 @@ const MnemonicDisplay = withSuspense(
   lazy(
     () =>
       import(
-        "@/components/ZondWeb3Wallet/Wallet/Body/CreateAccount/MnemonicDisplay/MnemonicDisplay"
+        "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/CreateAccount/MnemonicDisplay/MnemonicDisplay"
       ),
   ),
 );

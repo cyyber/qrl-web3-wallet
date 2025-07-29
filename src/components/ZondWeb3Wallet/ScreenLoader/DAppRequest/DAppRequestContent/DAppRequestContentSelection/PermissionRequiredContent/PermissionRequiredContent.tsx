@@ -7,7 +7,7 @@ import {
 } from "@/components/UI/AlertDialog";
 import { Button } from "@/components/UI/Button";
 import { Card, CardContent, CardFooter } from "@/components/UI/Card";
-import ChainBadge from "@/components/ZondWeb3Wallet/Wallet/Header/ChainBadge/ChainBadge";
+import ChainBadge from "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Header/ChainBadge/ChainBadge";
 import { useStore } from "@/stores/store";
 import { Check, Loader, X } from "lucide-react";
 import { observer } from "mobx-react-lite";

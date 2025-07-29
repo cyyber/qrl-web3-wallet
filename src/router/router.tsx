@@ -1,4 +1,3 @@
-import AllZRC20Tokens from "@/components/ZondWeb3Wallet/Wallet/Body/AllZRC20Tokens/AllZRC20Tokens";
 import withSuspense from "@/functions/withSuspense";
 import { lazy } from "react";
 import { createMemoryRouter, RouterProvider } from "react-router-dom";
@@ -7,13 +6,16 @@ const ZondWeb3Wallet = withSuspense(
   lazy(() => import("@/components/ZondWeb3Wallet/ZondWeb3Wallet")),
 );
 const Home = withSuspense(
-  lazy(() => import("@/components/ZondWeb3Wallet/Wallet/Body/Home/Home")),
+  lazy(
+    () =>
+      import("@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/Home/Home"),
+  ),
 );
 const CreateAccount = withSuspense(
   lazy(
     () =>
       import(
-        "@/components/ZondWeb3Wallet/Wallet/Body/CreateAccount/CreateAccount"
+        "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/CreateAccount/CreateAccount"
       ),
   ),
 );
@@ -21,27 +23,39 @@ const ImportAccount = withSuspense(
   lazy(
     () =>
       import(
-        "@/components/ZondWeb3Wallet/Wallet/Body/ImportAccount/ImportAccount"
+        "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/ImportAccount/ImportAccount"
       ),
   ),
 );
 const ImportToken = withSuspense(
   lazy(
     () =>
-      import("@/components/ZondWeb3Wallet/Wallet/Body/ImportToken/ImportToken"),
+      import(
+        "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/ImportToken/ImportToken"
+      ),
+  ),
+);
+const AllZRC20Tokens = withSuspense(
+  lazy(
+    () =>
+      import(
+        "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/AllZRC20Tokens/AllZRC20Tokens"
+      ),
   ),
 );
 const AccountList = withSuspense(
   lazy(
     () =>
-      import("@/components/ZondWeb3Wallet/Wallet/Body/AccountList/AccountList"),
+      import(
+        "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/AccountList/AccountList"
+      ),
   ),
 );
 const DAppConnectivity = withSuspense(
   lazy(
     () =>
       import(
-        "@/components/ZondWeb3Wallet/Wallet/Body/DAppConnectivity/DAppConnectivity"
+        "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/DAppConnectivity/DAppConnectivity"
       ),
   ),
 );
@@ -49,7 +63,7 @@ const ChainConnectivity = withSuspense(
   lazy(
     () =>
       import(
-        "@/components/ZondWeb3Wallet/Wallet/Body/ChainConnectivity/ChainConnectivity"
+        "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/ChainConnectivity/ChainConnectivity"
       ),
   ),
 );
@@ -57,7 +71,7 @@ const AddEditChain = withSuspense(
   lazy(
     () =>
       import(
-        "@/components/ZondWeb3Wallet/Wallet/Body/ChainConnectivity/NewChain/AddEditChain/AddEditChain"
+        "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/ChainConnectivity/NewChain/AddEditChain/AddEditChain"
       ),
   ),
 );
@@ -65,7 +79,7 @@ const TokenTransfer = withSuspense(
   lazy(
     () =>
       import(
-        "@/components/ZondWeb3Wallet/Wallet/Body/TokenTransfer/TokenTransfer"
+        "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/TokenTransfer/TokenTransfer"
       ),
   ),
 );

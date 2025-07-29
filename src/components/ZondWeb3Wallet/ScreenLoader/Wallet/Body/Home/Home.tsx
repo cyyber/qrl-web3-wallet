@@ -10,7 +10,7 @@ const AccountCreateImport = withSuspense(
   lazy(
     () =>
       import(
-        "@/components/ZondWeb3Wallet/Wallet/Body/Home/AccountCreateImport/AccountCreateImport"
+        "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/Home/AccountCreateImport/AccountCreateImport"
       ),
   ),
 );
@@ -18,7 +18,7 @@ const BackgroundVideo = withSuspense(
   lazy(
     () =>
       import(
-        "@/components/ZondWeb3Wallet/Wallet/Body/Home/BackgroundVideo/BackgroundVideo"
+        "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/Home/BackgroundVideo/BackgroundVideo"
       ),
   ),
 );
