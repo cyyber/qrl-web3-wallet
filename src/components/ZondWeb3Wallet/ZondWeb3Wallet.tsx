@@ -1,33 +1,16 @@
 import RouteMonitor from "@/components/ZondWeb3Wallet/RouteMonitor/RouteMonitor";
-import withSuspense from "@/functions/withSuspense";
-import StorageUtil from "@/utilities/storageUtil";
-import { observer } from "mobx-react-lite";
-import { lazy, useEffect, useState } from "react";
-import DAppRequest from "./DAppRequest/DAppRequest";
+import ScreenLoader from "@/components/ZondWeb3Wallet/ScreenLoader/ScreenLoader";
 import { TooltipProvider } from "../UI/Tooltip";
 
-const Wallet = withSuspense(
-  lazy(() => import("@/components/ZondWeb3Wallet/Wallet/Wallet")),
-);
-
-const ZondWeb3Wallet = observer(() => {
-  const [hasDAppRequest, setHasDAppRequest] = useState(true);
-
-  useEffect(() => {
-    (async () => {
-      const storedDAppRequestData = await StorageUtil.getDAppRequestData();
-      setHasDAppRequest(!!storedDAppRequestData);
-    })();
-  }, []);
-
+const ZondWeb3Wallet = () => {
   return (
     <div className="flex min-h-[48rem] w-[23rem] flex-col overflow-x-hidden bg-background text-foreground">
       <RouteMonitor />
       <TooltipProvider>
-        {hasDAppRequest ? <DAppRequest /> : <Wallet />}
+        <ScreenLoader />
       </TooltipProvider>
     </div>
   );
-});
+};
 
 export default ZondWeb3Wallet;
