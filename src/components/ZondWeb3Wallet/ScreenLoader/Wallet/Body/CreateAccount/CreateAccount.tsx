@@ -5,7 +5,7 @@ import { observer } from "mobx-react-lite";
 import { lazy, useState } from "react";
 import AccountCreationForm from "./AccountCreationForm/AccountCreationForm";
 import AccountCreationSuccess from "./AccountCreationSuccess/AccountCreationSuccess";
-import CircuitBackground from "../Shared/CircuitBackground/CircuitBackground";
+import CircuitBackground from "../../../Shared/CircuitBackground/CircuitBackground";
 
 const MnemonicDisplay = withSuspense(
   lazy(

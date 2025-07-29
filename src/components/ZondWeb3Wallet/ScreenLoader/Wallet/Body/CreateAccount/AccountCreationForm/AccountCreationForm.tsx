@@ -22,7 +22,7 @@ import { Loader, Plus } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import BackButton from "../../Shared/BackButton/BackButton";
+import BackButton from "../../../../Shared/BackButton/BackButton";
 
 const FormSchema = z
   .object({

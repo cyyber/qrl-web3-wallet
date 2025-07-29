@@ -1,5 +1,5 @@
 import { ROUTES } from "@/router/router";
-import BackButton from "../Shared/BackButton/BackButton";
+import BackButton from "../../../Shared/BackButton/BackButton";
 import ActiveBrowserTab from "./ActiveBrowserTab/ActiveBrowserTab";
 import ConnectivityWithWallet from "./ConnectivityWithWallet/ConnectivityWithWallet";
 

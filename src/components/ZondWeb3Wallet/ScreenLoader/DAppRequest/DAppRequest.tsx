@@ -4,7 +4,7 @@ import { observer } from "mobx-react-lite";
 import DAppRequestConnectionNotAvailable from "./DAppRequestConnectionNotAvailable/DAppRequestConnectionNotAvailable";
 import DAppRequestContentSelection from "./DAppRequestContentSelection/DAppRequestContentSelection";
 import { useEffect } from "react";
-import CircuitBackground from "../Wallet/Body/Shared/CircuitBackground/CircuitBackground";
+import CircuitBackground from "../Shared/CircuitBackground/CircuitBackground";
 
 const DAppRequest = observer(() => {
   const { zondStore, dAppRequestStore } = useStore();

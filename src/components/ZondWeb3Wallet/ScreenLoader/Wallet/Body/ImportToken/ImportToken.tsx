@@ -22,9 +22,9 @@ import { observer } from "mobx-react-lite";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import BackButton from "../Shared/BackButton/BackButton";
+import BackButton from "../../../Shared/BackButton/BackButton";
 import TokenImportSuccess from "./TokenImportSuccess/TokenImportSuccess";
-import CircuitBackground from "../Shared/CircuitBackground/CircuitBackground";
+import CircuitBackground from "../../../Shared/CircuitBackground/CircuitBackground";
 
 const FormSchema = z.object({
   contractAddress: z.string().min(1, "Contract address is required"),

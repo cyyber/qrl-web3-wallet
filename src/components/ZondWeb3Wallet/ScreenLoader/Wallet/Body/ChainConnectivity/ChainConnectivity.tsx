@@ -1,5 +1,5 @@
 import { ROUTES } from "@/router/router";
-import BackButton from "../Shared/BackButton/BackButton";
+import BackButton from "../../../Shared/BackButton/BackButton";
 import ActiveChain from "./ActiveChain/ActiveChain";
 import NewChain from "./NewChain/NewChain";
 import OtherChains from "./OtherChains/OtherChains";

@@ -12,7 +12,7 @@ import StringUtil from "@/utilities/stringUtil";
 import { TransactionReceipt, utils } from "@theqrl/web3";
 import { Check } from "lucide-react";
 import { Link } from "react-router-dom";
-import CircuitBackground from "../../Shared/CircuitBackground/CircuitBackground";
+import CircuitBackground from "../../../../Shared/CircuitBackground/CircuitBackground";
 
 type TransactionSuccessfulProps = {
   transactionReceipt: TransactionReceipt;

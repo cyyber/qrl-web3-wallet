@@ -1,9 +1,7 @@
 import withSuspense from "@/functions/withSuspense";
 import { useStore } from "@/stores/store";
-import { Loader } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { lazy, useEffect, useState } from "react";
-import CircuitBackground from "./Wallet/Body/Shared/CircuitBackground/CircuitBackground";
 
 const SCREENS = {
   LOADING: "LOADING",
@@ -11,6 +9,14 @@ const SCREENS = {
   WALLET: "WALLET",
 };
 
+const ScreenLoading = withSuspense(
+  lazy(
+    () =>
+      import(
+        "@/components/ZondWeb3Wallet/ScreenLoader/ScreenLoading/ScreenLoading"
+      ),
+  ),
+);
 const DAppRequest = withSuspense(
   lazy(
     () =>
@@ -41,15 +47,7 @@ const ScreenLoader = observer(() => {
     }
   }, [hasDAppRequest]);
 
-  if (screen === SCREENS.LOADING)
-    return (
-      <>
-        <CircuitBackground />
-        <div className="flex justify-center pt-48">
-          <Loader className="animate-spin" size={86} />
-        </div>
-      </>
-    );
+  if (screen === SCREENS.LOADING) return <ScreenLoading />;
 
   if (screen === SCREENS.DAPP_REQUEST) return <DAppRequest />;
 

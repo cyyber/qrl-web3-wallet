@@ -25,8 +25,8 @@ import { observer } from "mobx-react-lite";
 import { lazy, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import BackButton from "../Shared/BackButton/BackButton";
-import CircuitBackground from "../Shared/CircuitBackground/CircuitBackground";
+import BackButton from "../../../Shared/BackButton/BackButton";
+import CircuitBackground from "../../../Shared/CircuitBackground/CircuitBackground";
 
 const MnemonicWordListing = withSuspense(
   lazy(

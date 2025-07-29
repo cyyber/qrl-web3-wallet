@@ -4,8 +4,8 @@ import StorageUtil from "@/utilities/storageUtil";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import BackButton from "../../../Shared/BackButton/BackButton";
-import CircuitBackground from "../../../Shared/CircuitBackground/CircuitBackground";
+import BackButton from "../../../../../Shared/BackButton/BackButton";
+import CircuitBackground from "../../../../../Shared/CircuitBackground/CircuitBackground";
 import AddEditChainForm from "./AddEditChainForm/AddEditChainForm";
 
 const AddEditChain = observer(() => {
