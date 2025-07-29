@@ -3,7 +3,7 @@ import { StoreProvider } from "@/stores/store";
 import { describe, expect, it, jest } from "@jest/globals";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import DAppRequestContent from "../DAppRequestContent";
+import DAppRequest from "../DAppRequest";
 import { TooltipProvider } from "@/components/UI/Tooltip";
 
 jest.mock(
@@ -19,13 +19,13 @@ jest.mock(
   () => () => <div>Mocked ChainBadge</div>,
 );
 
-describe("DAppRequestContent", () => {
+describe("DAppRequest", () => {
   const renderComponent = (mockedStoreValues = mockedStore()) =>
     render(
       <StoreProvider value={mockedStoreValues}>
         <MemoryRouter>
           <TooltipProvider>
-            <DAppRequestContent />
+            <DAppRequest />
           </TooltipProvider>
         </MemoryRouter>
       </StoreProvider>,
