@@ -310,32 +310,37 @@ class StorageUtil {
    */
   static async setDAppsConnectedAccountsData(data: ConnectedAccountsDataType) {
     const urlOrigin = data.urlOrigin;
-    const { chainId } = await this.getActiveBlockChain();
-    const connectedAccountsDataIdentifier = `${chainId}_${urlOrigin}_${DAPPS_CONNECTED_ACCOUNTS_IDENTIFIER}`;
+    const connectedAccountsDataIdentifier = `${urlOrigin}_${DAPPS_CONNECTED_ACCOUNTS_IDENTIFIER}`;
     const updatedConnectedAccountsData: ConnectedAccountsDataType = {
       urlOrigin,
       accounts: data.accounts,
     };
     await browser.storage.local.set({
-      [connectedAccountsDataIdentifier]: updatedConnectedAccountsData,
+      [DAPPS_IDENTIFIER]: {
+        [connectedAccountsDataIdentifier]: updatedConnectedAccountsData,
+      },
     });
   }
 
   static async getDAppsConnectedAccountsData(urlOrigin: string = "") {
-    const { chainId } = await this.getActiveBlockChain();
-    const connectedAccountsDataIdentifier = `${chainId}_${urlOrigin}_${DAPPS_CONNECTED_ACCOUNTS_IDENTIFIER}`;
-    const storedConnectedAccountsData = await browser.storage.local.get(
-      connectedAccountsDataIdentifier,
-    );
-    return storedConnectedAccountsData[connectedAccountsDataIdentifier] as
+    const connectedAccountsDataIdentifier = `${urlOrigin}_${DAPPS_CONNECTED_ACCOUNTS_IDENTIFIER}`;
+    const storedConnectedAccountsData = (
+      await browser.storage.local.get(DAPPS_IDENTIFIER)
+    )?.[DAPPS_IDENTIFIER];
+    return storedConnectedAccountsData?.[connectedAccountsDataIdentifier] as
       | ConnectedAccountsDataType
       | undefined;
   }
 
   static async clearDAppsConnectedAccountsData(urlOrigin: string = "") {
-    const { chainId } = await this.getActiveBlockChain();
-    const connectedAccountsDataIdentifier = `${chainId}_${urlOrigin}_${DAPPS_CONNECTED_ACCOUNTS_IDENTIFIER}`;
-    await browser.storage.local.remove(connectedAccountsDataIdentifier);
+    const connectedAccountsDataIdentifier = `${urlOrigin}_${DAPPS_CONNECTED_ACCOUNTS_IDENTIFIER}`;
+    const storedConnectedAccountsData =
+      (await browser.storage.local.get(DAPPS_IDENTIFIER))?.[DAPPS_IDENTIFIER] ??
+      {};
+    delete storedConnectedAccountsData?.[connectedAccountsDataIdentifier];
+    await browser.storage.local.set({
+      [DAPPS_IDENTIFIER]: storedConnectedAccountsData,
+    });
   }
 }
 
