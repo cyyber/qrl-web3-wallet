@@ -129,14 +129,14 @@ class ZondStore {
 
     let storedAccountList: string[] = [];
     try {
-      const accountListFromStorage = await StorageUtil.getAccountList();
+      const accountListFromStorage = await StorageUtil.getAllAccounts();
       storedAccountList = [...accountListFromStorage];
       if (activeAccount) {
         storedAccountList.push(activeAccount);
       }
       storedAccountList = [...new Set(storedAccountList)];
     } finally {
-      await StorageUtil.setAccountList(storedAccountList);
+      await StorageUtil.setAllAccounts(storedAccountList);
       await this.fetchAccounts();
     }
   }
@@ -166,7 +166,7 @@ class ZondStore {
     this.zondAccounts = { ...this.zondAccounts, isLoading: true };
 
     let storedAccountsList: string[] = [];
-    const accountListFromStorage = await StorageUtil.getAccountList();
+    const accountListFromStorage = await StorageUtil.getAllAccounts();
     storedAccountsList = accountListFromStorage;
     try {
       const accountsWithBalance: ZondAccountsType["accounts"] =

@@ -93,9 +93,9 @@ class StorageUtil {
 
   /**
    * A function for storing the accounts created and imported within the zond web3 wallet extension.
-   * Call the getAccountList function to retrieve the stored value.
+   * Call the getAllAccounts function to retrieve the stored value.
    */
-  static async setAccountList(accountList: string[]) {
+  static async setAllAccounts(accountList: string[]) {
     const { chainId } = await this.getActiveBlockChain();
     const blockChainAccountListIdentifier = `${chainId}_${ALL_ACCOUNTS_IDENTIFIER}`;
     await browser.storage.local.set({
@@ -103,7 +103,7 @@ class StorageUtil {
     });
   }
 
-  static async getAccountList() {
+  static async getAllAccounts() {
     const { chainId } = await this.getActiveBlockChain();
     const blockChainAccountListIdentifier = `${chainId}_${ALL_ACCOUNTS_IDENTIFIER}`;
     const storedAccountList = await browser.storage.local.get(
