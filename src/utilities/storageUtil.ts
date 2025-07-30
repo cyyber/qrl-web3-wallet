@@ -9,15 +9,21 @@ import {
 } from "@/scripts/middlewares/middlewareTypes";
 import browser from "webextension-polyfill";
 
-const ACTIVE_PAGE_IDENTIFIER = "ACTIVE_PAGE";
-const ALL_BLOCKCHAINS_IDENTIFIER = "ALL_BLOCKCHAINS";
-const BLOCKCHAIN_SELECTION_IDENTIFIER = "BLOCKCHAIN_SELECTION";
+const ALL_ACCOUNTS_IDENTIFIER = "ALL_ACCOUNTS";
 const ACTIVE_ACCOUNT_IDENTIFIER = "ACTIVE_ACCOUNT";
-const ACCOUNT_LIST_IDENTIFIER = "ACCOUNT_LIST";
-const TRANSACTION_VALUES_IDENTIFIER = "TRANSACTION_VALUES";
-const TOKENS_LIST_IDENTIFIER = "TOKENS_LIST";
+
 const DAPP_REQUEST_DATA_IDENTIFIER = "DAPP_REQUEST_DATA";
-const CONNECTED_ACCOUNTS_DATA_IDENTIFIER = "CONNECTED_ACCOUNTS_DATA";
+const DAPP_CONNECTED_ACCOUNTS_IDENTIFIER = "DAPP_CONNECTED_ACCOUNTS";
+
+const BLOCKCHAINS_IDENTIFIER = "BLOCKCHAINS";
+const ALL_BLOCKCHAINS_IDENTIFIER = "ALL_BLOCKCHAINS";
+const ACTIVE_BLOCKCHAIN_IDENTIFIER = "ACTIVE_BLOCKCHAIN";
+
+const ACTIVE_PAGE_IDENTIFIER = "ACTIVE_PAGE";
+
+const TRANSACTION_VALUES_IDENTIFIER = "TRANSACTION_VALUES";
+
+const TOKENS_LIST_IDENTIFIER = "TOKENS_LIST";
 
 type TransactionValuesType = {
   receiverAddress?: string;
@@ -89,7 +95,7 @@ class StorageUtil {
    */
   static async setAccountList(accountList: string[]) {
     const { chainId } = await this.getBlockChain();
-    const blockChainAccountListIdentifier = `${chainId}_${ACCOUNT_LIST_IDENTIFIER}`;
+    const blockChainAccountListIdentifier = `${chainId}_${ALL_ACCOUNTS_IDENTIFIER}`;
     await browser.storage.local.set({
       [blockChainAccountListIdentifier]: accountList,
     });
@@ -97,7 +103,7 @@ class StorageUtil {
 
   static async getAccountList() {
     const { chainId } = await this.getBlockChain();
-    const blockChainAccountListIdentifier = `${chainId}_${ACCOUNT_LIST_IDENTIFIER}`;
+    const blockChainAccountListIdentifier = `${chainId}_${ALL_ACCOUNTS_IDENTIFIER}`;
     const storedAccountList = await browser.storage.local.get(
       blockChainAccountListIdentifier,
     );
@@ -143,17 +149,24 @@ class StorageUtil {
    * Call the getAllBlockChains function to retrieve all the stored blockchains.
    */
   static async setAllBlockChains(blockchains: BlockchainDataType[]) {
+    const existing = (
+      await browser.storage.local.get(BLOCKCHAINS_IDENTIFIER)
+    )?.[BLOCKCHAINS_IDENTIFIER];
     await browser.storage.local.set({
-      [ALL_BLOCKCHAINS_IDENTIFIER]: blockchains,
+      [BLOCKCHAINS_IDENTIFIER]: {
+        ...existing,
+        [ALL_BLOCKCHAINS_IDENTIFIER]: blockchains,
+      },
     });
   }
 
   static async getAllBlockChains() {
     const storedBlockchains = await browser.storage.local.get(
-      ALL_BLOCKCHAINS_IDENTIFIER,
+      BLOCKCHAINS_IDENTIFIER,
     );
-    return (storedBlockchains?.[ALL_BLOCKCHAINS_IDENTIFIER] ??
-      ZOND_BLOCKCHAINS) as BlockchainDataType[];
+    return (storedBlockchains?.[BLOCKCHAINS_IDENTIFIER]?.[
+      ALL_BLOCKCHAINS_IDENTIFIER
+    ] ?? ZOND_BLOCKCHAINS) as BlockchainDataType[];
   }
 
   /**
@@ -161,20 +174,28 @@ class StorageUtil {
    * Call the getBlockChain function to retrieve the stored value.
    */
   static async setBlockChain(selectedBlockchainId: string) {
+    const existing = (
+      await browser.storage.local.get(BLOCKCHAINS_IDENTIFIER)
+    )?.[BLOCKCHAINS_IDENTIFIER];
     await browser.storage.local.set({
-      [BLOCKCHAIN_SELECTION_IDENTIFIER]: selectedBlockchainId,
+      [BLOCKCHAINS_IDENTIFIER]: {
+        ...existing,
+        [ACTIVE_BLOCKCHAIN_IDENTIFIER]: selectedBlockchainId,
+      },
     });
   }
 
   static async getBlockChain() {
     const storedBlockchainId = await browser.storage.local.get(
-      BLOCKCHAIN_SELECTION_IDENTIFIER,
+      BLOCKCHAINS_IDENTIFIER,
     );
     const blockchains = await this.getAllBlockChains();
     const existingChain = blockchains.find(
       (chain) =>
         chain.chainId.toLowerCase() ===
-        storedBlockchainId?.[BLOCKCHAIN_SELECTION_IDENTIFIER]?.toLowerCase(),
+        storedBlockchainId?.[BLOCKCHAINS_IDENTIFIER]?.[
+          ACTIVE_BLOCKCHAIN_IDENTIFIER
+        ]?.toLowerCase(),
     );
     return existingChain ?? DEFAULT_BLOCKCHAIN;
   }
@@ -282,7 +303,7 @@ class StorageUtil {
   static async setConnectedAccountsData(data: ConnectedAccountsDataType) {
     const urlOrigin = data.urlOrigin;
     const { chainId } = await this.getBlockChain();
-    const connectedAccountsDataIdentifier = `${chainId}_${urlOrigin}_${CONNECTED_ACCOUNTS_DATA_IDENTIFIER}`;
+    const connectedAccountsDataIdentifier = `${chainId}_${urlOrigin}_${DAPP_CONNECTED_ACCOUNTS_IDENTIFIER}`;
     const updatedConnectedAccountsData: ConnectedAccountsDataType = {
       urlOrigin,
       accounts: data.accounts,
@@ -294,7 +315,7 @@ class StorageUtil {
 
   static async getConnectedAccountsData(urlOrigin: string = "") {
     const { chainId } = await this.getBlockChain();
-    const connectedAccountsDataIdentifier = `${chainId}_${urlOrigin}_${CONNECTED_ACCOUNTS_DATA_IDENTIFIER}`;
+    const connectedAccountsDataIdentifier = `${chainId}_${urlOrigin}_${DAPP_CONNECTED_ACCOUNTS_IDENTIFIER}`;
     const storedConnectedAccountsData = await browser.storage.local.get(
       connectedAccountsDataIdentifier,
     );
@@ -305,7 +326,7 @@ class StorageUtil {
 
   static async clearConnectedAccountsData(urlOrigin: string = "") {
     const { chainId } = await this.getBlockChain();
-    const connectedAccountsDataIdentifier = `${chainId}_${urlOrigin}_${CONNECTED_ACCOUNTS_DATA_IDENTIFIER}`;
+    const connectedAccountsDataIdentifier = `${chainId}_${urlOrigin}_${DAPP_CONNECTED_ACCOUNTS_IDENTIFIER}`;
     await browser.storage.local.remove(connectedAccountsDataIdentifier);
   }
 }
