@@ -111,12 +111,12 @@ class ZondStore {
   }
 
   async refreshBlockchainData() {
-    const blockchain = await StorageUtil.getBlockChain();
+    const blockchain = await StorageUtil.getActiveBlockChain();
     this.zondConnection = { ...this.zondConnection, blockchain };
   }
 
   async selectBlockchain(chainId: string) {
-    await StorageUtil.setBlockChain(chainId);
+    await StorageUtil.setActiveBlockChain(chainId);
     await this.initializeBlockchain();
   }
 

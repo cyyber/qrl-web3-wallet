@@ -38,7 +38,8 @@ let extensionChannel: Substream;
 let hasExtensionConnectSent = false;
 
 const getZondProperties = async () => {
-  const { defaultRpcUrl, defaultWsRpcUrl } = await StorageUtil.getBlockChain();
+  const { defaultRpcUrl, defaultWsRpcUrl } =
+    await StorageUtil.getActiveBlockChain();
   const zondHttpProvider = new Web3.providers.HttpProvider(defaultRpcUrl);
   const { provider, zond } = new Web3({ provider: zondHttpProvider });
   return { provider, zond, defaultWsRpcUrl };
