@@ -276,29 +276,32 @@ class StorageUtil {
    * A function for storing the request info temporarily by the dApp, which will be read by the zond web3 wallet.
    * Call the getDAppsRequestData function to retrieve the stored value, and clearDAppsRequestData for clearing the stored value.
    */
-  static async setDAppsRequestData(data: DAppRequestType) {
-    const { chainId } = await this.getActiveBlockChain();
-    const dAppRequestDataIdentifier = `${chainId}_${DAPPS_REQUEST_DATA_IDENTIFIER}`;
+  static async setDAppsRequestData(dAppsRequestData: DAppRequestType) {
     await browser.storage.session.set({
-      [dAppRequestDataIdentifier]: data,
+      [DAPPS_IDENTIFIER]: {
+        [DAPPS_REQUEST_DATA_IDENTIFIER]: dAppsRequestData,
+      },
     });
   }
 
   static async getDAppsRequestData() {
-    const { chainId } = await this.getActiveBlockChain();
-    const dAppRequestDataIdentifier = `${chainId}_${DAPPS_REQUEST_DATA_IDENTIFIER}`;
-    const storedDAppRequestData = await browser.storage.session.get(
-      dAppRequestDataIdentifier,
-    );
-    return storedDAppRequestData[dAppRequestDataIdentifier] as
+    const storedDAppsRequestData = (
+      await browser.storage.session.get(DAPPS_IDENTIFIER)
+    )?.[DAPPS_IDENTIFIER];
+    return storedDAppsRequestData?.[DAPPS_REQUEST_DATA_IDENTIFIER] as
       | DAppRequestType
       | undefined;
   }
 
   static async clearDAppsRequestData() {
-    const { chainId } = await this.getActiveBlockChain();
-    const dAppRequestDataIdentifier = `${chainId}_${DAPPS_REQUEST_DATA_IDENTIFIER}`;
-    await browser.storage.session.remove(dAppRequestDataIdentifier);
+    const storedDAppsRequestData =
+      (await browser.storage.session.get(DAPPS_IDENTIFIER))?.[
+        DAPPS_IDENTIFIER
+      ] ?? {};
+    delete storedDAppsRequestData?.[DAPPS_REQUEST_DATA_IDENTIFIER];
+    await browser.storage.session.set({
+      [DAPPS_IDENTIFIER]: storedDAppsRequestData,
+    });
   }
 
   /**
