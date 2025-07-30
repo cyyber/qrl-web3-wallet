@@ -9,11 +9,13 @@ import {
 } from "@/scripts/middlewares/middlewareTypes";
 import browser from "webextension-polyfill";
 
+const ACCOUNTS_IDENTIFIER = "ACCOUNTS";
 const ALL_ACCOUNTS_IDENTIFIER = "ALL_ACCOUNTS";
 const ACTIVE_ACCOUNT_IDENTIFIER = "ACTIVE_ACCOUNT";
 
-const DAPP_REQUEST_DATA_IDENTIFIER = "DAPP_REQUEST_DATA";
-const DAPP_CONNECTED_ACCOUNTS_IDENTIFIER = "DAPP_CONNECTED_ACCOUNTS";
+const DAPPS_IDENTIFIER = "DAPPS";
+const DAPPS_REQUEST_DATA_IDENTIFIER = "DAPPS_REQUEST_DATA";
+const DAPPS_CONNECTED_ACCOUNTS_IDENTIFIER = "DAPPS_CONNECTED_ACCOUNTS";
 
 const BLOCKCHAINS_IDENTIFIER = "BLOCKCHAINS";
 const ALL_BLOCKCHAINS_IDENTIFIER = "ALL_BLOCKCHAINS";
@@ -273,7 +275,7 @@ class StorageUtil {
    */
   static async setDAppRequestData(data: DAppRequestType) {
     const { chainId } = await this.getBlockChain();
-    const dAppRequestDataIdentifier = `${chainId}_${DAPP_REQUEST_DATA_IDENTIFIER}`;
+    const dAppRequestDataIdentifier = `${chainId}_${DAPPS_REQUEST_DATA_IDENTIFIER}`;
     await browser.storage.session.set({
       [dAppRequestDataIdentifier]: data,
     });
@@ -281,7 +283,7 @@ class StorageUtil {
 
   static async getDAppRequestData() {
     const { chainId } = await this.getBlockChain();
-    const dAppRequestDataIdentifier = `${chainId}_${DAPP_REQUEST_DATA_IDENTIFIER}`;
+    const dAppRequestDataIdentifier = `${chainId}_${DAPPS_REQUEST_DATA_IDENTIFIER}`;
     const storedDAppRequestData = await browser.storage.session.get(
       dAppRequestDataIdentifier,
     );
@@ -292,7 +294,7 @@ class StorageUtil {
 
   static async clearDAppRequestData() {
     const { chainId } = await this.getBlockChain();
-    const dAppRequestDataIdentifier = `${chainId}_${DAPP_REQUEST_DATA_IDENTIFIER}`;
+    const dAppRequestDataIdentifier = `${chainId}_${DAPPS_REQUEST_DATA_IDENTIFIER}`;
     await browser.storage.session.remove(dAppRequestDataIdentifier);
   }
 
@@ -303,7 +305,7 @@ class StorageUtil {
   static async setConnectedAccountsData(data: ConnectedAccountsDataType) {
     const urlOrigin = data.urlOrigin;
     const { chainId } = await this.getBlockChain();
-    const connectedAccountsDataIdentifier = `${chainId}_${urlOrigin}_${DAPP_CONNECTED_ACCOUNTS_IDENTIFIER}`;
+    const connectedAccountsDataIdentifier = `${chainId}_${urlOrigin}_${DAPPS_CONNECTED_ACCOUNTS_IDENTIFIER}`;
     const updatedConnectedAccountsData: ConnectedAccountsDataType = {
       urlOrigin,
       accounts: data.accounts,
@@ -315,7 +317,7 @@ class StorageUtil {
 
   static async getConnectedAccountsData(urlOrigin: string = "") {
     const { chainId } = await this.getBlockChain();
-    const connectedAccountsDataIdentifier = `${chainId}_${urlOrigin}_${DAPP_CONNECTED_ACCOUNTS_IDENTIFIER}`;
+    const connectedAccountsDataIdentifier = `${chainId}_${urlOrigin}_${DAPPS_CONNECTED_ACCOUNTS_IDENTIFIER}`;
     const storedConnectedAccountsData = await browser.storage.local.get(
       connectedAccountsDataIdentifier,
     );
@@ -326,7 +328,7 @@ class StorageUtil {
 
   static async clearConnectedAccountsData(urlOrigin: string = "") {
     const { chainId } = await this.getBlockChain();
-    const connectedAccountsDataIdentifier = `${chainId}_${urlOrigin}_${DAPP_CONNECTED_ACCOUNTS_IDENTIFIER}`;
+    const connectedAccountsDataIdentifier = `${chainId}_${urlOrigin}_${DAPPS_CONNECTED_ACCOUNTS_IDENTIFIER}`;
     await browser.storage.local.remove(connectedAccountsDataIdentifier);
   }
 }
