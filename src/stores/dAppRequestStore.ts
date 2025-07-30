@@ -63,19 +63,20 @@ class DAppRequestStore {
       title: currentTab?.title ?? "",
       urlOrigin,
       connectedAccounts:
-        (await StorageUtil.getConnectedAccountsData(urlOrigin))?.accounts ?? [],
+        (await StorageUtil.getDAppsConnectedAccountsData(urlOrigin))
+          ?.accounts ?? [],
     };
   }
 
   async disconnectFromCurrentTab() {
-    await StorageUtil.clearConnectedAccountsData(
+    await StorageUtil.clearDAppsConnectedAccountsData(
       this.currentTabData?.urlOrigin,
     );
     await this.fetchCurrentTabUrl();
   }
 
   async readDAppRequestData() {
-    const storedDAppRequestData = await StorageUtil.getDAppRequestData();
+    const storedDAppRequestData = await StorageUtil.getDAppsRequestData();
     this.dAppRequestData = storedDAppRequestData;
   }
 
@@ -123,7 +124,7 @@ class DAppRequestStore {
         error,
       );
     } finally {
-      await StorageUtil.clearDAppRequestData();
+      await StorageUtil.clearDAppsRequestData();
       this.setApprovalProcessingStatus({
         isProcessing: false,
         hasCompleted: true,

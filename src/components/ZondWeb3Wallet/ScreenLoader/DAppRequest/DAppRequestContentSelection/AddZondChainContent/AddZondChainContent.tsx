@@ -43,7 +43,7 @@ const AddZondChainContent = observer(() => {
         );
         if (!chainFound) {
           await StorageUtil.setAllBlockChains(updatedChainList);
-          await StorageUtil.clearDAppRequestData();
+          await StorageUtil.clearDAppsRequestData();
           await selectBlockchain(blockchain?.chainId);
         }
       }

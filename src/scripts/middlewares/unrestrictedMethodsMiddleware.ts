@@ -13,7 +13,8 @@ import StorageUtil from "@/utilities/storageUtil";
 const checkRequestCanProceed = async (req: JsonRpcRequest<JsonRpcRequest>) => {
   const urlOrigin = new URL(req?.senderData?.url ?? "").origin;
   const connectedAccounts =
-    (await StorageUtil.getConnectedAccountsData(urlOrigin))?.accounts ?? [];
+    (await StorageUtil.getDAppsConnectedAccountsData(urlOrigin))?.accounts ??
+    [];
   const hasConnectedAccounts = connectedAccounts.length > 0;
   if (!hasConnectedAccounts) {
     return {

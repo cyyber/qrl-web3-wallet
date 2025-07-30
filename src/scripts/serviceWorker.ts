@@ -47,7 +47,7 @@ const registerScripts = async () => {
 
 const prepareListeners = () => {
   browser.storage.onChanged.addListener(async () => {
-    const storedDAppRequestData = await StorageUtil.getDAppRequestData();
+    const storedDAppRequestData = await StorageUtil.getDAppsRequestData();
     if (!!storedDAppRequestData) {
       // If there is a pending request, the badge with 1 notification will be displayed.
       browser.action.setBadgeText({ text: "1" });

@@ -243,12 +243,12 @@ const prepareListeners = () => {
         return "0x".concat(networkId.toString(16));
       } else if (method === UNRESTRICTED_METHODS.ZOND_ACCOUNTS) {
         const connectedAccountsData =
-          await StorageUtil.getConnectedAccountsData(
+          await StorageUtil.getDAppsConnectedAccountsData(
             new URL(message?.data?.senderData?.url ?? "").origin,
           );
         return connectedAccountsData?.accounts ?? [];
       } else if (method === UNRESTRICTED_METHODS.WALLET_REVOKE_PERMISSIONS) {
-        await StorageUtil.clearConnectedAccountsData(
+        await StorageUtil.clearDAppsConnectedAccountsData(
           new URL(message?.data?.senderData?.url ?? "").origin,
         );
         return "";

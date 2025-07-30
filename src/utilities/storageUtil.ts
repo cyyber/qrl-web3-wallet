@@ -274,9 +274,9 @@ class StorageUtil {
 
   /**
    * A function for storing the request info temporarily by the dApp, which will be read by the zond web3 wallet.
-   * Call the getDAppRequestData function to retrieve the stored value, and clearFromTokenList for clearing the stored value.
+   * Call the getDAppsRequestData function to retrieve the stored value, and clearDAppsRequestData for clearing the stored value.
    */
-  static async setDAppRequestData(data: DAppRequestType) {
+  static async setDAppsRequestData(data: DAppRequestType) {
     const { chainId } = await this.getActiveBlockChain();
     const dAppRequestDataIdentifier = `${chainId}_${DAPPS_REQUEST_DATA_IDENTIFIER}`;
     await browser.storage.session.set({
@@ -284,7 +284,7 @@ class StorageUtil {
     });
   }
 
-  static async getDAppRequestData() {
+  static async getDAppsRequestData() {
     const { chainId } = await this.getActiveBlockChain();
     const dAppRequestDataIdentifier = `${chainId}_${DAPPS_REQUEST_DATA_IDENTIFIER}`;
     const storedDAppRequestData = await browser.storage.session.get(
@@ -295,7 +295,7 @@ class StorageUtil {
       | undefined;
   }
 
-  static async clearDAppRequestData() {
+  static async clearDAppsRequestData() {
     const { chainId } = await this.getActiveBlockChain();
     const dAppRequestDataIdentifier = `${chainId}_${DAPPS_REQUEST_DATA_IDENTIFIER}`;
     await browser.storage.session.remove(dAppRequestDataIdentifier);
@@ -303,9 +303,9 @@ class StorageUtil {
 
   /**
    * A function for storing the connected accounts info temporarily, which will be read by method like 'zond_accounts'.
-   * Call the getConnectedAccountsData function to retrieve the stored value, and clearConnectedAccountsData for clearing the stored value.
+   * Call the getDAppsConnectedAccountsData function to retrieve the stored value, and clearDAppsConnectedAccountsData for clearing the stored value.
    */
-  static async setConnectedAccountsData(data: ConnectedAccountsDataType) {
+  static async setDAppsConnectedAccountsData(data: ConnectedAccountsDataType) {
     const urlOrigin = data.urlOrigin;
     const { chainId } = await this.getActiveBlockChain();
     const connectedAccountsDataIdentifier = `${chainId}_${urlOrigin}_${DAPPS_CONNECTED_ACCOUNTS_IDENTIFIER}`;
@@ -318,7 +318,7 @@ class StorageUtil {
     });
   }
 
-  static async getConnectedAccountsData(urlOrigin: string = "") {
+  static async getDAppsConnectedAccountsData(urlOrigin: string = "") {
     const { chainId } = await this.getActiveBlockChain();
     const connectedAccountsDataIdentifier = `${chainId}_${urlOrigin}_${DAPPS_CONNECTED_ACCOUNTS_IDENTIFIER}`;
     const storedConnectedAccountsData = await browser.storage.local.get(
@@ -329,7 +329,7 @@ class StorageUtil {
       | undefined;
   }
 
-  static async clearConnectedAccountsData(urlOrigin: string = "") {
+  static async clearDAppsConnectedAccountsData(urlOrigin: string = "") {
     const { chainId } = await this.getActiveBlockChain();
     const connectedAccountsDataIdentifier = `${chainId}_${urlOrigin}_${DAPPS_CONNECTED_ACCOUNTS_IDENTIFIER}`;
     await browser.storage.local.remove(connectedAccountsDataIdentifier);

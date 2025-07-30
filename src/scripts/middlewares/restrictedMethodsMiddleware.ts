@@ -43,7 +43,7 @@ const checkRequestCanProceed = async (req: JsonRpcRequest<JsonRpcRequest>) => {
       const fromAddress = getFromAddress(req);
       const urlOrigin = new URL(req?.senderData?.url ?? "").origin;
       const connectedAccounts =
-        await StorageUtil.getConnectedAccountsData(urlOrigin);
+        await StorageUtil.getDAppsConnectedAccountsData(urlOrigin);
       const hasAddressConnected =
         connectedAccounts?.accounts.includes(fromAddress) ?? false;
       return {
@@ -70,7 +70,7 @@ const getRestrictedMethodResult = async (
       requestData: { senderData: req.senderData },
     };
 
-    await StorageUtil.setDAppRequestData(request);
+    await StorageUtil.setDAppsRequestData(request);
     try {
       await browser.action.openPopup();
     } catch (error) {
@@ -145,7 +145,7 @@ export const restrictedMethodsMiddleware: JsonRpcMiddleware<
               const urlOrigin = new URL(req?.senderData?.url ?? "").origin;
               const accounts: string[] =
                 restrictedMethodResult?.response?.accounts;
-              await StorageUtil.setConnectedAccountsData({
+              await StorageUtil.setDAppsConnectedAccountsData({
                 urlOrigin,
                 accounts,
               });
