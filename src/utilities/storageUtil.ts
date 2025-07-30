@@ -96,23 +96,22 @@ class StorageUtil {
    * Call the getAllAccounts function to retrieve the stored value.
    */
   static async setAllAccounts(accountList: string[]) {
-    const { chainId } = await this.getActiveBlockChain();
-    const blockChainAccountListIdentifier = `${chainId}_${ALL_ACCOUNTS_IDENTIFIER}`;
+    const existing = (await browser.storage.local.get(ACCOUNTS_IDENTIFIER))?.[
+      ACCOUNTS_IDENTIFIER
+    ];
     await browser.storage.local.set({
-      [blockChainAccountListIdentifier]: accountList,
+      [ACCOUNTS_IDENTIFIER]: {
+        ...existing,
+        [ALL_ACCOUNTS_IDENTIFIER]: accountList,
+      },
     });
   }
 
   static async getAllAccounts() {
-    const { chainId } = await this.getActiveBlockChain();
-    const blockChainAccountListIdentifier = `${chainId}_${ALL_ACCOUNTS_IDENTIFIER}`;
-    const storedAccountList = await browser.storage.local.get(
-      blockChainAccountListIdentifier,
-    );
-
-    return Object.keys(storedAccountList).length
-      ? storedAccountList[blockChainAccountListIdentifier]
-      : [];
+    const storedAllAccounts = (
+      await browser.storage.local.get(ACCOUNTS_IDENTIFIER)
+    )?.[ACCOUNTS_IDENTIFIER];
+    return (storedAllAccounts?.[ALL_ACCOUNTS_IDENTIFIER] ?? []) as string[];
   }
 
   /**
@@ -120,30 +119,37 @@ class StorageUtil {
    * Call the getActiveAccount function to retrieve the stored value, and clearActiveAccount for clearing the stored value.
    */
   static async setActiveAccount(activeAccount?: string) {
-    const { chainId } = await this.getActiveBlockChain();
-    const blockChainAccountIdentifier = `${chainId}_${ACTIVE_ACCOUNT_IDENTIFIER}`;
     if (activeAccount) {
+      const existing = (await browser.storage.local.get(ACCOUNTS_IDENTIFIER))?.[
+        ACCOUNTS_IDENTIFIER
+      ];
       await browser.storage.local.set({
-        [blockChainAccountIdentifier]: activeAccount ?? "",
+        [ACCOUNTS_IDENTIFIER]: {
+          ...existing,
+          [ACTIVE_ACCOUNT_IDENTIFIER]: activeAccount ?? "",
+        },
       });
     } else {
-      await browser.storage.local.remove(blockChainAccountIdentifier);
+      await this.clearActiveAccount();
     }
   }
 
   static async getActiveAccount() {
-    const { chainId } = await this.getActiveBlockChain();
-    const blockChainAccountIdentifier = `${chainId}_${ACTIVE_ACCOUNT_IDENTIFIER}`;
-    const storedActiveAccount = await browser.storage.local.get(
-      blockChainAccountIdentifier,
-    );
-    return (storedActiveAccount?.[blockChainAccountIdentifier] ?? "") as string;
+    const storedAccounts = (
+      await browser.storage.local.get(ACCOUNTS_IDENTIFIER)
+    )?.[ACCOUNTS_IDENTIFIER];
+    return (storedAccounts?.[ACTIVE_ACCOUNT_IDENTIFIER] ?? "") as string;
   }
 
   static async clearActiveAccount() {
-    const { chainId } = await this.getActiveBlockChain();
-    const blockChainAccountIdentifier = `${chainId}_${ACTIVE_ACCOUNT_IDENTIFIER}`;
-    await browser.storage.local.remove(blockChainAccountIdentifier);
+    const storedAccounts =
+      (await browser.storage.local.get(ACCOUNTS_IDENTIFIER))?.[
+        ACCOUNTS_IDENTIFIER
+      ] ?? {};
+    delete storedAccounts?.[ACTIVE_ACCOUNT_IDENTIFIER];
+    await browser.storage.local.set({
+      [ACCOUNTS_IDENTIFIER]: storedAccounts,
+    });
   }
 
   /**
