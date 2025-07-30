@@ -163,12 +163,11 @@ class StorageUtil {
   }
 
   static async getAllBlockChains() {
-    const storedBlockchains = await browser.storage.local.get(
-      BLOCKCHAINS_IDENTIFIER,
-    );
-    return (storedBlockchains?.[BLOCKCHAINS_IDENTIFIER]?.[
-      ALL_BLOCKCHAINS_IDENTIFIER
-    ] ?? ZOND_BLOCKCHAINS) as BlockchainDataType[];
+    const storedBlockchains = (
+      await browser.storage.local.get(BLOCKCHAINS_IDENTIFIER)
+    )?.[BLOCKCHAINS_IDENTIFIER];
+    return (storedBlockchains?.[ALL_BLOCKCHAINS_IDENTIFIER] ??
+      ZOND_BLOCKCHAINS) as BlockchainDataType[];
   }
 
   /**
@@ -188,16 +187,14 @@ class StorageUtil {
   }
 
   static async getBlockChain() {
-    const storedBlockchainId = await browser.storage.local.get(
-      BLOCKCHAINS_IDENTIFIER,
-    );
+    const storedBlockchains = (
+      await browser.storage.local.get(BLOCKCHAINS_IDENTIFIER)
+    )?.[BLOCKCHAINS_IDENTIFIER];
     const blockchains = await this.getAllBlockChains();
     const existingChain = blockchains.find(
       (chain) =>
         chain.chainId.toLowerCase() ===
-        storedBlockchainId?.[BLOCKCHAINS_IDENTIFIER]?.[
-          ACTIVE_BLOCKCHAIN_IDENTIFIER
-        ]?.toLowerCase(),
+        storedBlockchains?.[ACTIVE_BLOCKCHAIN_IDENTIFIER]?.toLowerCase(),
     );
     return existingChain ?? DEFAULT_BLOCKCHAIN;
   }
