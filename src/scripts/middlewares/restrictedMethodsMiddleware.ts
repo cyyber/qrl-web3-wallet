@@ -57,6 +57,7 @@ const checkRequestCanProceed = async (req: JsonRpcRequest<JsonRpcRequest>) => {
       try {
         // @ts-ignore
         const [chainData] = req.params;
+        const chainId = chainData?.chainId;
       } catch (error) {
         return {
           canProceed: false,
@@ -141,15 +142,14 @@ export const restrictedMethodsMiddleware: JsonRpcMiddleware<
           message: "A request is already pending",
         });
       }
-      end();
+      return end();
     } else {
       // check if the request can proceed
       const { canProceed, proceedError } = await checkRequestCanProceed(req);
       if (!canProceed) {
         // @ts-ignore
         res.error = proceedError;
-        end();
-        return;
+        return end();
       }
 
       // check if the request can complete silently without user interaction
@@ -157,8 +157,7 @@ export const restrictedMethodsMiddleware: JsonRpcMiddleware<
         await checkRequestCanCompleteSilently(req);
       if (hasCompleted) {
         res.result = completionResult;
-        end();
-        return;
+        return end();
       }
 
       // open the popup and wait for the user to approve/reject the request
@@ -221,7 +220,7 @@ export const restrictedMethodsMiddleware: JsonRpcMiddleware<
           res.error = providerErrors.userRejectedRequest();
         }
       }
-      end();
+      return end();
     }
   } else {
     next();

@@ -58,8 +58,7 @@ export const unrestrictedMethodsMiddleware: JsonRpcMiddleware<
         code: proceedError?.code ?? METHOD_ERROR_CODES.UNSUPPORTED_METHOD,
         message: proceedError?.message,
       });
-      end();
-      return;
+      return end();
     }
 
     try {
@@ -69,7 +68,7 @@ export const unrestrictedMethodsMiddleware: JsonRpcMiddleware<
         message: error?.message,
       });
     }
-    end();
+    return end();
   } else {
     next();
   }
