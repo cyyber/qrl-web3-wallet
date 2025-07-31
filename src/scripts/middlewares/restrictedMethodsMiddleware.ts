@@ -7,6 +7,35 @@ import { RESTRICTED_METHODS } from "../constants/requestConstants";
 import { EXTENSION_MESSAGES } from "../constants/streamConstants";
 import { DAppRequestType, DAppResponseType } from "./middlewareTypes";
 
+const checkRequestCanCompleteSilently = async (
+  req: JsonRpcRequest<JsonRpcRequest>,
+) => {
+  switch (req.method) {
+    case RESTRICTED_METHODS.WALLET_ADD_ZOND_CHAIN:
+      // @ts-ignore
+      const [chainData] = req.params;
+      const chainId = chainData?.chainId;
+      const blockchains = await StorageUtil.getAllBlockChains();
+      const chainFound = !!blockchains.find(
+        (chain) => chain.chainId.toLowerCase() === chainId.toLowerCase(),
+      );
+      if (chainFound) {
+        await StorageUtil.setActiveBlockChain(chainId);
+        return {
+          hasCompleted: true,
+          completionResult: null,
+        };
+      }
+      return {
+        hasCompleted: false,
+      };
+    default:
+      return {
+        hasCompleted: false,
+      };
+  }
+};
+
 const getFromAddress = (req: JsonRpcRequest<JsonRpcRequest>) => {
   switch (req.method) {
     case RESTRICTED_METHODS.ZOND_SEND_TRANSACTION:
@@ -119,6 +148,15 @@ export const restrictedMethodsMiddleware: JsonRpcMiddleware<
       if (!canProceed) {
         // @ts-ignore
         res.error = proceedError;
+        end();
+        return;
+      }
+
+      // check if the request can complete silently without user interaction
+      const { hasCompleted, completionResult } =
+        await checkRequestCanCompleteSilently(req);
+      if (hasCompleted) {
+        res.result = completionResult;
         end();
         return;
       }
