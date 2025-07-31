@@ -31,9 +31,8 @@ const AccountBadge = observer(() => {
   const location = useLocation();
   const pathName = location.pathname;
   const { zondStore } = useStore();
-  const {
-    activeAccount: { accountAddress },
-  } = zondStore;
+  const { activeAccount } = zondStore;
+  const { accountAddress } = activeAccount;
 
   const { prefix, addressSplit } = StringUtil.getSplitAddress(accountAddress);
   const account = `${prefix}${addressSplit[0]}...${addressSplit[addressSplit.length - 1]}`;
