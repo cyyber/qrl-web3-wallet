@@ -1,6 +1,4 @@
 import {
-  BlockchainAdditionalDataType,
-  BlockchainBaseDataType,
   BlockchainDataType,
   DEFAULT_BLOCKCHAIN,
 } from "@/configuration/zondBlockchainConfig";
@@ -78,13 +76,11 @@ class ZondStore {
     await this.validateActiveAccount();
   }
 
-  async addChain(
-    chainData: BlockchainBaseDataType,
-    additionalChainData: BlockchainAdditionalDataType,
-  ) {
+  async addChain(chainData: BlockchainDataType) {
     const newChain: BlockchainDataType = {
       ...chainData,
-      ...additionalChainData,
+      chainId: chainData?.chainId?.trim(),
+      chainName: chainData?.chainName?.trim()?.substring(0, 100),
     };
     const blockchains = await StorageUtil.getAllBlockChains();
     const chainFound = !!blockchains.find(
@@ -93,13 +89,11 @@ class ZondStore {
     return { chainFound, updatedChainList: [...blockchains, newChain] };
   }
 
-  async editChain(
-    chainData: BlockchainBaseDataType,
-    additionalChainData: BlockchainAdditionalDataType,
-  ) {
+  async editChain(chainData: BlockchainDataType) {
     const editedChain = {
       ...chainData,
-      ...additionalChainData,
+      chainId: chainData?.chainId?.trim(),
+      chainName: chainData?.chainName?.trim()?.substring(0, 100),
     };
     const blockchains = await StorageUtil.getAllBlockChains();
     const updatedChainList: BlockchainDataType[] = blockchains.map((chain) =>

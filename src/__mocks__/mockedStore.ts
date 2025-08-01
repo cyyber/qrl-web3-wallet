@@ -1,6 +1,5 @@
 import {
-  BlockchainAdditionalDataType,
-  BlockchainBaseDataType,
+  BlockchainDataType,
   DEFAULT_BLOCKCHAIN,
 } from "@/configuration/zondBlockchainConfig";
 import { StoreType } from "@/stores/store";
@@ -93,20 +92,12 @@ const mockedStoreValues: StoreType = {
       return { transactionReceipt: undefined, error: "" };
     },
     refreshBlockchainData: async () => {},
-    addChain: async (
-      chainData: BlockchainBaseDataType,
-      additionalChainData: BlockchainAdditionalDataType,
-    ) => {
+    addChain: async (chainData: BlockchainDataType) => {
       chainData;
-      additionalChainData;
       return { chainFound: false, updatedChainList: [] };
     },
-    editChain: async (
-      chainData: BlockchainBaseDataType,
-      additionalChainData: BlockchainAdditionalDataType,
-    ) => {
+    editChain: async (chainData: BlockchainDataType) => {
       chainData;
-      additionalChainData;
       return { updatedChainList: [] };
     },
   },

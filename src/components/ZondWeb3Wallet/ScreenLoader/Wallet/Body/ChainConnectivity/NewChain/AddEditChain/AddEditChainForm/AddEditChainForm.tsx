@@ -118,28 +118,31 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
     );
   }, [iconUrls]);
 
+  const generateBlockchainData = (formData: z.infer<typeof FormSchema>) => {
+    const chainData: BlockchainDataType = {
+      chainName: formData.chainName,
+      chainId: "0x".concat(formData.chainId.toString(16)),
+      nativeCurrency: {
+        name: formData.currencyName,
+        symbol: formData.currencySymbol,
+        decimals: formData.currencyDecimals,
+      },
+      rpcUrls,
+      blockExplorerUrls,
+      iconUrls,
+      defaultRpcUrl,
+      defaultBlockExplorerUrl,
+      defaultIconUrl,
+      isTestnet: false,
+      defaultWsRpcUrl: "http://127.0.0.1:8545",
+      isCustomChain: true,
+    };
+    return chainData;
+  };
+
   const addBlockchain = async (formData: z.infer<typeof FormSchema>) => {
     const { chainFound, updatedChainList } = await addChain(
-      {
-        chainName: formData.chainName,
-        chainId: "0x".concat(formData.chainId.toString(16)),
-        nativeCurrency: {
-          name: formData.currencyName,
-          symbol: formData.currencySymbol,
-          decimals: formData.currencyDecimals,
-        },
-        rpcUrls,
-        blockExplorerUrls,
-        iconUrls,
-      },
-      {
-        defaultRpcUrl,
-        defaultBlockExplorerUrl,
-        defaultIconUrl,
-        isTestnet: false,
-        defaultWsRpcUrl: "http://127.0.0.1:8545",
-        isCustomChain: true,
-      },
+      generateBlockchainData(formData),
     );
     if (chainFound) {
       setError(
@@ -154,26 +157,7 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
 
   const editBlockchain = async (formData: z.infer<typeof FormSchema>) => {
     const { updatedChainList } = await editChain(
-      {
-        chainName: formData.chainName,
-        chainId: "0x".concat(formData.chainId.toString(16)),
-        nativeCurrency: {
-          name: formData.currencyName,
-          symbol: formData.currencySymbol,
-          decimals: formData.currencyDecimals,
-        },
-        rpcUrls,
-        blockExplorerUrls,
-        iconUrls,
-      },
-      {
-        defaultRpcUrl,
-        defaultBlockExplorerUrl,
-        defaultIconUrl,
-        isTestnet: false,
-        defaultWsRpcUrl: "http://127.0.0.1:8545",
-        isCustomChain: true,
-      },
+      generateBlockchainData(formData),
     );
 
     await StorageUtil.setAllBlockChains(updatedChainList);

@@ -23,24 +23,20 @@ const AddZondChainContent = observer(() => {
       if (hasApproved) {
         const blockchain = dAppRequestData
           ?.params?.[0] as BlockchainBaseDataType;
-        const { chainFound, updatedChainList } = await addChain(
-          {
-            chainName: blockchain?.chainName,
-            chainId: blockchain?.chainId,
-            nativeCurrency: blockchain?.nativeCurrency,
-            rpcUrls: blockchain?.rpcUrls,
-            blockExplorerUrls: blockchain?.blockExplorerUrls,
-            iconUrls: blockchain?.iconUrls,
-          },
-          {
-            defaultRpcUrl: blockchain?.rpcUrls?.[0] ?? "",
-            defaultBlockExplorerUrl: blockchain?.blockExplorerUrls?.[0] ?? "",
-            defaultIconUrl: blockchain?.iconUrls?.[0] ?? "",
-            isTestnet: false,
-            defaultWsRpcUrl: "http://127.0.0.1:8545",
-            isCustomChain: true,
-          },
-        );
+        const { chainFound, updatedChainList } = await addChain({
+          chainName: blockchain?.chainName,
+          chainId: blockchain?.chainId,
+          nativeCurrency: blockchain?.nativeCurrency,
+          rpcUrls: blockchain?.rpcUrls,
+          blockExplorerUrls: blockchain?.blockExplorerUrls,
+          iconUrls: blockchain?.iconUrls,
+          defaultRpcUrl: blockchain?.rpcUrls?.[0] ?? "",
+          defaultBlockExplorerUrl: blockchain?.blockExplorerUrls?.[0] ?? "",
+          defaultIconUrl: blockchain?.iconUrls?.[0] ?? "",
+          isTestnet: false,
+          defaultWsRpcUrl: "http://127.0.0.1:8545",
+          isCustomChain: true,
+        });
         if (!chainFound) {
           await StorageUtil.setAllBlockChains(updatedChainList);
           await StorageUtil.clearDAppsRequestData();
