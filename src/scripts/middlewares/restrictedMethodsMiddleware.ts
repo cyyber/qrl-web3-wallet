@@ -44,7 +44,8 @@ const checkRequestCanCompleteSilently = async (
 const checkRequestCanProceed = async (req: JsonRpcRequest<JsonRpcRequest>) => {
   switch (req.method) {
     case RESTRICTED_METHODS.WALLET_ADD_ZOND_CHAIN:
-      return await checkWalletAddZondChainParams(req);
+      // @ts-ignore
+      return await checkWalletAddZondChainParams(req?.params?.[0]);
     case RESTRICTED_METHODS.ZOND_SEND_TRANSACTION:
     case RESTRICTED_METHODS.ZOND_SIGN_TYPED_DATA_V4:
     case RESTRICTED_METHODS.PERSONAL_SIGN:

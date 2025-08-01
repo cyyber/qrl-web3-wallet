@@ -63,18 +63,14 @@ const isAcceptableUrl = (urlString: string) => {
 };
 
 export const checkWalletAddZondChainParams = async (
-  req: JsonRpcRequest<JsonRpcRequest>,
+  chainData: BlockchainDataType,
 ) => {
-  const params = req.params;
-  // @ts-ignore
-  const chainData: BlockchainDataType = params?.[0];
-
-  if (!params || typeof params !== "object") {
+  if (!chainData || typeof chainData !== "object") {
     return {
       canProceed: false,
       proceedError: rpcErrors.invalidParams({
         message: `Expected an object parameter. Received: ${JSON.stringify(
-          params,
+          chainData,
         )}`,
       }),
     };
