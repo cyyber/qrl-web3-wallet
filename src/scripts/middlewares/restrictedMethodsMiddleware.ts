@@ -6,6 +6,10 @@ import browser from "webextension-polyfill";
 import { RESTRICTED_METHODS } from "../constants/requestConstants";
 import { EXTENSION_MESSAGES } from "../constants/streamConstants";
 import { DAppRequestType, DAppResponseType } from "./middlewareTypes";
+import {
+  checkAccountHasBeenAuthorized,
+  checkWalletAddZondChainParams,
+} from "../utils/restrictedMethodsMiddlewareUtils";
 
 const checkRequestCanCompleteSilently = async (
   req: JsonRpcRequest<JsonRpcRequest>,
@@ -36,55 +40,19 @@ const checkRequestCanCompleteSilently = async (
   }
 };
 
-const getFromAddress = (req: JsonRpcRequest<JsonRpcRequest>) => {
-  switch (req.method) {
-    case RESTRICTED_METHODS.ZOND_SEND_TRANSACTION:
-      // @ts-ignore
-      return req.params?.[0]?.from ?? "";
-    case RESTRICTED_METHODS.ZOND_SIGN_TYPED_DATA_V4:
-      // @ts-ignore
-      return req.params?.[0];
-    case RESTRICTED_METHODS.PERSONAL_SIGN:
-      // @ts-ignore
-      return req.params?.[1];
-  }
-};
-
 // a precheck to determine if the request can proceed
 const checkRequestCanProceed = async (req: JsonRpcRequest<JsonRpcRequest>) => {
   switch (req.method) {
     case RESTRICTED_METHODS.WALLET_ADD_ZOND_CHAIN:
-      try {
-        // @ts-ignore
-        const [chainData] = req.params;
-        const chainId = chainData?.chainId;
-      } catch (error) {
-        return {
-          canProceed: false,
-          proceedError: providerErrors.unsupportedMethod(),
-        };
-      }
-      return {
-        canProceed: true,
-      };
+      return await checkWalletAddZondChainParams(req);
     case RESTRICTED_METHODS.ZOND_SEND_TRANSACTION:
     case RESTRICTED_METHODS.ZOND_SIGN_TYPED_DATA_V4:
     case RESTRICTED_METHODS.PERSONAL_SIGN:
-      const fromAddress = getFromAddress(req);
-      const urlOrigin = new URL(req?.senderData?.url ?? "").origin;
-      const connectedAccounts =
-        await StorageUtil.getDAppsConnectedAccountsData(urlOrigin);
-      const hasAddressConnected =
-        connectedAccounts?.accounts.includes(fromAddress) ?? false;
-      return {
-        canProceed: hasAddressConnected,
-        proceedError: providerErrors.unauthorized({
-          message: `The requested account ${fromAddress} has not been authorized by the user.`,
-        }),
-      };
+      return await checkAccountHasBeenAuthorized(req);
     default:
       return {
         canProceed: true,
+        proceedError: undefined,
       };
   }
 };
