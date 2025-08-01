@@ -18,6 +18,8 @@ import { Input } from "@/components/UI/Input";
 import { Label } from "@/components/UI/Label";
 import { BlockchainDataType } from "@/configuration/zondBlockchainConfig";
 import { ROUTES } from "@/router/router";
+import { checkWalletAddZondChainParams } from "@/scripts/utils/restrictedMethodsMiddlewareUtils";
+import { useStore } from "@/stores/store";
 import StorageUtil from "@/utilities/storageUtil";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader, Pencil, Plus, X } from "lucide-react";
@@ -27,7 +29,6 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import UrlSelections from "./UrlSelections/UrlSelections";
-import { useStore } from "@/stores/store";
 
 type AddEditChainFormType = {
   chainToEdit?: BlockchainDataType;
@@ -140,13 +141,11 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
     return chainData;
   };
 
-  const addBlockchain = async (formData: z.infer<typeof FormSchema>) => {
-    const { chainFound, updatedChainList } = await addChain(
-      generateBlockchainData(formData),
-    );
+  const addBlockchain = async (blockchainData: BlockchainDataType) => {
+    const { chainFound, updatedChainList } = await addChain(blockchainData);
     if (chainFound) {
       setError(
-        `A blockchain with the chain ID ${formData.chainId} already exist.`,
+        `A blockchain with the chain ID ${blockchainData.chainId} already exist.`,
       );
       return;
     }
@@ -155,10 +154,8 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
     navigate(ROUTES.CHAIN_CONNECTIVITY);
   };
 
-  const editBlockchain = async (formData: z.infer<typeof FormSchema>) => {
-    const { updatedChainList } = await editChain(
-      generateBlockchainData(formData),
-    );
+  const editBlockchain = async (blockchainData: BlockchainDataType) => {
+    const { updatedChainList } = await editChain(blockchainData);
 
     await StorageUtil.setAllBlockChains(updatedChainList);
     navigate(ROUTES.CHAIN_CONNECTIVITY);
@@ -167,10 +164,17 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
 
   async function onSubmit(formData: z.infer<typeof FormSchema>) {
     setError("");
+    const blockchainData = generateBlockchainData(formData);
+    const { canProceed, proceedError } =
+      await checkWalletAddZondChainParams(blockchainData);
+    if (!canProceed) {
+      setError(proceedError?.message ?? "Form validation failed");
+      return;
+    }
     if (isChainEdit) {
-      await editBlockchain(formData);
+      await editBlockchain(blockchainData);
     } else {
-      await addBlockchain(formData);
+      await addBlockchain(blockchainData);
     }
   }
 
