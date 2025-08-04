@@ -10,6 +10,7 @@ import {
   checkAccountHasBeenAuthorized,
   checkWalletAddZondChainParams,
 } from "../utils/restrictedMethodsMiddlewareUtils";
+import { checkUrlOriginHasBeenConnected } from "../utils/unrestrictedMethodsMiddlewareUtils";
 
 const checkRequestCanCompleteSilently = async (
   req: JsonRpcRequest<JsonRpcRequest>,
@@ -44,6 +45,12 @@ const checkRequestCanCompleteSilently = async (
 const checkRequestCanProceed = async (req: JsonRpcRequest<JsonRpcRequest>) => {
   switch (req.method) {
     case RESTRICTED_METHODS.WALLET_ADD_ZOND_CHAIN:
+      const originConnectResult = await checkUrlOriginHasBeenConnected(
+        req?.senderData?.url ?? "",
+      );
+      if (!originConnectResult.canProceed) {
+        return originConnectResult;
+      }
       // @ts-ignore
       return await checkWalletAddZondChainParams(req?.params?.[0]);
     case RESTRICTED_METHODS.ZOND_SEND_TRANSACTION:

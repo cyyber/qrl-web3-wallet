@@ -1,28 +1,22 @@
-import StorageUtil from "@/utilities/storageUtil";
 import { JsonRpcMiddleware } from "@theqrl/zond-wallet-provider/json-rpc-engine";
 import { providerErrors } from "@theqrl/zond-wallet-provider/rpc-errors";
 import { Json, JsonRpcRequest } from "@theqrl/zond-wallet-provider/utils";
 import browser from "webextension-polyfill";
 import { UNRESTRICTED_METHODS } from "../constants/requestConstants";
 import { EXTENSION_MESSAGES } from "../constants/streamConstants";
-import { checkWalletSwitchZondChainParams } from "../utils/unrestrictedMethodsMiddlewareUtils";
+import {
+  checkUrlOriginHasBeenConnected,
+  checkWalletSwitchZondChainParams,
+} from "../utils/unrestrictedMethodsMiddlewareUtils";
 
 // a precheck to determine if the request can proceed
 const checkRequestCanProceed = async (req: JsonRpcRequest<JsonRpcRequest>) => {
-  const urlOrigin = new URL(req?.senderData?.url ?? "").origin;
-  const connectedAccounts =
-    (await StorageUtil.getDAppsConnectedAccountsData(urlOrigin))?.accounts ??
-    [];
-  const hasConnectedAccounts = connectedAccounts.length > 0;
-  if (!hasConnectedAccounts) {
-    return {
-      canProceed: false,
-      proceedError: providerErrors.unauthorized({
-        message: "The dApp is not connected to the Zond Web3 Wallet.",
-      }),
-    };
+  const originConnectResult = await checkUrlOriginHasBeenConnected(
+    req?.senderData?.url ?? "",
+  );
+  if (!originConnectResult.canProceed) {
+    return originConnectResult;
   }
-
   switch (req.method) {
     case UNRESTRICTED_METHODS.WALLET_SWITCH_ZOND_CHAIN:
       // @ts-ignore

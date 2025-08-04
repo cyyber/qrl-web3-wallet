@@ -3,6 +3,20 @@ import StorageUtil from "@/utilities/storageUtil";
 import { providerErrors, rpcErrors } from "@theqrl/zond-wallet-provider";
 import { RESTRICTED_METHODS } from "../constants/requestConstants";
 
+export const checkUrlOriginHasBeenConnected = async (url: string) => {
+  const urlOrigin = new URL(url).origin;
+  const connectedAccounts =
+    (await StorageUtil.getDAppsConnectedAccountsData(urlOrigin))?.accounts ??
+    [];
+  const hasConnectedAccounts = connectedAccounts.length > 0;
+  return {
+    canProceed: hasConnectedAccounts,
+    proceedError: providerErrors.unauthorized({
+      message: "The dApp is not connected to the Zond Web3 Wallet.",
+    }),
+  };
+};
+
 export const checkWalletSwitchZondChainParams = async (paramObject: {
   chainId: string;
 }) => {
