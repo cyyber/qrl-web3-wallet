@@ -17,6 +17,19 @@ export const checkWalletSwitchZondChainParams = async (paramObject: {
     };
   }
 
+  const allowedKeys = ["chainId"];
+  const extraKeys = Object.keys(paramObject).filter((key) => {
+    return !allowedKeys.includes(key);
+  });
+  if (extraKeys.length) {
+    return {
+      canProceed: false,
+      proceedError: rpcErrors.invalidParams({
+        message: `Received unexpected keys on object parameter. Unsupported keys: ${extraKeys}`,
+      }),
+    };
+  }
+
   const chainId = paramObject?.chainId;
   if (
     typeof chainId !== "string" ||

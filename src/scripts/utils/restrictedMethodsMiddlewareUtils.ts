@@ -76,6 +76,26 @@ export const checkWalletAddZondChainParams = async (
     };
   }
 
+  const allowedKeys = [
+    "chainName",
+    "chainId",
+    "nativeCurrency",
+    "rpcUrls",
+    "blockExplorerUrls",
+    "iconUrls",
+  ];
+  const extraKeys = Object.keys(chainData).filter((key) => {
+    return !allowedKeys.includes(key);
+  });
+  if (extraKeys.length) {
+    return {
+      canProceed: false,
+      proceedError: rpcErrors.invalidParams({
+        message: `Received unexpected keys on object parameter. Unsupported keys: ${extraKeys}`,
+      }),
+    };
+  }
+
   const chainId = chainData?.chainId;
   if (
     typeof chainId !== "string" ||
