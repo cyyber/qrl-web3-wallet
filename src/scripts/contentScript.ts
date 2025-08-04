@@ -252,6 +252,11 @@ const prepareListeners = () => {
           new URL(message?.data?.senderData?.url ?? "").origin,
         );
         return "";
+      } else if (method === UNRESTRICTED_METHODS.WALLET_SWITCH_ZOND_CHAIN) {
+        const [chainIdObject] = message?.data?.params;
+        const chainId = chainIdObject?.chainId;
+        await StorageUtil.setActiveBlockChain(chainId);
+        return null;
       } else if (method === UNRESTRICTED_METHODS.WEB_3_CLIENT_VERSION) {
         const currentVersion = await zond?.getNodeInfo();
         return currentVersion;

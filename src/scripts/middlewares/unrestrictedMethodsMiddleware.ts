@@ -1,13 +1,11 @@
+import StorageUtil from "@/utilities/storageUtil";
 import { JsonRpcMiddleware } from "@theqrl/zond-wallet-provider/json-rpc-engine";
 import { providerErrors } from "@theqrl/zond-wallet-provider/rpc-errors";
 import { Json, JsonRpcRequest } from "@theqrl/zond-wallet-provider/utils";
 import browser from "webextension-polyfill";
-import {
-  METHOD_ERROR_CODES,
-  UNRESTRICTED_METHODS,
-} from "../constants/requestConstants";
+import { UNRESTRICTED_METHODS } from "../constants/requestConstants";
 import { EXTENSION_MESSAGES } from "../constants/streamConstants";
-import StorageUtil from "@/utilities/storageUtil";
+import { checkWalletSwitchZondChainParams } from "../utils/unrestrictedMethodsMiddlewareUtils";
 
 // a precheck to determine if the request can proceed
 const checkRequestCanProceed = async (req: JsonRpcRequest<JsonRpcRequest>) => {
@@ -19,13 +17,22 @@ const checkRequestCanProceed = async (req: JsonRpcRequest<JsonRpcRequest>) => {
   if (!hasConnectedAccounts) {
     return {
       canProceed: false,
-      proceedError: {
-        code: METHOD_ERROR_CODES.UNAUTHORIZED_ACCOUNT,
+      proceedError: providerErrors.unauthorized({
         message: "The dApp is not connected to the Zond Web3 Wallet.",
-      },
+      }),
     };
   }
-  return { canProceed: true, proceedError: { code: 0, message: "" } };
+
+  switch (req.method) {
+    case UNRESTRICTED_METHODS.WALLET_SWITCH_ZOND_CHAIN:
+      // @ts-ignore
+      return await checkWalletSwitchZondChainParams(req?.params?.[0]);
+    default:
+      return {
+        canProceed: true,
+        proceedError: providerErrors.unsupportedMethod(),
+      };
+  }
 };
 
 const getUnrestrictedMethodResult = async (
@@ -54,10 +61,8 @@ export const unrestrictedMethodsMiddleware: JsonRpcMiddleware<
     // check if the request can proceed
     const { canProceed, proceedError } = await checkRequestCanProceed(req);
     if (!canProceed) {
-      res.error = providerErrors.custom({
-        code: proceedError?.code ?? METHOD_ERROR_CODES.UNSUPPORTED_METHOD,
-        message: proceedError?.message,
-      });
+      // @ts-ignore
+      res.error = proceedError;
       return end();
     }
 
