@@ -20,11 +20,16 @@ const AddZondChainDetails = observer(() => {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex gap-0">
-        <CurrencyImagePreload iconUrls={iconUrls} />
-        <div className="flex flex-col gap-1 transition-all duration-1000">
-          <div>Currency name</div>
-          <div className="font-bold text-secondary">{currencyName}</div>
+      <div className="grid grid-cols-2">
+        <div className="flex flex-col gap-1">
+          <div>Chain name</div>
+          <div className="font-bold text-secondary">{chainName}</div>
+        </div>
+        <div className="flex flex-col gap-1">
+          <div>Chain ID</div>
+          <div className="font-bold text-secondary">
+            {parseInt(chainId, 16)}
+          </div>
         </div>
       </div>
       <div className="grid grid-cols-2">
@@ -37,16 +42,11 @@ const AddZondChainDetails = observer(() => {
           <div className="font-bold text-secondary">{currencyDecimal}</div>
         </div>
       </div>
-      <div className="grid grid-cols-2">
-        <div className="flex flex-col gap-1">
-          <div>Chain name</div>
-          <div className="font-bold text-secondary">{chainName}</div>
-        </div>
-        <div className="flex flex-col gap-1">
-          <div>Chain ID</div>
-          <div className="font-bold text-secondary">
-            {parseInt(chainId, 16)}
-          </div>
+      <div className="flex gap-0">
+        <CurrencyImagePreload iconUrls={iconUrls} />
+        <div className="flex flex-col gap-1 transition-all duration-1000">
+          <div>Currency name</div>
+          <div className="font-bold text-secondary">{currencyName}</div>
         </div>
       </div>
       <AddZondChainUrlList title="RPC URLs" urlList={rpcUrls} />
