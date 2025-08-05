@@ -14,11 +14,11 @@ jest.mock("lucide-react", () => {
   };
 });
 jest.mock(
-  "@/components/ZondWeb3Wallet/Body/Home/AccountCreateImport/AccountCreateImport",
+  "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/Home/AccountCreateImport/AccountCreateImport",
   () => () => <div>Mocked Account Create Import</div>,
 );
 jest.mock(
-  "@/components/ZondWeb3Wallet/Body/Home/ConnectionFailed/ConnectionFailed",
+  "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/Home/ConnectionFailed/ConnectionFailed",
   () => () => <div>Mocked Connection Failed</div>,
 );
 

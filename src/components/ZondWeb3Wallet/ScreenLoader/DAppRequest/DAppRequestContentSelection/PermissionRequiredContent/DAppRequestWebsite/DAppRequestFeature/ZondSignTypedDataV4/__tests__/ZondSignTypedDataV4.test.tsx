@@ -6,11 +6,11 @@ import { MemoryRouter } from "react-router-dom";
 import ZondSignTypedDataV4 from "../ZondSignTypedDataV4";
 
 jest.mock(
-  "@/components/ZondWeb3Wallet/DAppRequest/DAppRequestContent/DAppRequestWebsite/DAppRequestFeature/ZondSignTypedDataV4/ZondSignTypedDataV4Content/ZondSignTypedDataV4Content",
+  "@/components/ZondWeb3Wallet/ScreenLoader/DAppRequest/DAppRequestContentSelection/PermissionRequiredContent/DAppRequestWebsite/DAppRequestFeature/ZondSignTypedDataV4/ZondSignTypedDataV4Content/ZondSignTypedDataV4Content",
   () => () => <div>Mocked Zond Sign Typed Data V4 Content</div>,
 );
 jest.mock(
-  "@/components/ZondWeb3Wallet/DAppRequest/DAppRequestContent/DAppRequestWebsite/DAppRequestFeature/ZondSignTypedDataV4/PersonalSign/PersonalSign",
+  "@/components/ZondWeb3Wallet/ScreenLoader/DAppRequest/DAppRequestContentSelection/PermissionRequiredContent/DAppRequestWebsite/DAppRequestFeature/ZondSignTypedDataV4/PersonalSign/PersonalSign",
   () => () => <div>Mocked Personal Sign</div>,
 );
 

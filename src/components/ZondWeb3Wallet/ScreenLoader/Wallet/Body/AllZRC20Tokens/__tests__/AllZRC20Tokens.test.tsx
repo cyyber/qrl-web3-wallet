@@ -6,7 +6,7 @@ import { MemoryRouter } from "react-router-dom";
 import AllZRC20Tokens from "../AllZRC20Tokens";
 
 jest.mock(
-  "@/components/ZondWeb3Wallet/Body/Home/AccountCreateImport/ActiveAccountDisplay/TokensCardContent/ZRC20Tokens/ZRC20Tokens",
+  "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/Home/AccountCreateImport/ActiveAccountDisplay/TokensCardContent/ZRC20Tokens/ZRC20Tokens",
   () => () => <div>Mocked ZRC 20 tokens</div>,
 );
 

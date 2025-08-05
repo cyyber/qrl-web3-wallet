@@ -104,7 +104,7 @@ const AddUrlItem = ({ addUrl }: AddUrlItemProps) => {
                         aria-label={field.name}
                         autoComplete="off"
                         disabled={isSubmitting}
-                        placeholder="http://url_address"
+                        placeholder="https://url_address"
                         type="text"
                       />
                     </FormControl>

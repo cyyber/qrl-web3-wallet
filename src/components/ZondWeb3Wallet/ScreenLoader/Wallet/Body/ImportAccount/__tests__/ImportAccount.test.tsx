@@ -8,7 +8,7 @@ import { MemoryRouter } from "react-router-dom";
 import ImportAccount from "../ImportAccount";
 
 jest.mock(
-  "@/components/ZondWeb3Wallet/Body/ImportAccount/AccountImportSuccess/AccountImportSuccess",
+  "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/ImportAccount/AccountImportSuccess/AccountImportSuccess",
   () => () => <div>Mocked Account Import Success</div>,
 );
 

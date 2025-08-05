@@ -7,15 +7,11 @@ import DAppRequest from "../DAppRequest";
 import { TooltipProvider } from "@/components/UI/Tooltip";
 
 jest.mock(
-  "@/components/ZondWeb3Wallet/DAppRequest/DAppRequestContent/DAppRequestConnectionNotAvailable/DAppRequestConnectionNotAvailable",
+  "@/components/ZondWeb3Wallet/ScreenLoader/DAppRequest/DAppRequestConnectionNotAvailable/DAppRequestConnectionNotAvailable",
   () => () => <div>Mocked DApp Request Connection Not Available</div>,
 );
 jest.mock(
-  "@/components/ZondWeb3Wallet/DAppRequest/DAppRequestContent/DAppRequestCompleted/DAppRequestCompleted",
-  () => () => <div>Mocked DApp Request Completed</div>,
-);
-jest.mock(
-  "@/components/ZondWeb3Wallet/Header/ChainBadge/ChainBadge",
+  "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Header/ChainBadge/ChainBadge",
   () => () => <div>Mocked ChainBadge</div>,
 );
 
@@ -40,19 +36,6 @@ describe("DAppRequest", () => {
 
     expect(
       screen.getByText("Mocked DApp Request Connection Not Available"),
-    ).toBeInTheDocument();
-  });
-
-  it("should display dapp request completed component if the request has completed", async () => {
-    renderComponent(
-      mockedStore({
-        zondStore: { zondConnection: { isConnected: true } },
-        dAppRequestStore: { approvalProcessingStatus: { hasCompleted: true } },
-      }),
-    );
-
-    expect(
-      screen.getByText("Mocked DApp Request Completed"),
     ).toBeInTheDocument();
   });
 

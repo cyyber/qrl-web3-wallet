@@ -27,8 +27,8 @@ jest.mock("@/utilities/storageUtil", () => {
 jest.mock("@/components/ZondWeb3Wallet/RouteMonitor/RouteMonitor", () => () => (
   <div>Mocked Route Monitor</div>
 ));
-jest.mock("@/components/ZondWeb3Wallet/DAppRequest/DAppRequest", () => () => (
-  <div>Mocked DApp Request</div>
+jest.mock("@/components/ZondWeb3Wallet/ScreenLoader/ScreenLoader", () => () => (
+  <div>Mocked Screen Loader</div>
 ));
 
 describe("ZondWeb3Wallet", () => {
@@ -46,7 +46,7 @@ describe("ZondWeb3Wallet", () => {
 
     await act(async () => {
       expect(screen.getByText("Mocked Route Monitor")).toBeInTheDocument();
-      expect(screen.getByText("Mocked DApp Request")).toBeInTheDocument();
+      expect(screen.getByText("Mocked Screen Loader")).toBeInTheDocument();
     });
   });
 });

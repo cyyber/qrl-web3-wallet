@@ -9,7 +9,7 @@ import UrlSelections from "../UrlSelections";
 import userEvent from "@testing-library/user-event";
 
 jest.mock(
-  "@/components/ZondWeb3Wallet/Body/ChainConnectivity/NewChain/AddEditChain/AddEditChainForm/UrlSelections/AddUrlItem/AddUrlItem",
+  "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/ChainConnectivity/NewChain/AddEditChain/AddEditChainForm/UrlSelections/AddUrlItem/AddUrlItem",
   () => () => <div>Mocked Add Url Item</div>,
 );
 

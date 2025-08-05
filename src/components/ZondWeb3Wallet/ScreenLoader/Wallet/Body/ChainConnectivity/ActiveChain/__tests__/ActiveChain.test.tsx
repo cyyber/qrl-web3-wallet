@@ -8,7 +8,7 @@ import { TooltipProvider } from "@/components/UI/Tooltip";
 import { ROUTES } from "@/router/router";
 
 jest.mock(
-  "@/components/ZondWeb3Wallet/Body/ChainConnectivity/ChainIcon/ChainIcon",
+  "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/ChainConnectivity/ChainIcon/ChainIcon",
   () => () => <div>Mocked Chain Icon</div>,
 );
 

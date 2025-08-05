@@ -6,11 +6,11 @@ import { MemoryRouter } from "react-router-dom";
 import TokensCardContent from "../TokensCardContent";
 
 jest.mock(
-  "@/components/ZondWeb3Wallet/Body/Home/AccountCreateImport/ActiveAccountDisplay/TokensCardContent/NativeToken/NativeToken",
+  "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/Home/AccountCreateImport/ActiveAccountDisplay/TokensCardContent/NativeToken/NativeToken",
   () => () => <div>Mocked Native token</div>,
 );
 jest.mock(
-  "@/components/ZondWeb3Wallet/Body/Home/AccountCreateImport/ActiveAccountDisplay/TokensCardContent/ZRC20Tokens/ZRC20Tokens",
+  "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/Home/AccountCreateImport/ActiveAccountDisplay/TokensCardContent/ZRC20Tokens/ZRC20Tokens",
   () => () => <div>Mocked ZRC 20 token</div>,
 );
 

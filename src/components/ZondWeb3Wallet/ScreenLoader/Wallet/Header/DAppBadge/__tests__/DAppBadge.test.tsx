@@ -8,7 +8,7 @@ import { MemoryRouter } from "react-router-dom";
 import DAppBadge from "../DAppBadge";
 
 jest.mock(
-  "@/components/ZondWeb3Wallet/Header/DAppBadge/DAppBadgeIcon/DAppBadgeIcon",
+  "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Header/DAppBadge/DAppBadgeIcon/DAppBadgeIcon",
   () => () => <div>Mocked DApp Badge Icon</div>,
 );
 

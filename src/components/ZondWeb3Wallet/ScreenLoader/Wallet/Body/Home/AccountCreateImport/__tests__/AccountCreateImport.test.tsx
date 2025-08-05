@@ -7,7 +7,7 @@ import AccountCreateImport from "../AccountCreateImport";
 import { TooltipProvider } from "@/components/UI/Tooltip";
 
 jest.mock(
-  "@/components/ZondWeb3Wallet/Body/Home/AccountCreateImport/ActiveAccountDisplay/ActiveAccountDisplay",
+  "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/Home/AccountCreateImport/ActiveAccountDisplay/ActiveAccountDisplay",
   () => () => <div>Mocked Active Account Display</div>,
 );
 

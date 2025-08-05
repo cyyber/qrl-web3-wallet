@@ -6,7 +6,7 @@ import { MemoryRouter } from "react-router-dom";
 import AddEditChain from "../AddEditChain";
 
 jest.mock(
-  "@/components/ZondWeb3Wallet/Body/ChainConnectivity/NewChain/AddEditChain/AddEditChainForm/AddEditChainForm",
+  "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/ChainConnectivity/NewChain/AddEditChain/AddEditChainForm/AddEditChainForm",
   () => () => <div>Mocked Add Edit Chain Form</div>,
 );
 

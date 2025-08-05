@@ -149,14 +149,12 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
       );
       return;
     }
-
     await StorageUtil.setAllBlockChains(updatedChainList);
     navigate(ROUTES.CHAIN_CONNECTIVITY);
   };
 
   const editBlockchain = async (blockchainData: BlockchainDataType) => {
     const { updatedChainList } = await editChain(blockchainData);
-
     await StorageUtil.setAllBlockChains(updatedChainList);
     navigate(ROUTES.CHAIN_CONNECTIVITY);
     await refreshBlockchainData();
@@ -165,8 +163,10 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
   async function onSubmit(formData: z.infer<typeof FormSchema>) {
     setError("");
     const blockchainData = generateBlockchainData(formData);
-    const { canProceed, proceedError } =
-      await checkWalletAddZondChainParams(blockchainData);
+    const { canProceed, proceedError } = await checkWalletAddZondChainParams(
+      blockchainData,
+      true,
+    );
     if (!canProceed) {
       setError(proceedError?.message ?? "Form validation failed");
       return;

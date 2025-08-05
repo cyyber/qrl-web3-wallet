@@ -9,7 +9,7 @@ import { TooltipProvider } from "@/components/UI/Tooltip";
 import { ROUTES } from "@/router/router";
 
 jest.mock(
-  "@/components/ZondWeb3Wallet/Body/AccountList/AccountId/AccountId",
+  "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/AccountList/AccountId/AccountId",
   () => () => <div>Mocked Account Id</div>,
 );
 

@@ -6,15 +6,15 @@ import { MemoryRouter } from "react-router-dom";
 import ChainConnectivity from "../ChainConnectivity";
 
 jest.mock(
-  "@/components/ZondWeb3Wallet/Body/ChainConnectivity/NewChain/NewChain",
+  "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/ChainConnectivity/NewChain/NewChain",
   () => () => <div>Mocked New Chain</div>,
 );
 jest.mock(
-  "@/components/ZondWeb3Wallet/Body/ChainConnectivity/ActiveChain/ActiveChain",
+  "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/ChainConnectivity/ActiveChain/ActiveChain",
   () => () => <div>Mocked Active Chain</div>,
 );
 jest.mock(
-  "@/components/ZondWeb3Wallet/Body/ChainConnectivity/OtherChains/OtherChains",
+  "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/ChainConnectivity/OtherChains/OtherChains",
   () => () => <div>Mocked Other Chains</div>,
 );
 

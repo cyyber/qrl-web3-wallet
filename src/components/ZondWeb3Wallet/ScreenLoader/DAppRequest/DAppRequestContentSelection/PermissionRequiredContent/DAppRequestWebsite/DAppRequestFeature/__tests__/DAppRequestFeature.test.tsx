@@ -7,11 +7,11 @@ import { MemoryRouter } from "react-router-dom";
 import DAppRequestFeature from "../DAppRequestFeature";
 
 jest.mock(
-  "@/components/ZondWeb3Wallet/DAppRequest/DAppRequestContent/DAppRequestWebsite/DAppRequestFeature/ZondRequestAccount/ZondRequestAccount",
+  "@/components/ZondWeb3Wallet/ScreenLoader/DAppRequest/DAppRequestContentSelection/PermissionRequiredContent/DAppRequestWebsite/DAppRequestFeature/ZondRequestAccount/ZondRequestAccount",
   () => () => <div>Mocked Zond Request Account</div>,
 );
 jest.mock(
-  "@/components/ZondWeb3Wallet/DAppRequest/DAppRequestContent/DAppRequestWebsite/DAppRequestFeature/ZondSendTransaction/ZondSendTransaction",
+  "@/components/ZondWeb3Wallet/ScreenLoader/DAppRequest/DAppRequestContentSelection/PermissionRequiredContent/DAppRequestWebsite/DAppRequestFeature/ZondSendTransaction/ZondSendTransaction",
   () => () => <div>Mocked Zond Send Transaction</div>,
 );
 

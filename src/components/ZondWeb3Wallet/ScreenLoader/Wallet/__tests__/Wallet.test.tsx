@@ -5,12 +5,14 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import Wallet from "../Wallet";
 
-jest.mock("@/components/ZondWeb3Wallet/Wallet/Header/Header", () => () => (
-  <div>Mocked Header</div>
-));
-jest.mock("@/components/ZondWeb3Wallet/Wallet/Body/Body", () => () => (
-  <div>Mocked Body</div>
-));
+jest.mock(
+  "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Header/Header",
+  () => () => <div>Mocked Header</div>,
+);
+jest.mock(
+  "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/Body",
+  () => () => <div>Mocked Body</div>,
+);
 
 describe("Wallet", () => {
   const renderComponent = (mockedStoreValues = mockedStore()) =>

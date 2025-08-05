@@ -6,7 +6,7 @@ import { MemoryRouter } from "react-router-dom";
 import DAppRequestWebsite from "../DAppRequestWebsite";
 
 jest.mock(
-  "@/components/ZondWeb3Wallet/DAppRequest/DAppRequestContent/DAppRequestWebsite/DAppRequestFeature/DAppRequestFeature",
+  "@/components/ZondWeb3Wallet/ScreenLoader/DAppRequest/DAppRequestContentSelection/PermissionRequiredContent/DAppRequestWebsite/DAppRequestFeature/DAppRequestFeature",
   () => () => <div>Mocked DApp Request Feature</div>,
 );
 

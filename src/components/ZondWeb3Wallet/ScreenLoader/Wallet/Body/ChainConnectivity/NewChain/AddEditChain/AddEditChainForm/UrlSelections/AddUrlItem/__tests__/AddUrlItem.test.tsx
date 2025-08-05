@@ -56,15 +56,15 @@ describe("AddUrlItem", () => {
     expect(urlField).toBeInTheDocument();
     expect(urlField).toBeEnabled();
     expect(urlField).toHaveValue("");
-    expect(urlField).toHaveAttribute("placeholder", "http://url_address");
+    expect(urlField).toHaveAttribute("placeholder", "https://url_address");
     expect(screen.getByText("Enter the URL to be added")).toBeInTheDocument();
     const addButton = screen.getByRole("button", { name: "Add" });
     expect(addButton).toBeInTheDocument();
     expect(addButton).toBeDisabled();
-    await userEvent.type(urlField, "http://testUrl");
+    await userEvent.type(urlField, "https://testUrl");
     expect(addButton).toBeEnabled();
     await userEvent.click(addButton);
     expect(mockedAddUrl).toHaveBeenCalledTimes(1);
-    expect(mockedAddUrl).toHaveBeenCalledWith("http://testUrl");
+    expect(mockedAddUrl).toHaveBeenCalledWith("https://testUrl");
   });
 });

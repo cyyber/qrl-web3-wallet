@@ -24,7 +24,7 @@ jest.mock("@/utilities/storageUtil", () => {
   };
 });
 jest.mock(
-  "@/components/ZondWeb3Wallet/Body/ChainConnectivity/OtherChains/OtherChainItem/OtherChainItem",
+  "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/ChainConnectivity/OtherChains/OtherChainItem/OtherChainItem",
   () => () => <div>Mocked Other Chain Item</div>,
 );
 

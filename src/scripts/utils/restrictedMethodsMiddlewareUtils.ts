@@ -64,6 +64,7 @@ const isAcceptableUrl = (urlString: string) => {
 
 export const checkWalletAddZondChainParams = async (
   chainData: BlockchainDataType,
+  hasInternalKeys: boolean = false,
 ) => {
   if (!chainData || typeof chainData !== "object") {
     return {
@@ -76,6 +77,14 @@ export const checkWalletAddZondChainParams = async (
     };
   }
 
+  const internalKeys = [
+    "defaultRpcUrl",
+    "defaultBlockExplorerUrl",
+    "defaultIconUrl",
+    "isTestnet",
+    "defaultWsRpcUrl",
+    "isCustomChain",
+  ];
   const allowedKeys = [
     "chainName",
     "chainId",
@@ -83,6 +92,7 @@ export const checkWalletAddZondChainParams = async (
     "rpcUrls",
     "blockExplorerUrls",
     "iconUrls",
+    ...(hasInternalKeys ? internalKeys : []),
   ];
   const extraKeys = Object.keys(chainData).filter((key) => {
     return !allowedKeys.includes(key);

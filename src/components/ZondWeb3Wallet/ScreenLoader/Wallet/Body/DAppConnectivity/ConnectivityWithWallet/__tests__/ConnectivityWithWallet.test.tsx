@@ -6,11 +6,11 @@ import { MemoryRouter } from "react-router-dom";
 import ConnectivityWithWallet from "../ConnectivityWithWallet";
 
 jest.mock(
-  "@/components/ZondWeb3Wallet/Body/DAppConnectivity/ConnectivityWithWallet/DAppConnected/DAppConnected",
+  "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/DAppConnectivity/ConnectivityWithWallet/DAppConnected/DAppConnected",
   () => () => <div>Mocked DApp Connected</div>,
 );
 jest.mock(
-  "@/components/ZondWeb3Wallet/Body/DAppConnectivity/ConnectivityWithWallet/DAppNotConnected/DAppNotConnected",
+  "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/DAppConnectivity/ConnectivityWithWallet/DAppNotConnected/DAppNotConnected",
   () => () => <div>Mocked DApp Not Connected</div>,
 );
 
