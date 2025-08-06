@@ -6,7 +6,7 @@ const ScreenLoading = () => {
     <>
       <CircuitBackground />
       <div className="flex justify-center pt-48">
-        <Loader className="animate-spin" size={86} />
+        <Loader className="animate-spin" size={86} data-testid="loader-icon" />
       </div>
     </>
   );

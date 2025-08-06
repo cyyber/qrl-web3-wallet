@@ -44,6 +44,7 @@ const PermissionRequiredContent = observer(() => {
             variant="outline"
             type="button"
             disabled={isProcessing}
+            aria-label="No"
             onClick={() => onPermission(false)}
           >
             {isRejectionProcessing ? (
@@ -57,6 +58,7 @@ const PermissionRequiredContent = observer(() => {
             className="w-full"
             type="button"
             disabled={!canProceed || isProcessing}
+            aria-label="Yes"
             onClick={() => onPermission(true)}
           >
             {isApprovalProcessing ? (

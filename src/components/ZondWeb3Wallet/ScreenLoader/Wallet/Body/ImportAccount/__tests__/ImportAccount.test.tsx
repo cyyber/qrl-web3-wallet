@@ -67,17 +67,17 @@ describe("ImportAccount", () => {
     renderComponent();
 
     const handleOnSubmitMock = jest.fn();
+    await userEvent.type(
+      screen.getByRole("textbox", { name: "mnemonicPhrases" }),
+      "knight paddy india glow play chew lame mature sock ill deadly olive blink marble breach hey mile mature tacit mean polo crawl khaya stud number speed viking windy jump subtle mildew sewage",
+    );
+    screen.getByRole("form", { name: "importAccount" }).onsubmit =
+      handleOnSubmitMock;
+    const button = screen.getByRole("button", { name: "Import account" });
+    await userEvent.click(button);
     await waitFor(async () => {
-      await userEvent.type(
-        screen.getByRole("textbox", { name: "mnemonicPhrases" }),
-        "knight paddy india glow play chew lame mature sock ill deadly olive blink marble breach hey mile mature tacit mean polo crawl khaya stud number speed viking windy jump subtle mildew sewage",
-      );
-      screen.getByRole("form", { name: "importAccount" }).onsubmit =
-        handleOnSubmitMock;
-      const button = screen.getByRole("button", { name: "Import account" });
-      await userEvent.click(button);
+      expect(handleOnSubmitMock).toHaveBeenCalledTimes(1);
     });
-    expect(handleOnSubmitMock).toHaveBeenCalledTimes(1);
   });
 
   it("should display the account import success component on successful submit", async () => {
@@ -113,19 +113,19 @@ describe("ImportAccount", () => {
     );
 
     const handleOnSubmitMock = jest.fn();
-    await waitFor(async () => {
-      await userEvent.type(
-        screen.getByRole("textbox", { name: "mnemonicPhrases" }),
-        "knight paddy india glow play chew lame mature sock ill deadly olive blink marble breach hey mile mature tacit mean polo crawl khaya stud number speed viking windy jump subtle mildew sewage",
-      );
-      screen.getByRole("form", { name: "importAccount" }).onsubmit =
-        handleOnSubmitMock;
-      const button = screen.getByRole("button", { name: "Import account" });
-      await userEvent.click(button);
+    await userEvent.type(
+      screen.getByRole("textbox", { name: "mnemonicPhrases" }),
+      "knight paddy india glow play chew lame mature sock ill deadly olive blink marble breach hey mile mature tacit mean polo crawl khaya stud number speed viking windy jump subtle mildew sewage",
+    );
+    screen.getByRole("form", { name: "importAccount" }).onsubmit =
+      handleOnSubmitMock;
+    const button = screen.getByRole("button", { name: "Import account" });
+    await userEvent.click(button);
+    await waitFor(() => {
+      expect(handleOnSubmitMock).toHaveBeenCalledTimes(1);
+      expect(
+        screen.getByText("Mocked Account Import Success"),
+      ).toBeInTheDocument();
     });
-    expect(handleOnSubmitMock).toHaveBeenCalledTimes(1);
-    expect(
-      screen.getByText("Mocked Account Import Success"),
-    ).toBeInTheDocument();
   });
 });

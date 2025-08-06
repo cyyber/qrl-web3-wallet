@@ -117,7 +117,7 @@ describe("AddEditChainForm", () => {
           iconUrls: [],
           nativeCurrency: {
             name: "Test native currency",
-            symbol: "Test symbol",
+            symbol: "TST",
             decimals: 18,
           },
           defaultRpcUrl: "http://testDefaultRpcUrl",
@@ -163,7 +163,7 @@ describe("AddEditChainForm", () => {
     });
     expect(currencySymbolField).toBeInTheDocument();
     expect(currencySymbolField).toBeEnabled();
-    expect(currencySymbolField).toHaveValue("Test symbol");
+    expect(currencySymbolField).toHaveValue("TST");
     expect(currencySymbolField).toHaveAttribute("placeholder", "ZND");
     expect(screen.getByText("Currency symbol")).toBeInTheDocument();
 
@@ -196,7 +196,7 @@ describe("AddEditChainForm", () => {
         iconUrls: ["https://testDefaultIconUrl"],
         nativeCurrency: {
           name: "Test native currency",
-          symbol: "Test symbol",
+          symbol: "TST",
           decimals: 18,
         },
         defaultRpcUrl: "https://testDefaultRpcUrl",
@@ -278,7 +278,7 @@ describe("AddEditChainForm", () => {
         iconUrls: ["https://testDefaultIconUrl"],
         nativeCurrency: {
           name: "Test native currency",
-          symbol: "Test symbol",
+          symbol: "TST",
           decimals: 18,
         },
         defaultRpcUrl: "https://testDefaultRpcUrl",

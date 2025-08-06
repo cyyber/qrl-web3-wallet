@@ -66,6 +66,7 @@ const AddZondChainContent = observer(() => {
           variant="outline"
           type="button"
           disabled={isProcessing}
+          aria-label="No"
           onClick={() => onPermission(false)}
         >
           <X className="mr-2 h-4 w-4" />
@@ -75,6 +76,7 @@ const AddZondChainContent = observer(() => {
           className="w-full"
           type="button"
           disabled={isProcessing}
+          aria-label="Yes"
           onClick={() => addBlockchain()}
         >
           <Check className="mr-2 h-4 w-4" />
