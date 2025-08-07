@@ -1,15 +1,14 @@
 import { useStore } from "@/stores/store";
 import { Loader } from "lucide-react";
 import { observer } from "mobx-react-lite";
-import DAppRequestConnectionNotAvailable from "./DAppRequestConnectionNotAvailable/DAppRequestConnectionNotAvailable";
-import DAppRequestContentSelection from "./DAppRequestContentSelection/DAppRequestContentSelection";
 import { useEffect } from "react";
 import CircuitBackground from "../Shared/CircuitBackground/CircuitBackground";
+import DAppRequestContentSelection from "./DAppRequestContentSelection/DAppRequestContentSelection";
 
 const DAppRequest = observer(() => {
   const { zondStore, dAppRequestStore } = useStore();
   const { zondConnection } = zondStore;
-  const { isLoading, isConnected } = zondConnection;
+  const { isLoading } = zondConnection;
   const { approvalProcessingStatus } = dAppRequestStore;
   const { hasCompleted } = approvalProcessingStatus;
 
@@ -25,10 +24,6 @@ const DAppRequest = observer(() => {
         <Loader className="animate-spin" size={86} />
       </div>
     );
-  }
-
-  if (!isConnected) {
-    return <DAppRequestConnectionNotAvailable />;
   }
 
   return (

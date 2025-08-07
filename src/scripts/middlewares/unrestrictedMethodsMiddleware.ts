@@ -4,10 +4,7 @@ import { Json, JsonRpcRequest } from "@theqrl/zond-wallet-provider/utils";
 import browser from "webextension-polyfill";
 import { UNRESTRICTED_METHODS } from "../constants/requestConstants";
 import { EXTENSION_MESSAGES } from "../constants/streamConstants";
-import {
-  checkUrlOriginHasBeenConnected,
-  checkWalletSwitchZondChainParams,
-} from "../utils/unrestrictedMethodsMiddlewareUtils";
+import { checkUrlOriginHasBeenConnected } from "../utils/restrictedMethodsMiddlewareUtils";
 
 // a precheck to determine if the request can proceed
 const checkRequestCanProceed = async (req: JsonRpcRequest<JsonRpcRequest>) => {
@@ -17,16 +14,10 @@ const checkRequestCanProceed = async (req: JsonRpcRequest<JsonRpcRequest>) => {
   if (!originConnectResult.canProceed) {
     return originConnectResult;
   }
-  switch (req.method) {
-    case UNRESTRICTED_METHODS.WALLET_SWITCH_ZOND_CHAIN:
-      // @ts-ignore
-      return await checkWalletSwitchZondChainParams(req?.params?.[0]);
-    default:
-      return {
-        canProceed: true,
-        proceedError: providerErrors.unsupportedMethod(),
-      };
-  }
+  return {
+    canProceed: true,
+    proceedError: providerErrors.unsupportedMethod(),
+  };
 };
 
 const getUnrestrictedMethodResult = async (

@@ -3,6 +3,7 @@ import { useStore } from "@/stores/store";
 import { observer } from "mobx-react-lite";
 import AddZondChainContent from "./AddZondChainContent/AddZondChainContent";
 import PermissionRequiredContent from "./PermissionRequiredContent/PermissionRequiredContent";
+import SwitchZondChainContent from "./SwitchZondChainContent/SwitchZondChainContent";
 
 const PERMISSION_REQUIRED_METHODS: string[] = [
   RESTRICTED_METHODS.PERSONAL_SIGN,
@@ -18,6 +19,9 @@ const DAppRequestContentSelection = observer(() => {
 
   if (method === RESTRICTED_METHODS.WALLET_ADD_ZOND_CHAIN)
     return <AddZondChainContent />;
+
+  if (method === RESTRICTED_METHODS.WALLET_SWITCH_ZOND_CHAIN)
+    return <SwitchZondChainContent />;
 
   if (PERMISSION_REQUIRED_METHODS.includes(method))
     return <PermissionRequiredContent />;

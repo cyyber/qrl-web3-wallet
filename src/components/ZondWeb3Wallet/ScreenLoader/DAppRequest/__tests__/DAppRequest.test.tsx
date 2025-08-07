@@ -7,10 +7,6 @@ import DAppRequest from "../DAppRequest";
 import { TooltipProvider } from "@/components/UI/Tooltip";
 
 jest.mock(
-  "@/components/ZondWeb3Wallet/ScreenLoader/DAppRequest/DAppRequestConnectionNotAvailable/DAppRequestConnectionNotAvailable",
-  () => () => <div>Mocked DApp Request Connection Not Available</div>,
-);
-jest.mock(
   "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Header/ChainBadge/ChainBadge",
   () => () => <div>Mocked ChainBadge</div>,
 );
@@ -26,18 +22,6 @@ describe("DAppRequest", () => {
         </MemoryRouter>
       </StoreProvider>,
     );
-
-  it("should display network not available if there is no connection", async () => {
-    renderComponent(
-      mockedStore({
-        zondStore: { zondConnection: { isConnected: false } },
-      }),
-    );
-
-    expect(
-      screen.getByText("Mocked DApp Request Connection Not Available"),
-    ).toBeInTheDocument();
-  });
 
   it("should render the dapp request content component", async () => {
     renderComponent();

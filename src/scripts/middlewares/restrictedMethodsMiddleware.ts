@@ -8,51 +8,73 @@ import { EXTENSION_MESSAGES } from "../constants/streamConstants";
 import { DAppRequestType, DAppResponseType } from "./middlewareTypes";
 import {
   checkAccountHasBeenAuthorized,
+  checkUrlOriginHasBeenConnected,
   checkWalletAddZondChainParams,
+  checkWalletSwitchZondChainParams,
 } from "../utils/restrictedMethodsMiddlewareUtils";
-import { checkUrlOriginHasBeenConnected } from "../utils/unrestrictedMethodsMiddlewareUtils";
 
 const checkRequestCanCompleteSilently = async (
   req: JsonRpcRequest<JsonRpcRequest>,
 ) => {
-  switch (req.method) {
-    case RESTRICTED_METHODS.WALLET_ADD_ZOND_CHAIN:
-      // @ts-ignore
-      const [chainData] = req.params;
-      const chainId = chainData?.chainId;
-      const blockchains = await StorageUtil.getAllBlockChains();
-      const chainFound = !!blockchains.find(
-        (chain) => chain.chainId.toLowerCase() === chainId.toLowerCase(),
-      );
-      if (chainFound) {
-        await StorageUtil.setActiveBlockChain(chainId);
-        return {
-          hasCompleted: true,
-          completionResult: null,
-        };
-      }
+  if (req.method === RESTRICTED_METHODS.WALLET_ADD_ZOND_CHAIN) {
+    // @ts-ignore
+    const [chainData] = req.params;
+    const chainId = chainData?.chainId;
+    const blockchains = await StorageUtil.getAllBlockChains();
+    const chainFound = !!blockchains.find(
+      (chain) => chain.chainId.toLowerCase() === chainId.toLowerCase(),
+    );
+    if (chainFound) {
+      await StorageUtil.setActiveBlockChain(chainId);
       return {
-        hasCompleted: false,
+        hasCompleted: true,
+        completionResult: null,
       };
-    default:
+    }
+    return {
+      hasCompleted: false,
+    };
+  } else if (req.method === RESTRICTED_METHODS.WALLET_SWITCH_ZOND_CHAIN) {
+    // @ts-ignore
+    const [chainData] = req.params;
+    const chainId = chainData?.chainId;
+    const currentChainId = (await StorageUtil.getActiveBlockChain())?.chainId;
+    if (chainId?.toLowerCase() === currentChainId?.toLowerCase()) {
       return {
-        hasCompleted: false,
+        hasCompleted: true,
+        completionResult: null,
       };
+    }
+    return {
+      hasCompleted: false,
+    };
+  } else {
+    return {
+      hasCompleted: false,
+    };
   }
 };
 
 // a precheck to determine if the request can proceed
 const checkRequestCanProceed = async (req: JsonRpcRequest<JsonRpcRequest>) => {
+  if (
+    req.method === RESTRICTED_METHODS.WALLET_ADD_ZOND_CHAIN ||
+    req.method === RESTRICTED_METHODS.WALLET_SWITCH_ZOND_CHAIN
+  ) {
+    const originConnectResult = await checkUrlOriginHasBeenConnected(
+      req?.senderData?.url ?? "",
+    );
+    if (!originConnectResult.canProceed) {
+      return originConnectResult;
+    }
+  }
   switch (req.method) {
     case RESTRICTED_METHODS.WALLET_ADD_ZOND_CHAIN:
-      const originConnectResult = await checkUrlOriginHasBeenConnected(
-        req?.senderData?.url ?? "",
-      );
-      if (!originConnectResult.canProceed) {
-        return originConnectResult;
-      }
       // @ts-ignore
       return await checkWalletAddZondChainParams(req?.params?.[0]);
+    case RESTRICTED_METHODS.WALLET_SWITCH_ZOND_CHAIN:
+      // @ts-ignore
+      return await checkWalletSwitchZondChainParams(req?.params?.[0]);
     case RESTRICTED_METHODS.ZOND_SEND_TRANSACTION:
     case RESTRICTED_METHODS.ZOND_SIGN_TYPED_DATA_V4:
     case RESTRICTED_METHODS.PERSONAL_SIGN:
@@ -151,6 +173,7 @@ export const restrictedMethodsMiddleware: JsonRpcMiddleware<
         if (hasApproved) {
           switch (restrictedMethodResult?.method) {
             case RESTRICTED_METHODS.WALLET_ADD_ZOND_CHAIN:
+            case RESTRICTED_METHODS.WALLET_SWITCH_ZOND_CHAIN:
               const hasApproved = restrictedMethodResult?.hasApproved;
               res.result = hasApproved ? null : false;
               break;
