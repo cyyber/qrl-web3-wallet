@@ -13,13 +13,13 @@ const ACCOUNTS_IDENTIFIER = "ACCOUNTS";
 const ALL_ACCOUNTS_IDENTIFIER = "ALL_ACCOUNTS";
 const ACTIVE_ACCOUNT_IDENTIFIER = "ACTIVE_ACCOUNT";
 
-const DAPPS_IDENTIFIER = "DAPPS";
-const DAPPS_REQUEST_DATA_IDENTIFIER = "DAPPS_REQUEST_DATA";
-const DAPPS_CONNECTED_ACCOUNTS_IDENTIFIER = "DAPPS_CONNECTED_ACCOUNTS";
-
 const BLOCKCHAINS_IDENTIFIER = "BLOCKCHAINS";
 const ALL_BLOCKCHAINS_IDENTIFIER = "ALL_BLOCKCHAINS";
 const ACTIVE_BLOCKCHAIN_IDENTIFIER = "ACTIVE_BLOCKCHAIN";
+
+const DAPPS_IDENTIFIER = "DAPPS";
+const ALL_DAPPS_IDENTIFIER = "ALL_DAPPS";
+const DAPPS_REQUEST_DATA_IDENTIFIER = "DAPPS_REQUEST_DATA";
 
 const ACTIVE_PAGE_IDENTIFIER = "ACTIVE_PAGE";
 
@@ -310,37 +310,36 @@ class StorageUtil {
    */
   static async setDAppsConnectedAccountsData(data: ConnectedAccountsDataType) {
     const urlOrigin = data.urlOrigin;
-    const connectedAccountsDataIdentifier = `${urlOrigin}_${DAPPS_CONNECTED_ACCOUNTS_IDENTIFIER}`;
-    const updatedConnectedAccountsData: ConnectedAccountsDataType = {
-      urlOrigin,
-      accounts: data.accounts,
-    };
-    await browser.storage.local.set({
-      [DAPPS_IDENTIFIER]: {
-        [connectedAccountsDataIdentifier]: updatedConnectedAccountsData,
-      },
-    });
+
+    const existingData = await browser.storage.local.get(DAPPS_IDENTIFIER);
+    if (!existingData[DAPPS_IDENTIFIER]) {
+      existingData[DAPPS_IDENTIFIER] = {};
+    }
+    if (!existingData[DAPPS_IDENTIFIER][ALL_DAPPS_IDENTIFIER]) {
+      existingData[DAPPS_IDENTIFIER][ALL_DAPPS_IDENTIFIER] = {};
+    }
+    if (!existingData[DAPPS_IDENTIFIER][ALL_DAPPS_IDENTIFIER][urlOrigin]) {
+      existingData[DAPPS_IDENTIFIER][ALL_DAPPS_IDENTIFIER][urlOrigin] = {};
+    }
+    existingData[DAPPS_IDENTIFIER][ALL_DAPPS_IDENTIFIER][urlOrigin].urlOrigin =
+      urlOrigin;
+    existingData[DAPPS_IDENTIFIER][ALL_DAPPS_IDENTIFIER][urlOrigin].accounts =
+      data.accounts;
+
+    await browser.storage.local.set(existingData);
   }
 
   static async getDAppsConnectedAccountsData(urlOrigin: string = "") {
-    const connectedAccountsDataIdentifier = `${urlOrigin}_${DAPPS_CONNECTED_ACCOUNTS_IDENTIFIER}`;
-    const storedConnectedAccountsData = (
-      await browser.storage.local.get(DAPPS_IDENTIFIER)
-    )?.[DAPPS_IDENTIFIER];
-    return storedConnectedAccountsData?.[connectedAccountsDataIdentifier] as
-      | ConnectedAccountsDataType
-      | undefined;
+    const existingData = await browser.storage.local.get(DAPPS_IDENTIFIER);
+    return existingData?.[DAPPS_IDENTIFIER]?.[ALL_DAPPS_IDENTIFIER]?.[
+      urlOrigin
+    ] as ConnectedAccountsDataType | undefined;
   }
 
   static async clearDAppsConnectedAccountsData(urlOrigin: string = "") {
-    const connectedAccountsDataIdentifier = `${urlOrigin}_${DAPPS_CONNECTED_ACCOUNTS_IDENTIFIER}`;
-    const storedConnectedAccountsData =
-      (await browser.storage.local.get(DAPPS_IDENTIFIER))?.[DAPPS_IDENTIFIER] ??
-      {};
-    delete storedConnectedAccountsData?.[connectedAccountsDataIdentifier];
-    await browser.storage.local.set({
-      [DAPPS_IDENTIFIER]: storedConnectedAccountsData,
-    });
+    const existingData = await browser.storage.local.get(DAPPS_IDENTIFIER);
+    delete existingData[DAPPS_IDENTIFIER]?.[ALL_DAPPS_IDENTIFIER]?.[urlOrigin];
+    await browser.storage.local.set(existingData);
   }
 }
 
