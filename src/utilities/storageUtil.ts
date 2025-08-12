@@ -325,6 +325,12 @@ class StorageUtil {
       urlOrigin;
     existingData[DAPPS_IDENTIFIER][ALL_DAPPS_IDENTIFIER][urlOrigin].accounts =
       data.accounts;
+    existingData[DAPPS_IDENTIFIER][ALL_DAPPS_IDENTIFIER][
+      urlOrigin
+    ].blockchains = data.blockchains;
+    existingData[DAPPS_IDENTIFIER][ALL_DAPPS_IDENTIFIER][
+      urlOrigin
+    ].permissions = data.permissions;
 
     await browser.storage.local.set(existingData);
   }

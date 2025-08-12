@@ -5,7 +5,13 @@ import { Json, JsonRpcRequest } from "@theqrl/zond-wallet-provider/utils";
 import browser from "webextension-polyfill";
 import { RESTRICTED_METHODS } from "../constants/requestConstants";
 import { EXTENSION_MESSAGES } from "../constants/streamConstants";
-import { DAppRequestType, DAppResponseType } from "./middlewareTypes";
+import {
+  CAVEAT_TYPES,
+  DAppRequestType,
+  DAppResponseType,
+  PARENT_CAPABILITIES,
+  Permission,
+} from "./middlewareTypes";
 import {
   checkAccountHasBeenAuthorized,
   checkUrlOriginHasBeenConnected,
@@ -181,9 +187,36 @@ export const restrictedMethodsMiddleware: JsonRpcMiddleware<
               const urlOrigin = new URL(req?.senderData?.url ?? "").origin;
               const accounts: string[] =
                 restrictedMethodResult?.response?.accounts;
+              const blockchains = (await StorageUtil.getAllBlockChains()).map(
+                (chain) => chain.chainId,
+              );
+              const permissions: Permission[] = [
+                {
+                  invoker: urlOrigin,
+                  parentCapability: PARENT_CAPABILITIES.ZOND_ACCOUNTS,
+                  caveats: [
+                    {
+                      type: CAVEAT_TYPES.RESTRICT_RETURNED_ACCOUNTS,
+                      value: accounts,
+                    },
+                  ],
+                },
+                {
+                  invoker: urlOrigin,
+                  parentCapability: PARENT_CAPABILITIES.ZOND_CHAINS,
+                  caveats: [
+                    {
+                      type: CAVEAT_TYPES.RESTRICT_NETWORK_SWITCHING,
+                      value: blockchains,
+                    },
+                  ],
+                },
+              ];
               await StorageUtil.setDAppsConnectedAccountsData({
                 urlOrigin,
                 accounts,
+                blockchains,
+                permissions,
               });
               res.result = accounts;
               break;

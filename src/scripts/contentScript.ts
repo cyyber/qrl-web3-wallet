@@ -247,11 +247,24 @@ const prepareListeners = () => {
             new URL(message?.data?.senderData?.url ?? "").origin,
           );
         return connectedAccountsData?.accounts ?? [];
+      } else if (method === UNRESTRICTED_METHODS.WALLET_GET_PERMISSIONS) {
+        const dAppsConnectedAccountsData =
+          await StorageUtil.getDAppsConnectedAccountsData(
+            new URL(message?.data?.senderData?.url ?? "").origin,
+          );
+        return dAppsConnectedAccountsData?.permissions;
+      } else if (method === UNRESTRICTED_METHODS.WALLET_REQUEST_PERMISSIONS) {
+        const [paramObject] = message.data.params;
+        // console.log(">>>paramObject", paramObject);
+        // await StorageUtil.clearDAppsConnectedAccountsData(
+        //   new URL(message?.data?.senderData?.url ?? "").origin,
+        // );
+        return "";
       } else if (method === UNRESTRICTED_METHODS.WALLET_REVOKE_PERMISSIONS) {
         await StorageUtil.clearDAppsConnectedAccountsData(
           new URL(message?.data?.senderData?.url ?? "").origin,
         );
-        return "";
+        return null;
       } else if (method === UNRESTRICTED_METHODS.WEB_3_CLIENT_VERSION) {
         const currentVersion = await zond?.getNodeInfo();
         return currentVersion;
