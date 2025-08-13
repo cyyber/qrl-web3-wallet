@@ -187,9 +187,8 @@ export const restrictedMethodsMiddleware: JsonRpcMiddleware<
               const urlOrigin = new URL(req?.senderData?.url ?? "").origin;
               const accounts: string[] =
                 restrictedMethodResult?.response?.accounts;
-              const blockchains = (await StorageUtil.getAllBlockChains()).map(
-                (chain) => chain.chainId,
-              );
+              const blockchains: string[] =
+                restrictedMethodResult?.response?.blockchains;
               const permissions: Permission[] = [
                 {
                   invoker: urlOrigin,

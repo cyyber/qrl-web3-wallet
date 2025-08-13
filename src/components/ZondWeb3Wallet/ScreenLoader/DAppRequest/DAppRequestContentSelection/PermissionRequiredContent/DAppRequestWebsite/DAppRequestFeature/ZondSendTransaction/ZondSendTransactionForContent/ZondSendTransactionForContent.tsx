@@ -210,23 +210,23 @@ const ZondSendTransactionForContent = observer(
     return (
       <div className="flex flex-col gap-6">
         <Tabs defaultValue="details" className="w-full">
-          <TabsList>
+          <TabsList className="w-full">
             <TabsTrigger
               value="details"
-              className="data-[state=active]:text-secondary"
+              className="w-full data-[state=active]:text-secondary"
             >
               Details
             </TabsTrigger>
             {transactionType !== SEND_TRANSACTION_TYPES.ZND_TRANSFER && (
               <TabsTrigger
                 value="data"
-                className="data-[state=active]:text-secondary"
+                className="w-full data-[state=active]:text-secondary"
               >
                 Data
               </TabsTrigger>
             )}
           </TabsList>
-          <TabsContent value="details" className="rounded-md bg-muted p-2">
+          <TabsContent value="details" className="rounded-md p-2">
             <div className="flex flex-col gap-2">
               <div className="flex flex-col gap-1">
                 <div>From Address</div>
@@ -263,7 +263,7 @@ const ZondSendTransactionForContent = observer(
             </div>
           </TabsContent>
           {transactionType !== SEND_TRANSACTION_TYPES.ZND_TRANSFER && (
-            <TabsContent value="data" className="rounded-md bg-muted p-2">
+            <TabsContent value="data" className="rounded-md p-2">
               <div className="flex flex-col gap-1">
                 <div>Data</div>
                 <div className="flex gap-2">
