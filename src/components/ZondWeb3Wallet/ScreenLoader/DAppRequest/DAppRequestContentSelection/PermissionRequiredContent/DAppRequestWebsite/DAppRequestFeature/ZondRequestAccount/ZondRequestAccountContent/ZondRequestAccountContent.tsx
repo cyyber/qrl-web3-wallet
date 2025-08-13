@@ -20,8 +20,8 @@ const ZondRequestAccountContent = observer(() => {
 
   useEffect(() => {
     (async () => {
-      const blockchains = await StorageUtil.getAllBlockChains();
-      setAllBlockchains(blockchains);
+      const allBlockchains = await StorageUtil.getAllBlockChains();
+      setAllBlockchains(allBlockchains);
       setIsLoadingBlockchains(false);
     })();
   }, []);

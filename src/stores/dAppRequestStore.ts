@@ -13,6 +13,7 @@ type CurrentTabData = {
   urlOrigin: string;
   title: string;
   connectedAccounts: string[];
+  connectedBlockchains: string[];
 };
 
 class DAppRequestStore {
@@ -65,6 +66,9 @@ class DAppRequestStore {
       connectedAccounts:
         (await StorageUtil.getDAppsConnectedAccountsData(urlOrigin))
           ?.accounts ?? [],
+      connectedBlockchains:
+        (await StorageUtil.getDAppsConnectedAccountsData(urlOrigin))
+          ?.blockchains ?? [],
     };
   }
 
