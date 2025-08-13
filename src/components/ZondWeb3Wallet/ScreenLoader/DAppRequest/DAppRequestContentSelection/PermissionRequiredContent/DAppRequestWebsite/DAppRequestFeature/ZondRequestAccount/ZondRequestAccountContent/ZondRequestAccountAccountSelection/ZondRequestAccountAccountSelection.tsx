@@ -28,7 +28,7 @@ const ZondRequestAccountAccountSelection = observer(
             <div className="h-full w-full rounded-md bg-accent" />
           </div>
         ) : hasAccounts ? (
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-3">
             {availableAccounts.map((account) => (
               <div className="flex items-start space-x-3">
                 <Checkbox

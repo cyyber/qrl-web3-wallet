@@ -1,4 +1,5 @@
 import { Checkbox } from "@/components/UI/Checkbox";
+import ChainIcon from "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/ChainConnectivity/ChainIcon/ChainIcon";
 import { BlockchainDataType } from "@/configuration/zondBlockchainConfig";
 import { observer } from "mobx-react-lite";
 
@@ -29,7 +30,7 @@ const ZondRequestAccountBlockchainSelection = observer(
             <div className="h-full w-full rounded-md bg-accent" />
           </div>
         ) : hasBlockchains ? (
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-3">
             {allBlockchains.map((blockchain) => (
               <div className="flex items-start space-x-3">
                 <Checkbox
@@ -43,12 +44,19 @@ const ZondRequestAccountBlockchainSelection = observer(
                   htmlFor={blockchain.chainId}
                   className="cursor-pointer text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
-                  <div className="flex flex-col gap-1">
-                    <div className="flex flex-wrap gap-1">
-                      {blockchain.chainName}
-                    </div>
-                    <div className="text-xs text-secondary">
-                      {blockchain.chainId}
+                  <div className="flex gap-3">
+                    <ChainIcon
+                      src={blockchain.defaultIconUrl}
+                      alt={blockchain.chainName}
+                    />
+                    <div className="flex flex-col gap-1 break-all">
+                      <span className="font-bold">{blockchain.chainName}</span>
+                      <span className="text-xm opacity-80">
+                        Chain ID {parseInt(blockchain.chainId, 16)}
+                      </span>
+                      <span className="text-xm opacity-80">
+                        {blockchain.defaultRpcUrl}
+                      </span>
                     </div>
                   </div>
                 </label>
