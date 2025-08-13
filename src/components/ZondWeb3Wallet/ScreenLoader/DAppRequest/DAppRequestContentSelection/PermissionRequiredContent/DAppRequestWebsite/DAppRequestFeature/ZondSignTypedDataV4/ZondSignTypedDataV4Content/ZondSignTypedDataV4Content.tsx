@@ -139,7 +139,7 @@ const ZondSignTypedDataV4Content = observer(() => {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col rounded-md bg-muted p-2">
+      <div className="flex flex-col rounded-md p-2">
         <div className="flex flex-col gap-1">
           <div>From Address</div>
           <div className="w-64 font-bold text-secondary">{`${prefixFromAddress} ${addressSplitFromAddress.join(" ")}`}</div>
@@ -154,7 +154,7 @@ const ZondSignTypedDataV4Content = observer(() => {
           <AccordionTrigger className="rounded-md bg-muted p-2">
             Domain
           </AccordionTrigger>
-          <AccordionContent className="mt-2 rounded-md bg-muted p-2 text-xs">
+          <AccordionContent className="mt-2 rounded-md p-2 text-xs">
             <div className="flex flex-col gap-2">
               <div className="flex flex-col gap-1">
                 <div>Name</div>
@@ -173,7 +173,7 @@ const ZondSignTypedDataV4Content = observer(() => {
           <AccordionTrigger className="rounded-md bg-muted p-2">
             Message
           </AccordionTrigger>
-          <AccordionContent className="mt-2 rounded-md bg-muted p-2 text-xs">
+          <AccordionContent className="mt-2 rounded-md p-2 text-xs">
             <div className="flex flex-col gap-2">
               <div className="flex justify-between gap-2">
                 <div className="flex flex-col gap-1">

@@ -120,7 +120,7 @@ const PersonalSign = observer(() => {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2 rounded-md bg-muted p-2">
+      <div className="flex flex-col gap-2 rounded-md p-2">
         <div className="flex flex-col gap-1">
           <div>From Address</div>
           <div className="w-64 font-bold text-secondary">{`${prefixFromAddress} ${addressSplitFromAddress.join(" ")}`}</div>

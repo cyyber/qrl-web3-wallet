@@ -44,6 +44,7 @@ const checkRequestCanCompleteSilently = async (
     // @ts-ignore
     const [chainData] = req.params;
     const chainId = chainData?.chainId;
+
     const currentChainId = (await StorageUtil.getActiveBlockChain())?.chainId;
     if (chainId?.toLowerCase() === currentChainId?.toLowerCase()) {
       return {
@@ -51,6 +52,20 @@ const checkRequestCanCompleteSilently = async (
         completionResult: null,
       };
     }
+
+    const chainIdsForOrigin = (
+      await StorageUtil.getDAppsConnectedAccountsData(
+        new URL(req.senderData?.url ?? "").origin,
+      )
+    )?.blockchains;
+    if (chainIdsForOrigin?.includes(chainId)) {
+      await StorageUtil.setActiveBlockChain(chainId);
+      return {
+        hasCompleted: true,
+        completionResult: null,
+      };
+    }
+
     return {
       hasCompleted: false,
     };
@@ -189,6 +204,12 @@ export const restrictedMethodsMiddleware: JsonRpcMiddleware<
                 restrictedMethodResult?.response?.accounts;
               const blockchains: string[] =
                 restrictedMethodResult?.response?.blockchains;
+              const currentBlockchain = (
+                await StorageUtil.getActiveBlockChain()
+              ).chainId;
+              if (!blockchains.includes(currentBlockchain)) {
+                await StorageUtil.setActiveBlockChain(blockchains?.[0]);
+              }
               const permissions: Permission[] = [
                 {
                   invoker: urlOrigin,
