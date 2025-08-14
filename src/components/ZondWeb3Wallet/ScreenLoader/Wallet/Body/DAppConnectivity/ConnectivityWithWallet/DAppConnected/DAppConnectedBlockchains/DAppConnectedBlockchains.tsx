@@ -5,6 +5,16 @@ import StorageUtil from "@/utilities/storageUtil";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import ChainIcon from "../../../../ChainConnectivity/ChainIcon/ChainIcon";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/UI/Tooltip";
+import { Button } from "@/components/UI/Button";
+import { Pencil } from "lucide-react";
+import { Label } from "@/components/UI/Label";
+import { Link } from "react-router-dom";
+import { ROUTES } from "@/router/router";
 
 const DAppConnectedBlockchains = observer(() => {
   const { dAppRequestStore } = useStore();
@@ -26,8 +36,34 @@ const DAppConnectedBlockchains = observer(() => {
 
   return (
     <Card className="flex flex-col gap-4 p-4">
-      <div className="text-sm">
-        The following blockchains are allowed to be used by this website
+      <div className="flex gap-2">
+        <div className="text-sm">
+          The following blockchains are allowed to be used by this website
+        </div>
+        <div className="shrink-0">
+          <Tooltip delayDuration={0}>
+            <TooltipTrigger asChild>
+              <Link
+                to={ROUTES.EDIT_DAPP_CONNECTED_BLOCKCHAINS}
+                state={{ hasState: true }}
+                aria-label="Edit chain"
+              >
+                <Button
+                  className="size-7 hover:bg-accent hover:text-secondary"
+                  variant="outline"
+                  size="icon"
+                  aria-label="Edit"
+                  onClick={() => {}}
+                >
+                  <Pencil size="16" />
+                </Button>
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent side="left">
+              <Label>Edit connected blockchains</Label>
+            </TooltipContent>
+          </Tooltip>
+        </div>
       </div>
       {isLoading ? (
         <div className="flex h-20 w-full animate-pulse items-center justify-between">

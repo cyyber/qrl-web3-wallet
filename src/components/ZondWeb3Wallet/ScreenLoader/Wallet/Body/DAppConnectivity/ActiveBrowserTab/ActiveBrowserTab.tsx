@@ -68,8 +68,8 @@ const ActiveBrowserTab = observer(() => {
             <Tooltip delayDuration={0}>
               <TooltipTrigger asChild>
                 <Button
-                  className="size-7 hover:bg-accent hover:text-secondary"
-                  variant="outline"
+                  className="size-7"
+                  variant="destructive"
                   size="icon"
                   aria-label="Disconnect"
                   onClick={disconnect}

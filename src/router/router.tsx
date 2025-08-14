@@ -59,6 +59,22 @@ const DAppConnectivity = withSuspense(
       ),
   ),
 );
+const EditDAppConnectedAccounts = withSuspense(
+  lazy(
+    () =>
+      import(
+        "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/DAppConnectivity/ConnectivityWithWallet/DAppConnected/DAppConnectedAccounts/EditDAppConnectedAccounts/EditDAppConnectedAccounts"
+      ),
+  ),
+);
+const EditDAppConnectedBlockchains = withSuspense(
+  lazy(
+    () =>
+      import(
+        "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/DAppConnectivity/ConnectivityWithWallet/DAppConnected/DAppConnectedBlockchains/EditDAppConnectedBlockchains/EditDAppConnectedBlockchains"
+      ),
+  ),
+);
 const ChainConnectivity = withSuspense(
   lazy(
     () =>
@@ -93,6 +109,8 @@ export const ROUTES = {
   TOKEN_TRANSFER: "/token-transfer",
   ACCOUNT_LIST: "/account-list",
   DAPP_CONNECTIVITY: "/dapp-connectivity",
+  EDIT_DAPP_CONNECTED_ACCOUNTS: "/edit-dapp-connected-accounts",
+  EDIT_DAPP_CONNECTED_BLOCKCHAINS: "/edit-dapp-connected-blockchains",
   CHAIN_CONNECTIVITY: "/chain-connectivity",
   ADD_EDIT_CHAIN: "/add-edit-chain",
   DEFAULT: "*",
@@ -134,6 +152,14 @@ const router = createMemoryRouter([
       {
         path: ROUTES.DAPP_CONNECTIVITY,
         element: <DAppConnectivity />,
+      },
+      {
+        path: ROUTES.EDIT_DAPP_CONNECTED_ACCOUNTS,
+        element: <EditDAppConnectedAccounts />,
+      },
+      {
+        path: ROUTES.EDIT_DAPP_CONNECTED_BLOCKCHAINS,
+        element: <EditDAppConnectedBlockchains />,
       },
       {
         path: ROUTES.CHAIN_CONNECTIVITY,

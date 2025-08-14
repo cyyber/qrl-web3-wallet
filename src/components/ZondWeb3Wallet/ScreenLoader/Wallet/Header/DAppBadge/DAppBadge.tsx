@@ -53,7 +53,10 @@ const DAppBadge = observer(() => {
             variant="outline"
             size="sm"
             className={badgeButtonClasses({
-              isActive: pathName === ROUTES.DAPP_CONNECTIVITY,
+              isActive:
+                pathName === ROUTES.DAPP_CONNECTIVITY ||
+                pathName === ROUTES.EDIT_DAPP_CONNECTED_ACCOUNTS ||
+                pathName === ROUTES.EDIT_DAPP_CONNECTED_BLOCKCHAINS,
             })}
           >
             <Card
