@@ -7,6 +7,11 @@ import { RESTRICTED_METHODS } from "../constants/requestConstants";
 import StorageUtil from "@/utilities/storageUtil";
 import { MAX_SAFE_CHAIN_ID } from "@/constants/blockchain";
 import { BlockchainDataType } from "@/configuration/zondBlockchainConfig";
+import {
+  CAVEAT_TYPES,
+  PARENT_CAPABILITIES,
+  Permission,
+} from "../middlewares/middlewareTypes";
 
 const getFromAddress = (req: JsonRpcRequest<JsonRpcRequest>) => {
   switch (req.method) {
@@ -299,4 +304,49 @@ export const checkWalletSwitchZondChainParams = async (paramObject: {
     canProceed: true,
     proceedError: undefined,
   };
+};
+
+export const updateAccountsAndBlockchainsForUrlOrigin = async ({
+  urlOrigin,
+  accounts,
+  blockchains,
+}: {
+  urlOrigin: string;
+  accounts: string[];
+  blockchains: string[];
+}) => {
+  const origin = new URL(urlOrigin ?? "").origin;
+  const currentBlockchain = (await StorageUtil.getActiveBlockChain()).chainId;
+  if (!blockchains.includes(currentBlockchain)) {
+    await StorageUtil.setActiveBlockChain(blockchains?.[0]);
+  }
+  const permissions: Permission[] = [
+    {
+      invoker: origin,
+      parentCapability: PARENT_CAPABILITIES.ZOND_ACCOUNTS,
+      caveats: [
+        {
+          type: CAVEAT_TYPES.RESTRICT_RETURNED_ACCOUNTS,
+          value: accounts,
+        },
+      ],
+    },
+    {
+      invoker: origin,
+      parentCapability: PARENT_CAPABILITIES.ZOND_CHAINS,
+      caveats: [
+        {
+          type: CAVEAT_TYPES.RESTRICT_NETWORK_SWITCHING,
+          value: blockchains,
+        },
+      ],
+    },
+  ];
+  await StorageUtil.setDAppsConnectedAccountsData({
+    urlOrigin: origin,
+    accounts,
+    blockchains,
+    permissions,
+  });
+  return accounts;
 };

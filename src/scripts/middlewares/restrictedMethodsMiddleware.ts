@@ -6,18 +6,13 @@ import browser from "webextension-polyfill";
 import { RESTRICTED_METHODS } from "../constants/requestConstants";
 import { EXTENSION_MESSAGES } from "../constants/streamConstants";
 import {
-  CAVEAT_TYPES,
-  DAppRequestType,
-  DAppResponseType,
-  PARENT_CAPABILITIES,
-  Permission,
-} from "./middlewareTypes";
-import {
   checkAccountHasBeenAuthorized,
   checkUrlOriginHasBeenConnected,
   checkWalletAddZondChainParams,
   checkWalletSwitchZondChainParams,
+  updateAccountsAndBlockchainsForUrlOrigin,
 } from "../utils/restrictedMethodsMiddlewareUtils";
+import { DAppRequestType, DAppResponseType } from "./middlewareTypes";
 
 const checkRequestCanCompleteSilently = async (
   req: JsonRpcRequest<JsonRpcRequest>,
@@ -199,44 +194,10 @@ export const restrictedMethodsMiddleware: JsonRpcMiddleware<
               res.result = hasApproved ? null : false;
               break;
             case RESTRICTED_METHODS.ZOND_REQUEST_ACCOUNTS:
-              const urlOrigin = new URL(req?.senderData?.url ?? "").origin;
-              const accounts: string[] =
-                restrictedMethodResult?.response?.accounts;
-              const blockchains: string[] =
-                restrictedMethodResult?.response?.blockchains;
-              const currentBlockchain = (
-                await StorageUtil.getActiveBlockChain()
-              ).chainId;
-              if (!blockchains.includes(currentBlockchain)) {
-                await StorageUtil.setActiveBlockChain(blockchains?.[0]);
-              }
-              const permissions: Permission[] = [
-                {
-                  invoker: urlOrigin,
-                  parentCapability: PARENT_CAPABILITIES.ZOND_ACCOUNTS,
-                  caveats: [
-                    {
-                      type: CAVEAT_TYPES.RESTRICT_RETURNED_ACCOUNTS,
-                      value: accounts,
-                    },
-                  ],
-                },
-                {
-                  invoker: urlOrigin,
-                  parentCapability: PARENT_CAPABILITIES.ZOND_CHAINS,
-                  caveats: [
-                    {
-                      type: CAVEAT_TYPES.RESTRICT_NETWORK_SWITCHING,
-                      value: blockchains,
-                    },
-                  ],
-                },
-              ];
-              await StorageUtil.setDAppsConnectedAccountsData({
-                urlOrigin,
-                accounts,
-                blockchains,
-                permissions,
+              const accounts = await updateAccountsAndBlockchainsForUrlOrigin({
+                urlOrigin: new URL(req?.senderData?.url ?? "").origin,
+                accounts: restrictedMethodResult?.response?.accounts,
+                blockchains: restrictedMethodResult?.response?.blockchains,
               });
               res.result = accounts;
               break;

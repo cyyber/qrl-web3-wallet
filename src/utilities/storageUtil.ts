@@ -311,28 +311,26 @@ class StorageUtil {
   static async setDAppsConnectedAccountsData(data: ConnectedAccountsDataType) {
     const urlOrigin = data.urlOrigin;
 
-    const existingData = await browser.storage.local.get(DAPPS_IDENTIFIER);
-    if (!existingData[DAPPS_IDENTIFIER]) {
-      existingData[DAPPS_IDENTIFIER] = {};
+    const storageData = await browser.storage.local.get(DAPPS_IDENTIFIER);
+    if (!storageData[DAPPS_IDENTIFIER]) {
+      storageData[DAPPS_IDENTIFIER] = {};
     }
-    if (!existingData[DAPPS_IDENTIFIER][ALL_DAPPS_IDENTIFIER]) {
-      existingData[DAPPS_IDENTIFIER][ALL_DAPPS_IDENTIFIER] = {};
+    if (!storageData[DAPPS_IDENTIFIER][ALL_DAPPS_IDENTIFIER]) {
+      storageData[DAPPS_IDENTIFIER][ALL_DAPPS_IDENTIFIER] = {};
     }
-    if (!existingData[DAPPS_IDENTIFIER][ALL_DAPPS_IDENTIFIER][urlOrigin]) {
-      existingData[DAPPS_IDENTIFIER][ALL_DAPPS_IDENTIFIER][urlOrigin] = {};
+    if (!storageData[DAPPS_IDENTIFIER][ALL_DAPPS_IDENTIFIER][urlOrigin]) {
+      storageData[DAPPS_IDENTIFIER][ALL_DAPPS_IDENTIFIER][urlOrigin] = {};
     }
-    existingData[DAPPS_IDENTIFIER][ALL_DAPPS_IDENTIFIER][urlOrigin].urlOrigin =
+    storageData[DAPPS_IDENTIFIER][ALL_DAPPS_IDENTIFIER][urlOrigin].urlOrigin =
       urlOrigin;
-    existingData[DAPPS_IDENTIFIER][ALL_DAPPS_IDENTIFIER][urlOrigin].accounts =
+    storageData[DAPPS_IDENTIFIER][ALL_DAPPS_IDENTIFIER][urlOrigin].accounts =
       data.accounts;
-    existingData[DAPPS_IDENTIFIER][ALL_DAPPS_IDENTIFIER][
-      urlOrigin
-    ].blockchains = data.blockchains;
-    existingData[DAPPS_IDENTIFIER][ALL_DAPPS_IDENTIFIER][
-      urlOrigin
-    ].permissions = data.permissions;
+    storageData[DAPPS_IDENTIFIER][ALL_DAPPS_IDENTIFIER][urlOrigin].blockchains =
+      data.blockchains;
+    storageData[DAPPS_IDENTIFIER][ALL_DAPPS_IDENTIFIER][urlOrigin].permissions =
+      data.permissions;
 
-    await browser.storage.local.set(existingData);
+    await browser.storage.local.set(storageData);
   }
 
   static async getDAppsConnectedAccountsData(urlOrigin: string = "") {
