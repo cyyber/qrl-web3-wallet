@@ -9,9 +9,10 @@ import {
 import { ROUTES } from "@/router/router";
 import { useStore } from "@/stores/store";
 import { cva } from "class-variance-authority";
-import { Earth, Unlink } from "lucide-react";
+import { Unlink } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useNavigate } from "react-router-dom";
+import ActiveBrowserTabIcon from "./ActiveBrowserTabIcon/ActiveBrowserTabIcon";
 
 const connectivityStatusClasses = cva("h-3 w-3 rounded-full", {
   variants: {
@@ -47,16 +48,10 @@ const ActiveBrowserTab = observer(() => {
                 hasDAppConnected,
               })}
             />
-            {currentTabData?.favIconUrl ? (
-              <div className="h-6 w-6">
-                <img
-                  src={currentTabData?.favIconUrl}
-                  alt={currentTabData?.title}
-                />
-              </div>
-            ) : (
-              <Earth className="h-6 w-6" />
-            )}
+            <ActiveBrowserTabIcon
+              favIconUrl={currentTabData?.favIconUrl}
+              altText={currentTabData?.title}
+            />
           </div>
           <div className="flex flex-col break-all">
             <span className="font-bold">{currentTabData?.urlOrigin}</span>
