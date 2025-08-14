@@ -1,39 +1,21 @@
+import { Button } from "@/components/UI/Button";
 import { Card } from "@/components/UI/Card";
-import { BlockchainDataType } from "@/configuration/zondBlockchainConfig";
-import { useStore } from "@/stores/store";
-import StorageUtil from "@/utilities/storageUtil";
-import { observer } from "mobx-react-lite";
-import { useEffect, useState } from "react";
-import ChainIcon from "../../../../ChainConnectivity/ChainIcon/ChainIcon";
+import { Label } from "@/components/UI/Label";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/UI/Tooltip";
-import { Button } from "@/components/UI/Button";
-import { Pencil } from "lucide-react";
-import { Label } from "@/components/UI/Label";
-import { Link } from "react-router-dom";
 import { ROUTES } from "@/router/router";
+import { useStore } from "@/stores/store";
+import { Pencil } from "lucide-react";
+import { observer } from "mobx-react-lite";
+import { Link } from "react-router-dom";
+import ChainIcon from "../../../../ChainConnectivity/ChainIcon/ChainIcon";
 
 const DAppConnectedBlockchains = observer(() => {
   const { dAppRequestStore } = useStore();
   const { currentTabData } = dAppRequestStore;
-
-  const [isLoading, setIsLoading] = useState(true);
-  const [blockchains, setBlockchains] = useState<BlockchainDataType[]>([]);
-
-  useEffect(() => {
-    (async () => {
-      const connectedBlockchains = (
-        await StorageUtil.getAllBlockChains()
-      ).filter((blockchain) =>
-        currentTabData?.connectedBlockchains?.includes(blockchain),
-      );
-      setBlockchains(connectedBlockchains);
-      setIsLoading(false);
-    })();
-  }, []);
 
   return (
     <Card className="flex flex-col gap-4 p-4">
@@ -54,7 +36,6 @@ const DAppConnectedBlockchains = observer(() => {
                   variant="outline"
                   size="icon"
                   aria-label="Edit"
-                  onClick={() => {}}
                 >
                   <Pencil size="16" />
                 </Button>
@@ -66,32 +47,26 @@ const DAppConnectedBlockchains = observer(() => {
           </Tooltip>
         </div>
       </div>
-      {isLoading ? (
-        <div className="flex h-20 w-full animate-pulse items-center justify-between">
-          <div className="h-full w-full rounded-md bg-accent" />
-        </div>
-      ) : (
-        <div className="flex flex-col gap-2">
-          {blockchains?.map(
-            ({ chainId, chainName, defaultIconUrl, defaultRpcUrl }) => (
-              <Card className="flex justify-between gap-3 p-3">
-                <div className="flex gap-3">
-                  <div className="pt-1">
-                    <ChainIcon src={defaultIconUrl} alt={chainName} />
-                  </div>
-                  <div className="flex flex-col break-all">
-                    <span className="font-bold">{chainName}</span>
-                    <span className="text-xm opacity-80">
-                      Chain ID {parseInt(chainId, 16)}
-                    </span>
-                    <span className="text-xm opacity-80">{defaultRpcUrl}</span>
-                  </div>
+      <div className="flex flex-col gap-2">
+        {currentTabData?.connectedBlockchains?.map(
+          ({ chainId, chainName, defaultIconUrl, defaultRpcUrl }) => (
+            <Card className="flex justify-between gap-3 p-3">
+              <div className="flex gap-3">
+                <div className="pt-1">
+                  <ChainIcon src={defaultIconUrl} alt={chainName} />
                 </div>
-              </Card>
-            ),
-          )}
-        </div>
-      )}
+                <div className="flex flex-col break-all">
+                  <span className="font-bold">{chainName}</span>
+                  <span className="text-xm opacity-80">
+                    Chain ID {parseInt(chainId, 16)}
+                  </span>
+                  <span className="text-xm opacity-80">{defaultRpcUrl}</span>
+                </div>
+              </div>
+            </Card>
+          ),
+        )}
+      </div>
     </Card>
   );
 });

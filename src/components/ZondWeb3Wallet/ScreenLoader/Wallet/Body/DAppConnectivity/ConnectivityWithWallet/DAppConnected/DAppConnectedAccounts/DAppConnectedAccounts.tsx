@@ -14,9 +14,7 @@ import { Link } from "react-router-dom";
 import { ROUTES } from "@/router/router";
 
 const DAppConnectedAccounts = observer(() => {
-  const { dAppRequestStore, zondStore } = useStore();
-  const { zondAccounts } = zondStore;
-  const { isLoading } = zondAccounts;
+  const { dAppRequestStore } = useStore();
   const { currentTabData } = dAppRequestStore;
 
   return (
@@ -50,23 +48,17 @@ const DAppConnectedAccounts = observer(() => {
           </Tooltip>
         </div>
       </div>
-      {isLoading ? (
-        <div className="flex h-20 w-full animate-pulse items-center justify-between">
-          <div className="h-full w-full rounded-md bg-accent" />
-        </div>
-      ) : (
-        <div className="flex flex-col gap-2">
-          {currentTabData?.connectedAccounts?.map((accountAddress) => (
-            <Card
-              key={accountAddress}
-              id={accountAddress}
-              className="p-3 font-bold text-foreground"
-            >
-              <AccountId account={accountAddress} />
-            </Card>
-          ))}
-        </div>
-      )}
+      <div className="flex flex-col gap-2">
+        {currentTabData?.connectedAccounts?.map((accountAddress) => (
+          <Card
+            key={accountAddress}
+            id={accountAddress}
+            className="p-3 font-bold text-foreground"
+          >
+            <AccountId account={accountAddress} />
+          </Card>
+        ))}
+      </div>
     </Card>
   );
 });
