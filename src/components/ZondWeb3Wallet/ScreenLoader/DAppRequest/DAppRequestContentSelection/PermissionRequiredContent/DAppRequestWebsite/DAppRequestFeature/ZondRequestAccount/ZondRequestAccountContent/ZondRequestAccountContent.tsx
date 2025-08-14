@@ -29,7 +29,7 @@ const ZondRequestAccountContent = observer(() => {
   useEffect(() => {
     addToResponseData({
       accounts,
-      blockchains: blockchains.map((blockchain) => blockchain.chainId),
+      blockchains,
     });
     setCanProceed(!!accounts.length && !!blockchains.length);
   }, [accounts, blockchains]);

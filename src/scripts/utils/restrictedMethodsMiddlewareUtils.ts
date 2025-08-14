@@ -313,12 +313,13 @@ export const updateAccountsAndBlockchainsForUrlOrigin = async ({
 }: {
   urlOrigin: string;
   accounts: string[];
-  blockchains: string[];
+  blockchains: BlockchainDataType[];
 }) => {
   const origin = new URL(urlOrigin ?? "").origin;
-  const currentBlockchain = (await StorageUtil.getActiveBlockChain()).chainId;
-  if (!blockchains.includes(currentBlockchain)) {
-    await StorageUtil.setActiveBlockChain(blockchains?.[0]);
+  const currentBlockchainId = (await StorageUtil.getActiveBlockChain()).chainId;
+  const blockchainIds = blockchains.map((blockchain) => blockchain.chainId);
+  if (!blockchainIds.includes(currentBlockchainId)) {
+    await StorageUtil.setActiveBlockChain(blockchainIds?.[0]);
   }
   const permissions: Permission[] = [
     {
@@ -337,7 +338,7 @@ export const updateAccountsAndBlockchainsForUrlOrigin = async ({
       caveats: [
         {
           type: CAVEAT_TYPES.RESTRICT_NETWORK_SWITCHING,
-          value: blockchains,
+          value: blockchainIds,
         },
       ],
     },

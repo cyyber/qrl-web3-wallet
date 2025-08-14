@@ -1,3 +1,4 @@
+import { BlockchainDataType } from "@/configuration/zondBlockchainConfig";
 import { EXTENSION_MESSAGES } from "@/scripts/constants/streamConstants";
 import {
   DAppRequestType,
@@ -13,7 +14,7 @@ type CurrentTabData = {
   urlOrigin: string;
   title: string;
   connectedAccounts: string[];
-  connectedBlockchains: string[];
+  connectedBlockchains: BlockchainDataType[];
 };
 
 class DAppRequestStore {

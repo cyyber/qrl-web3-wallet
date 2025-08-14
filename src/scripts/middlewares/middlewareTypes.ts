@@ -1,3 +1,4 @@
+import { BlockchainDataType } from "@/configuration/zondBlockchainConfig";
 import { AdditionalJsonRpcRequestKeys } from "@theqrl/zond-wallet-provider/utils";
 
 export type DAppRequestType = {
@@ -42,6 +43,6 @@ export type Permission = {
 export type ConnectedAccountsDataType = {
   urlOrigin: string;
   accounts: string[];
-  blockchains: string[];
+  blockchains: BlockchainDataType[];
   permissions: Permission[];
 };

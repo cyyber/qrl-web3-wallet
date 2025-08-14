@@ -25,11 +25,12 @@ const DAppConnectedBlockchains = observer(() => {
 
   useEffect(() => {
     (async () => {
-      const allBlockchains = (await StorageUtil.getAllBlockChains()).filter(
-        (blockchain) =>
-          currentTabData?.connectedBlockchains?.includes(blockchain.chainId),
+      const connectedBlockchains = (
+        await StorageUtil.getAllBlockChains()
+      ).filter((blockchain) =>
+        currentTabData?.connectedBlockchains?.includes(blockchain),
       );
-      setBlockchains(allBlockchains);
+      setBlockchains(connectedBlockchains);
       setIsLoading(false);
     })();
   }, []);
