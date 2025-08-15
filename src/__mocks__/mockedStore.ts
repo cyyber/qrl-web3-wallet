@@ -147,7 +147,7 @@ const mockedStoreValues: StoreType = {
     onPermission: async (hasApproved: boolean) => {
       hasApproved;
     },
-    fetchCurrentTabUrl: async () => {},
+    fetchCurrentTabData: async () => {},
     disconnectFromCurrentTab: async () => {},
   },
 };

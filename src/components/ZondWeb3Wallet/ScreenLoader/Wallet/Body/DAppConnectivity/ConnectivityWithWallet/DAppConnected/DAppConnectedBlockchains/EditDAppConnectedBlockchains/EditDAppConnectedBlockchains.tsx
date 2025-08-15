@@ -110,6 +110,7 @@ const EditDAppConnectedBlockchains = observer(() => {
             </Button>
             <Button
               className="w-full"
+              disabled={!selectedBlockchains.length}
               type="submit"
               aria-label="Edit blockchains"
               onClick={onEdit}

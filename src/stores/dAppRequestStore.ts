@@ -40,9 +40,10 @@ class DAppRequestStore {
       setOnPermissionCallBack: action.bound,
       onPermission: action.bound,
       approvalProcessingStatus: observable.struct,
+      fetchCurrentTabData: action.bound,
       disconnectFromCurrentTab: action.bound,
     });
-    this.fetchCurrentTabUrl();
+    this.fetchCurrentTabData();
   }
 
   get hasDAppRequest() {
@@ -53,7 +54,7 @@ class DAppRequestStore {
     return !!this?.currentTabData?.connectedAccounts?.length;
   }
 
-  async fetchCurrentTabUrl() {
+  async fetchCurrentTabData() {
     const tabs = await browser.tabs.query({
       active: true,
       currentWindow: true,
@@ -77,7 +78,7 @@ class DAppRequestStore {
     await StorageUtil.clearDAppsConnectedAccountsData(
       this.currentTabData?.urlOrigin,
     );
-    await this.fetchCurrentTabUrl();
+    await this.fetchCurrentTabData();
   }
 
   async readDAppRequestData() {
