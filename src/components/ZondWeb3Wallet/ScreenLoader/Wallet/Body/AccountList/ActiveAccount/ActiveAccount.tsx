@@ -15,9 +15,8 @@ import AccountId from "../AccountId/AccountId";
 
 const ActiveAccount = observer(() => {
   const { zondStore } = useStore();
-  const {
-    activeAccount: { accountAddress },
-  } = zondStore;
+  const { activeAccount } = zondStore;
+  const { accountAddress } = activeAccount;
 
   const activeAccountLabel = `${accountAddress ? "Active account" : ""}`;
 

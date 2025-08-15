@@ -1,17 +1,17 @@
+import { Button } from "@/components/UI/Button";
 import { Card } from "@/components/UI/Card";
-import { useStore } from "@/stores/store";
-import { observer } from "mobx-react-lite";
-import AccountId from "../../../../AccountList/AccountId/AccountId";
+import { Label } from "@/components/UI/Label";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/UI/Tooltip";
-import { Button } from "@/components/UI/Button";
-import { Label } from "@/components/UI/Label";
-import { Pencil } from "lucide-react";
-import { Link } from "react-router-dom";
 import { ROUTES } from "@/router/router";
+import { useStore } from "@/stores/store";
+import { Pencil } from "lucide-react";
+import { observer } from "mobx-react-lite";
+import { Link } from "react-router-dom";
+import AccountId from "../../../../AccountList/AccountId/AccountId";
 
 const DAppConnectedAccounts = observer(() => {
   const { dAppRequestStore } = useStore();

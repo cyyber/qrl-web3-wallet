@@ -1,6 +1,7 @@
 import { useStore } from "@/stores/store";
 import StringUtil from "@/utilities/stringUtil";
 import { observer } from "mobx-react-lite";
+import { useEffect, useState } from "react";
 
 type AccountIdType = {
   account: string;
@@ -8,9 +9,15 @@ type AccountIdType = {
 
 const AccountId = observer(({ account }: AccountIdType) => {
   const { zondStore } = useStore();
-  const { getAccountBalance } = zondStore;
+  const { getAccountBalance, zondAccounts } = zondStore;
+  const { accounts } = zondAccounts;
   const { prefix, addressSplit } = StringUtil.getSplitAddress(account);
-  const accountBalance = getAccountBalance(account);
+
+  const [accountBalance, setAccountBalance] = useState("");
+
+  useEffect(() => {
+    setAccountBalance(getAccountBalance(account));
+  }, [accounts]);
 
   return (
     <div className="flex gap-1">
