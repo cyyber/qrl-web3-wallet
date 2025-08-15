@@ -9,33 +9,37 @@ import { BlockchainDataType } from "@/configuration/zondBlockchainConfig";
 
 const ZondRequestAccountContent = observer(() => {
   const { dAppRequestStore } = useStore();
-  const { addToResponseData, setCanProceed } = dAppRequestStore;
+  const { addToResponseData, setCanProceed, currentTabData } = dAppRequestStore;
 
   const [isLoadingBlockchains, setIsLoadingBlockchains] = useState(true);
-  const [accounts, setAccounts] = useState<string[]>([]);
+  const [selectedAccounts, setSelectedAccounts] = useState<string[]>([]);
   const [allBlockchains, setAllBlockchains] = useState<BlockchainDataType[]>(
     [],
   );
-  const [blockchains, setBlockchains] = useState<BlockchainDataType[]>([]);
+  const [selectedBlockchains, setSelectedBlockchains] = useState<
+    BlockchainDataType[]
+  >([]);
 
   useEffect(() => {
     (async () => {
       const allBlockchains = await StorageUtil.getAllBlockChains();
+      setSelectedAccounts(currentTabData?.connectedAccounts ?? []);
       setAllBlockchains(allBlockchains);
+      setSelectedBlockchains(currentTabData?.connectedBlockchains ?? []);
       setIsLoadingBlockchains(false);
     })();
-  }, []);
+  }, [currentTabData]);
 
   useEffect(() => {
     addToResponseData({
-      accounts,
-      blockchains,
+      accounts: selectedAccounts,
+      blockchains: selectedBlockchains,
     });
-    setCanProceed(!!accounts.length && !!blockchains.length);
-  }, [accounts, blockchains]);
+    setCanProceed(!!selectedAccounts.length && !!selectedBlockchains.length);
+  }, [selectedAccounts, selectedBlockchains]);
 
   const onAccountSelection = (selectedAccount: string, checked: boolean) => {
-    let updatedAccounts = accounts;
+    let updatedAccounts = selectedAccounts;
     if (checked) {
       updatedAccounts = Array.from(
         new Set([...updatedAccounts, selectedAccount]),
@@ -45,14 +49,14 @@ const ZondRequestAccountContent = observer(() => {
         (account) => account !== selectedAccount,
       );
     }
-    setAccounts(updatedAccounts);
+    setSelectedAccounts(updatedAccounts);
   };
 
   const onBlockchainSelection = (
     selectedBlockchain: BlockchainDataType,
     checked: boolean,
   ) => {
-    let updatedBlockchains = blockchains;
+    let updatedBlockchains = selectedBlockchains;
     if (checked) {
       updatedBlockchains = Array.from(
         new Set([...updatedBlockchains, selectedBlockchain]),
@@ -62,7 +66,7 @@ const ZondRequestAccountContent = observer(() => {
         (blockchain) => blockchain.chainId !== selectedBlockchain.chainId,
       );
     }
-    setBlockchains(updatedBlockchains);
+    setSelectedBlockchains(updatedBlockchains);
   };
 
   return (
@@ -83,7 +87,7 @@ const ZondRequestAccountContent = observer(() => {
       </TabsList>
       <TabsContent value="accounts" className="rounded-md p-2">
         <ZondRequestAccountAccountSelection
-          selectedAccounts={accounts}
+          selectedAccounts={selectedAccounts}
           onAccountSelection={onAccountSelection}
         />
       </TabsContent>
@@ -91,7 +95,7 @@ const ZondRequestAccountContent = observer(() => {
         <ZondRequestAccountBlockchainSelection
           isLoading={isLoadingBlockchains}
           allBlockchains={allBlockchains}
-          selectedBlockchains={blockchains}
+          selectedBlockchains={selectedBlockchains}
           onBlockchainSelection={onBlockchainSelection}
         />
       </TabsContent>

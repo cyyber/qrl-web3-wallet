@@ -345,8 +345,8 @@ export const updateAccountsAndBlockchainsForUrlOrigin = async ({
   ];
   await StorageUtil.setDAppsConnectedAccountsData({
     urlOrigin: origin,
-    accounts,
-    blockchains,
+    accounts: [...accounts],
+    blockchains: [...blockchains],
     permissions,
   });
   return accounts;
