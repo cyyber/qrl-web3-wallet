@@ -23,7 +23,8 @@ import { updateAccountsAndBlockchainsForUrlOrigin } from "@/scripts/utils/restri
 const EditDAppConnectedBlockchains = observer(() => {
   const navigate = useNavigate();
   const { state } = useLocation();
-  const { dAppRequestStore } = useStore();
+  const { dAppRequestStore, zondStore } = useStore();
+  const { initializeBlockchain } = zondStore;
   const { currentTabData } = dAppRequestStore;
   const hasState = !!state?.hasState;
 
@@ -73,6 +74,7 @@ const EditDAppConnectedBlockchains = observer(() => {
       blockchains: selectedBlockchains,
     });
     navigate(ROUTES.DAPP_CONNECTIVITY);
+    initializeBlockchain();
   };
 
   return (

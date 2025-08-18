@@ -6,6 +6,7 @@ import { observer } from "mobx-react-lite";
 import AddZondChainInfo from "./AddZondChainInfo/AddZondChainInfo";
 import { BlockchainBaseDataType } from "@/configuration/zondBlockchainConfig";
 import StorageUtil from "@/utilities/storageUtil";
+import { includeChainForUrlOrigin } from "@/scripts/utils/restrictedMethodsMiddlewareUtils";
 
 const AddZondChainContent = observer(() => {
   const { dAppRequestStore, zondStore } = useStore();
@@ -40,6 +41,10 @@ const AddZondChainContent = observer(() => {
         if (!chainFound) {
           await StorageUtil.setAllBlockChains(updatedChainList);
           await StorageUtil.clearDAppsRequestData();
+          await includeChainForUrlOrigin({
+            urlOrigin: dAppRequestData?.requestData?.senderData?.url ?? "",
+            chainId: blockchain?.chainId,
+          });
           await selectBlockchain(blockchain?.chainId);
         }
       }

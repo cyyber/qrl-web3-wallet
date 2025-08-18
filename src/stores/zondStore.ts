@@ -43,6 +43,7 @@ class ZondStore {
 
   constructor() {
     makeAutoObservable(this, {
+      initializeBlockchain: action.bound,
       zondInstance: observable.struct,
       zondConnection: observable.struct,
       zondAccounts: observable.struct,

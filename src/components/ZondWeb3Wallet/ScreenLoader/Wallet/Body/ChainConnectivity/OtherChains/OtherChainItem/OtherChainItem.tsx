@@ -31,6 +31,10 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ChainIcon from "../../ChainIcon/ChainIcon";
 import StorageUtil from "@/utilities/storageUtil";
+import {
+  excludeChainForUrlOrigin,
+  includeChainForUrlOrigin,
+} from "@/scripts/utils/restrictedMethodsMiddlewareUtils";
 
 type OtherChainItemProps = {
   blockchain: BlockchainDataType;
@@ -40,15 +44,20 @@ type OtherChainItemProps = {
 const OtherChainItem = observer(
   ({ blockchain, triggerReRender }: OtherChainItemProps) => {
     const navigate = useNavigate();
-    const { zondStore } = useStore();
+    const { dAppRequestStore, zondStore } = useStore();
     const { selectBlockchain } = zondStore;
     const { defaultRpcUrl, chainName, chainId, defaultIconUrl, isCustomChain } =
       blockchain;
+    const { currentTabData } = dAppRequestStore;
 
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-    const connectChain = (chainId: string) => {
+    const connectChain = async (chainId: string) => {
       navigate(ROUTES.HOME);
+      await includeChainForUrlOrigin({
+        urlOrigin: currentTabData?.urlOrigin ?? "",
+        chainId,
+      });
       selectBlockchain(chainId);
     };
 
@@ -59,6 +68,10 @@ const OtherChainItem = observer(
         (chain) => chain.chainId !== chainId,
       );
       await StorageUtil.setAllBlockChains(updatedChains);
+      await excludeChainForUrlOrigin({
+        urlOrigin: currentTabData?.urlOrigin ?? "",
+        chainId,
+      });
       triggerReRender();
     };
 

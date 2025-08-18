@@ -41,7 +41,16 @@ const checkRequestCanCompleteSilently = async (
     const chainId = chainData?.chainId;
 
     const currentChainId = (await StorageUtil.getActiveBlockChain())?.chainId;
-    if (chainId?.toLowerCase() === currentChainId?.toLowerCase()) {
+    const isAlreadyCurrentChain =
+      chainId?.toLowerCase() === currentChainId?.toLowerCase();
+    const dAppConnectedChains = await StorageUtil.getDAppsConnectedAccountsData(
+      new URL(req?.senderData?.url ?? "").origin,
+    );
+    const isDAppConnectedChain = dAppConnectedChains?.blockchains
+      ?.map((chain) => chain.chainId.toLowerCase())
+      ?.includes(chainId?.toLowerCase());
+    if (isAlreadyCurrentChain || isDAppConnectedChain) {
+      await StorageUtil.setActiveBlockChain(chainId);
       return {
         hasCompleted: true,
         completionResult: null,

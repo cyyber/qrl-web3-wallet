@@ -318,7 +318,9 @@ export const updateAccountsAndBlockchainsForUrlOrigin = async ({
   const origin = new URL(urlOrigin ?? "").origin;
   const currentBlockchainId = (await StorageUtil.getActiveBlockChain()).chainId;
   const blockchainIds = blockchains.map((blockchain) => blockchain.chainId);
-  if (!blockchainIds.includes(currentBlockchainId)) {
+  const ifSelectionsExludeCurrentChain =
+    !blockchainIds.includes(currentBlockchainId);
+  if (ifSelectionsExludeCurrentChain) {
     await StorageUtil.setActiveBlockChain(blockchainIds?.[0]);
   }
   const permissions: Permission[] = [
@@ -328,7 +330,7 @@ export const updateAccountsAndBlockchainsForUrlOrigin = async ({
       caveats: [
         {
           type: CAVEAT_TYPES.RESTRICT_RETURNED_ACCOUNTS,
-          value: accounts,
+          value: [...accounts],
         },
       ],
     },
@@ -338,7 +340,7 @@ export const updateAccountsAndBlockchainsForUrlOrigin = async ({
       caveats: [
         {
           type: CAVEAT_TYPES.RESTRICT_NETWORK_SWITCHING,
-          value: blockchainIds,
+          value: [...blockchainIds],
         },
       ],
     },
@@ -350,4 +352,56 @@ export const updateAccountsAndBlockchainsForUrlOrigin = async ({
     permissions,
   });
   return accounts;
+};
+
+export const includeChainForUrlOrigin = async ({
+  urlOrigin,
+  chainId,
+}: {
+  urlOrigin: string;
+  chainId: string;
+}) => {
+  const origin = new URL(urlOrigin ?? "").origin;
+  const dAppConnectedData =
+    await StorageUtil.getDAppsConnectedAccountsData(origin);
+  const allBlockchains = await StorageUtil.getAllBlockChains();
+  const blockchain = allBlockchains.find(
+    (chain) => chain?.chainId?.toLowerCase() === chainId?.toLowerCase(),
+  );
+  const isAdditionRequired = !(dAppConnectedData?.blockchains ?? []).find(
+    (chain) =>
+      chain.chainId?.toLowerCase() === blockchain?.chainId?.toLowerCase(),
+  );
+  const updatedBlockchains = [
+    ...(dAppConnectedData?.blockchains ?? []),
+    ...(isAdditionRequired && blockchain ? [blockchain] : []),
+  ];
+
+  await updateAccountsAndBlockchainsForUrlOrigin({
+    urlOrigin: origin,
+    accounts: dAppConnectedData?.accounts ?? [],
+    blockchains: updatedBlockchains,
+  });
+};
+
+export const excludeChainForUrlOrigin = async ({
+  urlOrigin,
+  chainId,
+}: {
+  urlOrigin: string;
+  chainId: string;
+}) => {
+  const origin = new URL(urlOrigin ?? "").origin;
+  const dAppConnectedData =
+    await StorageUtil.getDAppsConnectedAccountsData(origin);
+  const updatedBlockchains =
+    dAppConnectedData?.blockchains?.filter(
+      (chain) => chain?.chainId?.toLowerCase() !== chainId.toLowerCase(),
+    ) ?? [];
+
+  await updateAccountsAndBlockchainsForUrlOrigin({
+    urlOrigin: origin,
+    accounts: dAppConnectedData?.accounts ?? [],
+    blockchains: updatedBlockchains,
+  });
 };

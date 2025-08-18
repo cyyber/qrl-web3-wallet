@@ -42,12 +42,12 @@ const AddZondChainDetails = observer(() => {
           <div className="font-bold text-secondary">{currencyDecimal}</div>
         </div>
       </div>
-      <div className="flex gap-0">
-        <CurrencyImagePreload iconUrls={iconUrls} />
+      <div className="flex gap-4">
         <div className="flex flex-col gap-1 transition-all duration-1000">
           <div>Currency name</div>
           <div className="font-bold text-secondary">{currencyName}</div>
         </div>
+        <CurrencyImagePreload iconUrls={iconUrls} />
       </div>
       <AddZondChainUrlList title="RPC URLs" urlList={rpcUrls} />
       <AddZondChainUrlList

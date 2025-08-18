@@ -1,13 +1,14 @@
 import { Button } from "@/components/UI/Button";
 import { Card, CardContent, CardFooter } from "@/components/UI/Card";
 import { useStore } from "@/stores/store";
-import StorageUtil from "@/utilities/storageUtil";
 import { Check, X } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import SwitchZondChainInfo from "./SwitchZondChainInfo/SwitchZondChainInfo";
+import { includeChainForUrlOrigin } from "@/scripts/utils/restrictedMethodsMiddlewareUtils";
 
 const SwitchZondChainContent = observer(() => {
-  const { dAppRequestStore } = useStore();
+  const { dAppRequestStore, zondStore } = useStore();
+  const { selectBlockchain } = zondStore;
   const {
     dAppRequestData,
     onPermission,
@@ -22,7 +23,11 @@ const SwitchZondChainContent = observer(() => {
   const switchChain = async () => {
     const onPermissionCallBack = async (hasApproved: boolean) => {
       if (hasApproved) {
-        await StorageUtil.setActiveBlockChain(chainId);
+        await includeChainForUrlOrigin({
+          urlOrigin: dAppRequestData?.requestData?.senderData?.url ?? "",
+          chainId,
+        });
+        await selectBlockchain(chainId);
       }
     };
     setOnPermissionCallBack(onPermissionCallBack);
