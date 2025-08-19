@@ -6,13 +6,19 @@ import { UNRESTRICTED_METHODS } from "../constants/requestConstants";
 import { EXTENSION_MESSAGES } from "../constants/streamConstants";
 import { checkUrlOriginHasBeenConnected } from "../utils/restrictedMethodsMiddlewareUtils";
 
+const ZOND_WALLET_DAPP_CONNECTION_REQUIRED_METHODS: string[] = [
+  UNRESTRICTED_METHODS.ZOND_ACCOUNTS,
+];
+
 // a precheck to determine if the request can proceed
 const checkRequestCanProceed = async (req: JsonRpcRequest<JsonRpcRequest>) => {
-  const originConnectResult = await checkUrlOriginHasBeenConnected(
-    req?.senderData?.url ?? "",
-  );
-  if (!originConnectResult.canProceed) {
-    return originConnectResult;
+  if (ZOND_WALLET_DAPP_CONNECTION_REQUIRED_METHODS.includes(req.method)) {
+    const originConnectResult = await checkUrlOriginHasBeenConnected(
+      req?.senderData?.url ?? "",
+    );
+    if (!originConnectResult.canProceed) {
+      return originConnectResult;
+    }
   }
   return {
     canProceed: true,
