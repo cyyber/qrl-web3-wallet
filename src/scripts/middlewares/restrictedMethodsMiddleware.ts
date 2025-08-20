@@ -9,10 +9,16 @@ import {
   checkAccountHasBeenAuthorized,
   checkUrlOriginHasBeenConnected,
   checkWalletAddZondChainParams,
+  checkWalletRequestPermissionParams,
   checkWalletSwitchZondChainParams,
   updateAccountsAndBlockchainsForUrlOrigin,
 } from "../utils/restrictedMethodsMiddlewareUtils";
 import { DAppRequestType, DAppResponseType } from "./middlewareTypes";
+
+const ZOND_WALLET_DAPP_CONNECTION_REQUIRED_METHODS: string[] = [
+  RESTRICTED_METHODS.WALLET_ADD_ZOND_CHAIN,
+  RESTRICTED_METHODS.WALLET_SWITCH_ZOND_CHAIN,
+];
 
 const checkRequestCanCompleteSilently = async (
   req: JsonRpcRequest<JsonRpcRequest>,
@@ -82,10 +88,7 @@ const checkRequestCanCompleteSilently = async (
 
 // a precheck to determine if the request can proceed
 const checkRequestCanProceed = async (req: JsonRpcRequest<JsonRpcRequest>) => {
-  if (
-    req.method === RESTRICTED_METHODS.WALLET_ADD_ZOND_CHAIN ||
-    req.method === RESTRICTED_METHODS.WALLET_SWITCH_ZOND_CHAIN
-  ) {
+  if (ZOND_WALLET_DAPP_CONNECTION_REQUIRED_METHODS.includes(req.method)) {
     const originConnectResult = await checkUrlOriginHasBeenConnected(
       req?.senderData?.url ?? "",
     );
@@ -100,6 +103,9 @@ const checkRequestCanProceed = async (req: JsonRpcRequest<JsonRpcRequest>) => {
     case RESTRICTED_METHODS.WALLET_SWITCH_ZOND_CHAIN:
       // @ts-ignore
       return await checkWalletSwitchZondChainParams(req?.params?.[0]);
+    case RESTRICTED_METHODS.WALLET_REQUEST_PERMISSIONS:
+      // @ts-ignore
+      return await checkWalletRequestPermissionParams(req?.params?.[0]);
     case RESTRICTED_METHODS.ZOND_SEND_TRANSACTION:
     case RESTRICTED_METHODS.ZOND_SIGN_TYPED_DATA_V4:
     case RESTRICTED_METHODS.PERSONAL_SIGN:
@@ -209,6 +215,13 @@ export const restrictedMethodsMiddleware: JsonRpcMiddleware<
                 blockchains: restrictedMethodResult?.response?.blockchains,
               });
               res.result = accounts;
+              break;
+            case RESTRICTED_METHODS.WALLET_REQUEST_PERMISSIONS:
+              const dAppConnectedAccountsData =
+                await StorageUtil.getDAppsConnectedAccountsData(
+                  new URL(req?.senderData?.url ?? "").origin,
+                );
+              res.result = dAppConnectedAccountsData?.permissions ?? [];
               break;
             case RESTRICTED_METHODS.ZOND_SEND_TRANSACTION:
               const transactionHash =

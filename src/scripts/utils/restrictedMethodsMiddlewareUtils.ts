@@ -306,6 +306,36 @@ export const checkWalletSwitchZondChainParams = async (paramObject: {
   };
 };
 
+export const checkWalletRequestPermissionParams = async (paramObject: {
+  [k: string]: any;
+}) => {
+  const isAnObject =
+    Boolean(paramObject) &&
+    typeof paramObject === "object" &&
+    !Array.isArray(paramObject);
+  if (!isAnObject) {
+    return {
+      canProceed: false,
+      proceedError: rpcErrors.invalidParams(),
+    };
+  }
+  const allowedCapabilities: string[] = Object.values(PARENT_CAPABILITIES);
+  const requestedCapability = Object.keys(paramObject)?.[0] ?? "";
+  if (!allowedCapabilities.includes(requestedCapability)) {
+    return {
+      canProceed: false,
+      proceedError: rpcErrors.methodNotFound({
+        message: `The method "${requestedCapability}" does not exist / is not available.`,
+      }),
+    };
+  }
+
+  return {
+    canProceed: true,
+    proceedError: undefined,
+  };
+};
+
 export const updateAccountsAndBlockchainsForUrlOrigin = async ({
   urlOrigin,
   accounts,

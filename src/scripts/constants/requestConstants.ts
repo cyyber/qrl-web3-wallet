@@ -2,7 +2,6 @@
 export const UNRESTRICTED_METHODS = Object.freeze({
   NET_VERSION: "net_version",
   WALLET_GET_PERMISSIONS: "wallet_getPermissions",
-  WALLET_REQUEST_PERMISSIONS: "wallet_requestPermissions",
   WALLET_REVOKE_PERMISSIONS: "wallet_revokePermissions",
   WEB_3_CLIENT_VERSION: "web3_clientVersion",
   ZOND_ACCOUNTS: "zond_accounts",
@@ -47,6 +46,7 @@ export const UNRESTRICTED_METHODS = Object.freeze({
 export const RESTRICTED_METHODS = Object.freeze({
   PERSONAL_SIGN: "personal_sign",
   WALLET_ADD_ZOND_CHAIN: "wallet_addZondChain",
+  WALLET_REQUEST_PERMISSIONS: "wallet_requestPermissions",
   WALLET_SWITCH_ZOND_CHAIN: "wallet_switchZondChain",
   ZOND_REQUEST_ACCOUNTS: "zond_requestAccounts",
   ZOND_SEND_TRANSACTION: "zond_sendTransaction",

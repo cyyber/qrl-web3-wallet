@@ -11,6 +11,7 @@ const DAppRequestFeature = observer(() => {
 
   switch (dAppRequestData?.method) {
     case RESTRICTED_METHODS.ZOND_REQUEST_ACCOUNTS:
+    case RESTRICTED_METHODS.WALLET_REQUEST_PERMISSIONS:
       return <ZondRequestAccount />;
     case RESTRICTED_METHODS.ZOND_SEND_TRANSACTION:
       return <ZondSendTransaction />;

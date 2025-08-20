@@ -252,14 +252,9 @@ const prepareListeners = () => {
           await StorageUtil.getDAppsConnectedAccountsData(
             new URL(message?.data?.senderData?.url ?? "").origin,
           );
-        return dAppsConnectedAccountsData?.permissions;
-      } else if (method === UNRESTRICTED_METHODS.WALLET_REQUEST_PERMISSIONS) {
-        const [paramObject] = message.data.params;
-        // console.log(">>>paramObject", paramObject);
-        // await StorageUtil.clearDAppsConnectedAccountsData(
-        //   new URL(message?.data?.senderData?.url ?? "").origin,
-        // );
-        return "";
+        return getSerializableObject(
+          dAppsConnectedAccountsData?.permissions ?? [],
+        );
       } else if (method === UNRESTRICTED_METHODS.WALLET_REVOKE_PERMISSIONS) {
         await StorageUtil.clearDAppsConnectedAccountsData(
           new URL(message?.data?.senderData?.url ?? "").origin,
