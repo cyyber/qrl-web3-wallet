@@ -217,10 +217,14 @@ export const restrictedMethodsMiddleware: JsonRpcMiddleware<
               res.result = accounts;
               break;
             case RESTRICTED_METHODS.WALLET_REQUEST_PERMISSIONS:
+              const urlOrigin = new URL(req?.senderData?.url ?? "").origin;
+              await updateAccountsAndBlockchainsForUrlOrigin({
+                urlOrigin,
+                accounts: restrictedMethodResult?.response?.accounts,
+                blockchains: restrictedMethodResult?.response?.blockchains,
+              });
               const dAppConnectedAccountsData =
-                await StorageUtil.getDAppsConnectedAccountsData(
-                  new URL(req?.senderData?.url ?? "").origin,
-                );
+                await StorageUtil.getDAppsConnectedAccountsData(urlOrigin);
               res.result = dAppConnectedAccountsData?.permissions ?? [];
               break;
             case RESTRICTED_METHODS.ZOND_SEND_TRANSACTION:
