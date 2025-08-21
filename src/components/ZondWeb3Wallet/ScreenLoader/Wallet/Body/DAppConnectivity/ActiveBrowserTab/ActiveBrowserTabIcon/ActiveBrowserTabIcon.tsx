@@ -10,7 +10,7 @@ const ActiveBrowserTabIcon = ({
   altText,
 }: ActiveBrowserTabIconProps) => {
   if (!favIconUrl) {
-    return <Earth className="h-6 w-6" />;
+    return <Earth className="h-6 w-6" data-testid="earth-icon" />;
   }
 
   return (

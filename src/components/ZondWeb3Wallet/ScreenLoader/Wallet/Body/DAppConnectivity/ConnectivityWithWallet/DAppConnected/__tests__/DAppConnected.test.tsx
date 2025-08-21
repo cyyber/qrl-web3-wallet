@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it } from "@jest/globals";
 import { cleanup, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import DAppConnected from "../DAppConnected";
+import { TooltipProvider } from "@/components/UI/Tooltip";
 
 describe("DAppConnected", () => {
   afterEach(cleanup);
@@ -12,7 +13,9 @@ describe("DAppConnected", () => {
     render(
       <StoreProvider value={mockedStoreValues}>
         <MemoryRouter>
-          <DAppConnected />
+          <TooltipProvider>
+            <DAppConnected />
+          </TooltipProvider>
         </MemoryRouter>
       </StoreProvider>,
     );

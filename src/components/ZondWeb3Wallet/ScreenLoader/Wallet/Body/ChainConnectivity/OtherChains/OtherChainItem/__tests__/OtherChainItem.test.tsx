@@ -8,6 +8,38 @@ import { MemoryRouter } from "react-router-dom";
 import OtherChainItem from "../OtherChainItem";
 import userEvent from "@testing-library/user-event";
 
+jest.mock("@/utilities/storageUtil", () => {
+  const originalModule = jest.requireActual<
+    typeof import("@/utilities/storageUtil")
+  >("@/utilities/storageUtil");
+  return {
+    ...originalModule,
+    getAllBlockChains: jest.fn(async () => []),
+    setAllBlockChains: jest.fn(async () => {}),
+    getActiveBlockChain: jest.fn(async () => ({
+      chainId: "0x5",
+      chainName: "Test chain name",
+      rpcUrls: [],
+      blockExplorerUrls: [],
+      iconUrls: [],
+      nativeCurrency: {
+        name: "Test native currency",
+        symbol: "Test symbol",
+        decimals: 18,
+      },
+      defaultRpcUrl: "http://testDefaultRpcUrl",
+      defaultBlockExplorerUrl: "http://testDefaultExplorerUrl",
+      defaultIconUrl: "http://testDefaultIconUrl",
+      isTestnet: false,
+      defaultWsRpcUrl: "http://testDefaultRpcUrl",
+      isCustomChain: true,
+    })),
+    setActiveBlockChain: jest.fn(async () => {}),
+    getDAppsConnectedAccountsData: jest.fn(async () => {}),
+    setDAppsConnectedAccountsData: jest.fn(async () => {}),
+  };
+});
+
 describe("OtherChains", () => {
   afterEach(cleanup);
 
@@ -67,7 +99,12 @@ describe("OtherChains", () => {
   it("should call the select chain method on clicking the connect button", async () => {
     const mockedSelectBlockchain = jest.fn(async () => {});
     renderComponent(
-      mockedStore({ zondStore: { selectBlockchain: mockedSelectBlockchain } }),
+      mockedStore({
+        zondStore: { selectBlockchain: mockedSelectBlockchain },
+        dAppRequestStore: {
+          currentTabData: { urlOrigin: "http://testUrlOrigin" },
+        },
+      }),
     );
 
     const connectChainButton = screen.getByRole("button", {
@@ -104,27 +141,34 @@ describe("OtherChains", () => {
 
   it("should call the setAllBlockChains method on clicking delete button", async () => {
     const mockedTriggerReRender = jest.fn();
-    renderComponent(mockedStore(), {
-      blockchain: {
-        chainId: "0x5",
-        chainName: "Test chain name",
-        rpcUrls: [],
-        blockExplorerUrls: [],
-        iconUrls: [],
-        nativeCurrency: {
-          name: "Test native currency",
-          symbol: "Test symbol",
-          decimals: 18,
+    renderComponent(
+      mockedStore({
+        dAppRequestStore: {
+          currentTabData: { urlOrigin: "http://testUrlOrigin" },
         },
-        defaultRpcUrl: "http://testDefaultRpcUrl",
-        defaultBlockExplorerUrl: "http://testDefaultExplorerUrl",
-        defaultIconUrl: "http://testDefaultIconUrl",
-        isTestnet: false,
-        defaultWsRpcUrl: "http://testDefaultRpcUrl",
-        isCustomChain: true,
+      }),
+      {
+        blockchain: {
+          chainId: "0x5",
+          chainName: "Test chain name",
+          rpcUrls: [],
+          blockExplorerUrls: [],
+          iconUrls: [],
+          nativeCurrency: {
+            name: "Test native currency",
+            symbol: "Test symbol",
+            decimals: 18,
+          },
+          defaultRpcUrl: "http://testDefaultRpcUrl",
+          defaultBlockExplorerUrl: "http://testDefaultExplorerUrl",
+          defaultIconUrl: "http://testDefaultIconUrl",
+          isTestnet: false,
+          defaultWsRpcUrl: "http://testDefaultRpcUrl",
+          isCustomChain: true,
+        },
+        triggerReRender: mockedTriggerReRender,
       },
-      triggerReRender: mockedTriggerReRender,
-    });
+    );
 
     const moreButton = screen.getByRole("button", {
       name: "More",

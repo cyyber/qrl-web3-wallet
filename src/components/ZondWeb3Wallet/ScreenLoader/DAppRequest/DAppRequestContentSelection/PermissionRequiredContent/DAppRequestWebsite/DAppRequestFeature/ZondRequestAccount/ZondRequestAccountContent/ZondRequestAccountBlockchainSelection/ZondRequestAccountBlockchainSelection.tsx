@@ -39,6 +39,7 @@ const ZondRequestAccountBlockchainSelection = observer(
                 <Checkbox
                   id={blockchain.chainId}
                   checked={selectedBlockchainIds.includes(blockchain.chainId)}
+                  aria-label="blockchainCheckbox"
                   onCheckedChange={(checked) =>
                     onBlockchainSelection(blockchain, !!checked)
                   }

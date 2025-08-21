@@ -34,6 +34,7 @@ const ZondRequestAccountAccountSelection = observer(
                 <Checkbox
                   id={account}
                   checked={selectedAccounts.includes(account)}
+                  aria-label="accountsCheckbox"
                   onCheckedChange={(checked) =>
                     onAccountSelection(account, !!checked)
                   }
