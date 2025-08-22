@@ -27,6 +27,9 @@ const ZRC20Tokens = observer(
       !!numberOfTokens &&
       numberOfTokens > tokenDisplayLimit &&
       !shouldDisplayAllTokens;
+    const displayLimit = shouldDisplayAllTokens
+      ? numberOfTokens + 1
+      : tokenDisplayLimit;
 
     useEffect(() => {
       (async () => {
@@ -38,17 +41,9 @@ const ZRC20Tokens = observer(
 
     return (
       <>
-        {tokenContractsList
-          .slice(
-            0,
-            shouldDisplayAllTokens ? numberOfTokens + 1 : tokenDisplayLimit,
-          )
-          .map((contractAddress) => (
-            <ZRC20Token
-              key={contractAddress}
-              contractAddress={contractAddress}
-            />
-          ))}
+        {tokenContractsList.slice(0, displayLimit).map((contractAddress) => (
+          <ZRC20Token key={contractAddress} contractAddress={contractAddress} />
+        ))}
         {shouldDisplayViewAllButton && (
           <Link className="w-full" to={ROUTES.ALL_ZRC_20_TOKENS}>
             <Button className="w-full" type="button" variant="ghost">

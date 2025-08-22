@@ -6,8 +6,8 @@ const TokenListItemLoading = () => {
       <div className="flex items-center gap-4">
         <div className="h-8 w-8 rounded-full bg-accent" />
         <div className="flex flex-col gap-2">
-          <div className="h-4 w-36 rounded-md bg-accent" />
           <div className="h-4 w-24 rounded-md bg-accent" />
+          <div className="h-4 w-16 rounded-md bg-accent" />
         </div>
       </div>
       <div className="h-10 w-10 rounded-md bg-accent" />

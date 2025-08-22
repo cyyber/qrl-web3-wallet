@@ -10,6 +10,7 @@ import { getOptimalTokenBalance } from "@/functions/getOptimalTokenBalance";
 import { ROUTES } from "@/router/router";
 import { StoreType, useStore } from "@/stores/store";
 import StorageUtil from "@/utilities/storageUtil";
+import StringUtil from "@/utilities/stringUtil";
 import { Download, TextSelect, X } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useNavigate } from "react-router-dom";
@@ -35,6 +36,9 @@ const TokenImportSuccess = observer(
     const totalSupply = token?.totalSupply;
     const balance = token?.balance;
 
+    const { prefix, addressSplit } =
+      StringUtil.getSplitAddress(contractAddress);
+
     const onConfirmImport = async () => {
       await StorageUtil.setTokenContractsList(accountAddress, contractAddress);
       navigate(ROUTES.HOME, { state: { hasTokensPreference: true } });
@@ -50,7 +54,12 @@ const TokenImportSuccess = observer(
             <TextSelect size={64} />
             <div className="flex flex-col gap-1">
               <div>Contract address:</div>
-              <div className="font-bold text-secondary">{contractAddress}</div>
+              <div className="flex flex-wrap gap-1 font-bold text-secondary">
+                {prefix}
+                {addressSplit.map((segment) => (
+                  <span key={segment}>{segment}</span>
+                ))}
+              </div>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
