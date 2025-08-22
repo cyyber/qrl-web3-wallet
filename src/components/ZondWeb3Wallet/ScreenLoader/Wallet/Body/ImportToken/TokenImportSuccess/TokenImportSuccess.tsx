@@ -53,36 +53,33 @@ const TokenImportSuccess = observer(
           <div className="flex flex-col gap-4">
             <TextSelect size={64} />
             <div className="flex flex-col gap-1">
-              <div>Contract address:</div>
+              <div>Contract address</div>
               <div className="flex flex-wrap gap-1 font-bold text-secondary">
-                {prefix}
-                {addressSplit.map((segment) => (
-                  <span key={segment}>{segment}</span>
-                ))}
+                {`${prefix} ${addressSplit.join(" ")}`}
               </div>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1">
-              <div>Name:</div>
+              <div>Name</div>
               <div className="font-bold text-secondary">{name}</div>
             </div>
             <div className="flex flex-col gap-1">
-              <div>Symbol:</div>
+              <div>Symbol</div>
               <div className="font-bold text-secondary">{symbol}</div>
             </div>
             <div className="flex flex-col gap-1">
-              <div>Total supply:</div>
+              <div>Total supply</div>
               <div className="font-bold text-secondary">{totalSupply}</div>
             </div>
             <div className="flex flex-col gap-1">
-              <div>Balance:</div>
+              <div>Balance</div>
               <div className="font-bold text-secondary">
                 {getOptimalTokenBalance(balance?.toString() ?? "0", symbol)}
               </div>
             </div>
             <div className="flex flex-col gap-1">
-              <div>Decimals:</div>
+              <div>Decimals</div>
               <div className="font-bold text-secondary">
                 {decimals?.toString()}
               </div>

@@ -48,6 +48,7 @@ export const RESTRICTED_METHODS = Object.freeze({
   WALLET_ADD_ZOND_CHAIN: "wallet_addZondChain",
   WALLET_REQUEST_PERMISSIONS: "wallet_requestPermissions",
   WALLET_SWITCH_ZOND_CHAIN: "wallet_switchZondChain",
+  WALLET_WATCH_ASSET: "wallet_watchAsset",
   ZOND_REQUEST_ACCOUNTS: "zond_requestAccounts",
   ZOND_SEND_TRANSACTION: "zond_sendTransaction",
   ZOND_SIGN_TYPED_DATA_V4: "zond_signTypedData_v4",

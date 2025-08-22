@@ -306,6 +306,84 @@ export const checkWalletSwitchZondChainParams = async (paramObject: {
   };
 };
 
+export const checkWalletWatchAssetParams = async (paramObject: {
+  type: string;
+  options: {
+    address: string;
+    symbol: string;
+    decimals: number;
+    image: string;
+  };
+}) => {
+  if (!paramObject || typeof paramObject !== "object") {
+    return {
+      canProceed: false,
+      proceedError: rpcErrors.invalidParams({
+        message: `Expected single, object parameter. Received: ${JSON.stringify(
+          paramObject,
+        )}`,
+      }),
+    };
+  }
+
+  if (!paramObject?.type || paramObject?.type?.toLowerCase() !== "erc20") {
+    return {
+      canProceed: false,
+      proceedError: rpcErrors.invalidParams({
+        message: "Asset type should be ERC20.",
+      }),
+    };
+  }
+
+  if (
+    !paramObject?.options?.address ||
+    !paramObject?.options?.decimals ||
+    !paramObject?.options?.symbol
+  ) {
+    return {
+      canProceed: false,
+      proceedError: rpcErrors.invalidParams({
+        message: "Must specify address, symbol, and decimals.",
+      }),
+    };
+  }
+
+  if (typeof paramObject?.options?.symbol !== "string") {
+    return {
+      canProceed: false,
+      proceedError: rpcErrors.invalidParams({
+        message: "Invalid symbol: not a string.",
+      }),
+    };
+  }
+
+  if (paramObject?.options?.symbol?.length > 11) {
+    return {
+      canProceed: false,
+      proceedError: rpcErrors.invalidParams({
+        message: "Invalid symbol '${symbol}': longer than 11 characters.",
+      }),
+    };
+  }
+
+  if (
+    paramObject?.options?.decimals < 0 ||
+    paramObject?.options?.decimals > 36
+  ) {
+    return {
+      canProceed: false,
+      proceedError: rpcErrors.invalidParams({
+        message: "Invalid decimals '${decimals}': must be 0 <= 36.",
+      }),
+    };
+  }
+
+  return {
+    canProceed: true,
+    proceedError: undefined,
+  };
+};
+
 export const checkWalletRequestPermissionParams = async (paramObject: {
   [k: string]: any;
 }) => {
