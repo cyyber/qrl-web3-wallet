@@ -11,6 +11,7 @@ import {
   checkWalletAddZondChainParams,
   checkWalletRequestPermissionParams,
   checkWalletSwitchZondChainParams,
+  checkWalletWatchAssetParams,
   updateAccountsAndBlockchainsForUrlOrigin,
 } from "../utils/restrictedMethodsMiddlewareUtils";
 import { DAppRequestType, DAppResponseType } from "./middlewareTypes";
@@ -103,6 +104,9 @@ const checkRequestCanProceed = async (req: JsonRpcRequest<JsonRpcRequest>) => {
     case RESTRICTED_METHODS.WALLET_SWITCH_ZOND_CHAIN:
       // @ts-ignore
       return await checkWalletSwitchZondChainParams(req?.params?.[0]);
+    case RESTRICTED_METHODS.WALLET_WATCH_ASSET:
+      // @ts-ignore
+      return await checkWalletWatchAssetParams(req?.params?.[0]);
     case RESTRICTED_METHODS.WALLET_REQUEST_PERMISSIONS:
       // @ts-ignore
       return await checkWalletRequestPermissionParams(req?.params?.[0]);
@@ -205,8 +209,12 @@ export const restrictedMethodsMiddleware: JsonRpcMiddleware<
           switch (restrictedMethodResult?.method) {
             case RESTRICTED_METHODS.WALLET_ADD_ZOND_CHAIN:
             case RESTRICTED_METHODS.WALLET_SWITCH_ZOND_CHAIN:
-              const hasApproved = restrictedMethodResult?.hasApproved;
+              const hasApproved = !!restrictedMethodResult?.response?.result;
               res.result = hasApproved ? null : false;
+              break;
+            case RESTRICTED_METHODS.WALLET_WATCH_ASSET:
+              const hasAddedAsset = !!restrictedMethodResult?.response?.result;
+              res.result = hasAddedAsset;
               break;
             case RESTRICTED_METHODS.ZOND_REQUEST_ACCOUNTS:
               const accounts = await updateAccountsAndBlockchainsForUrlOrigin({

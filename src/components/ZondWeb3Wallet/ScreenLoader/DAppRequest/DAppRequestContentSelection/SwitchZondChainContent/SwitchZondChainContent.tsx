@@ -14,6 +14,7 @@ const SwitchZondChainContent = observer(() => {
     onPermission,
     approvalProcessingStatus,
     setOnPermissionCallBack,
+    addToResponseData,
   } = dAppRequestStore;
   const { isProcessing } = approvalProcessingStatus;
 
@@ -28,6 +29,7 @@ const SwitchZondChainContent = observer(() => {
           chainId,
         });
         await selectBlockchain(chainId);
+        addToResponseData({ result: true });
       }
     };
     setOnPermissionCallBack(onPermissionCallBack);

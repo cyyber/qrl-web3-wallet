@@ -16,6 +16,7 @@ const WatchAssetContent = observer(() => {
     approvalProcessingStatus,
     setOnPermissionCallBack,
     dAppRequestData,
+    addToResponseData,
   } = dAppRequestStore;
   const { isProcessing } = approvalProcessingStatus;
 
@@ -29,6 +30,7 @@ const WatchAssetContent = observer(() => {
           accountAddress,
           contractAddress,
         );
+        addToResponseData({ result: true });
       }
     };
     setOnPermissionCallBack(onPermissionCallBack);

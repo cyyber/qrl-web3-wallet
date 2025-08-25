@@ -16,6 +16,7 @@ const AddZondChainContent = observer(() => {
     onPermission,
     approvalProcessingStatus,
     setOnPermissionCallBack,
+    addToResponseData,
   } = dAppRequestStore;
   const { isProcessing } = approvalProcessingStatus;
 
@@ -47,6 +48,7 @@ const AddZondChainContent = observer(() => {
           });
           await selectBlockchain(blockchain?.chainId);
         }
+        addToResponseData({ result: true });
       }
     };
     setOnPermissionCallBack(onPermissionCallBack);

@@ -10,7 +10,7 @@ const TokenListItemLoading = () => {
           <div className="h-4 w-16 rounded-md bg-accent" />
         </div>
       </div>
-      <div className="h-10 w-10 rounded-md bg-accent" />
+      <div className="h-6 w-6 rounded-md bg-accent" />
     </Card>
   );
 };
