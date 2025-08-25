@@ -6,7 +6,7 @@ import { MemoryRouter } from "react-router-dom";
 import ZRC20Token from "../ZRC20Token";
 import { TooltipProvider } from "@/components/UI/Tooltip";
 
-describe("ERC20Token", () => {
+describe("ZRC20Token", () => {
   afterEach(cleanup);
 
   const renderComponent = (mockedStoreValues = mockedStore()) =>

@@ -41,7 +41,7 @@ const WatchAssetContent = observer(() => {
         <ChainBadge isDisabled={true} />
       </div>
       <div className="p-6">
-        <div>Here is a request to add an ERC20 token to the wallet.</div>
+        <div>Here is a request to add an ZRC20 token to the wallet.</div>
       </div>
       <CardContent className="space-y-6">
         <WatchAssetInfo />

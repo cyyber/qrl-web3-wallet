@@ -326,11 +326,11 @@ export const checkWalletWatchAssetParams = async (paramObject: {
     };
   }
 
-  if (!paramObject?.type || paramObject?.type?.toLowerCase() !== "erc20") {
+  if (!paramObject?.type || paramObject?.type?.toLowerCase() !== "zrc20") {
     return {
       canProceed: false,
       proceedError: rpcErrors.invalidParams({
-        message: "Asset type should be ERC20.",
+        message: "Asset type should be ZRC20.",
       }),
     };
   }
