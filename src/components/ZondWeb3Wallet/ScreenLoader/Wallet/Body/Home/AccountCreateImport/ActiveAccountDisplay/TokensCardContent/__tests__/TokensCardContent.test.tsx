@@ -31,8 +31,5 @@ describe("TokensCardContent", () => {
 
     expect(screen.getByText("Mocked Native token")).toBeInTheDocument();
     expect(screen.getByText("Mocked ZRC 20 token")).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Import token" }),
-    ).toBeInTheDocument();
   });
 });

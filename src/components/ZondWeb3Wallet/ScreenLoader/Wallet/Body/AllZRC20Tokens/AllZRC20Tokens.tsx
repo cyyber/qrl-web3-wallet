@@ -13,7 +13,7 @@ const AllZRC20Tokens = () => {
           <CardHeader>
             <CardTitle>All ZRC 20 tokens</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-2">
             <ZRC20Tokens shouldDisplayAllTokens={true} />
           </CardContent>
         </Card>

@@ -72,6 +72,9 @@ describe("AccountCreateImport", () => {
     expect(screen.getAllByRole("heading", { level: 3 })[1]).toHaveTextContent(
       "Tokens",
     );
+    expect(
+      screen.getByRole("button", { name: "Import token" }),
+    ).toBeInTheDocument();
     expect(screen.getAllByRole("heading", { level: 3 })[2]).toHaveTextContent(
       "Add accounts",
     );

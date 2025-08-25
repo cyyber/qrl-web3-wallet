@@ -10,7 +10,7 @@ import {
 import { ROUTES } from "@/router/router";
 import { useStore } from "@/stores/store";
 import { cva } from "class-variance-authority";
-import { Download, Plus, Send } from "lucide-react";
+import { Download, Logs, Plus, Send } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { Link, useLocation } from "react-router-dom";
 import ActiveAccountDisplay from "./ActiveAccountDisplay/ActiveAccountDisplay";
@@ -81,6 +81,20 @@ const AccountCreateImport = observer(() => {
             <CardContent>
               <TokensCardContent />
             </CardContent>
+            <CardFooter className="flex-col gap-4">
+              <Link className="w-full" to={ROUTES.IMPORT_TOKEN}>
+                <Button className="w-full" type="button">
+                  <Download className="mr-2 h-4 w-4" />
+                  Import token
+                </Button>
+              </Link>
+              <Link className="w-full" to={ROUTES.ALL_ZRC_20_TOKENS}>
+                <Button className="w-full" type="button" variant="outline">
+                  <Logs className="mr-2 h-4 w-4" />
+                  View all ZRC 20 tokens
+                </Button>
+              </Link>
+            </CardFooter>
           </Card>
         </>
       )}
@@ -102,7 +116,7 @@ const AccountCreateImport = observer(() => {
             </Button>
           </Link>
           <Link className="w-full" to={ROUTES.IMPORT_ACCOUNT}>
-            <Button className="w-full" type="button">
+            <Button className="w-full" type="button" variant="outline">
               <Download className="mr-2 h-4 w-4" />
               Import an existing account
             </Button>

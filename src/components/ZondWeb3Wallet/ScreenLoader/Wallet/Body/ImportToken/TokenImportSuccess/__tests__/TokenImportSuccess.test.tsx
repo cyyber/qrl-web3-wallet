@@ -16,7 +16,7 @@ describe("TokenImportSuccess", () => {
       <StoreProvider value={mockedStoreValues}>
         <MemoryRouter>
           <TokenImportSuccess
-            contractAddress="0x0db3981cb93db985e4e3a62ff695f7a1b242dd7c"
+            contractAddress="Z0db3981cb93db985e4e3a62ff695f7a1b242dd7c"
             onCancelImport={mockedOnCancelImport}
             token={{
               balance: 25,
@@ -36,19 +36,19 @@ describe("TokenImportSuccess", () => {
     expect(screen.getByRole("heading", { level: 3 })).toHaveTextContent(
       "Import token",
     );
-    expect(screen.getByText("Contract address:")).toBeInTheDocument();
+    expect(screen.getByText("Contract address")).toBeInTheDocument();
     expect(
-      screen.getByText("0x0db3981cb93db985e4e3a62ff695f7a1b242dd7c"),
+      screen.getByText("Z 0db39 81cb9 3db98 5e4e3 a62ff 695f7 a1b24 2dd7c"),
     ).toBeInTheDocument();
-    expect(screen.getByText("Name:")).toBeInTheDocument();
+    expect(screen.getByText("Name")).toBeInTheDocument();
     expect(screen.getByText("MOCK TOKEN")).toBeInTheDocument();
-    expect(screen.getByText("Symbol:")).toBeInTheDocument();
+    expect(screen.getByText("Symbol")).toBeInTheDocument();
     expect(screen.getByText("MCK")).toBeInTheDocument();
-    expect(screen.getByText("Total supply:")).toBeInTheDocument();
+    expect(screen.getByText("Total supply")).toBeInTheDocument();
     expect(screen.getByText("100")).toBeInTheDocument();
-    expect(screen.getByText("Balance:")).toBeInTheDocument();
+    expect(screen.getByText("Balance")).toBeInTheDocument();
     expect(screen.getByText("25.0 MCK")).toBeInTheDocument();
-    expect(screen.getByText("Decimals:")).toBeInTheDocument();
+    expect(screen.getByText("Decimals")).toBeInTheDocument();
     expect(screen.getByText("18")).toBeInTheDocument();
   });
 
