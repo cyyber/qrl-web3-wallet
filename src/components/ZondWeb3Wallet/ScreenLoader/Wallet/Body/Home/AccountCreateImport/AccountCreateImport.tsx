@@ -15,6 +15,9 @@ import { observer } from "mobx-react-lite";
 import { Link, useLocation } from "react-router-dom";
 import ActiveAccountDisplay from "./ActiveAccountDisplay/ActiveAccountDisplay";
 import TokensCardContent from "./ActiveAccountDisplay/TokensCardContent/TokensCardContent";
+import { useEffect, useState } from "react";
+import StorageUtil from "@/utilities/storageUtil";
+import { ZRC_20_ITEMS_DISPLAY_LIMIT } from "@/constants/zrc20Token";
 
 const tokensClasses = cva("w-full", {
   variants: {
@@ -49,6 +52,16 @@ const AccountCreateImport = observer(() => {
   const hasActiveAccount = !!accountAddress;
   const hasAccountCreationPreference = !!state?.hasAccountCreationPreference;
   const hasTokensPreference = !!state?.hasTokensPreference;
+
+  const [tokenContractsList, setTokenContractsList] = useState<string[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const storedTokens =
+        await StorageUtil.getTokenContractsList(accountAddress);
+      setTokenContractsList(storedTokens);
+    })();
+  }, [accountAddress]);
 
   return (
     <div className="flex flex-col gap-8">
@@ -88,12 +101,14 @@ const AccountCreateImport = observer(() => {
                   Import token
                 </Button>
               </Link>
-              <Link className="w-full" to={ROUTES.ALL_ZRC_20_TOKENS}>
-                <Button className="w-full" type="button" variant="outline">
-                  <Logs className="mr-2 h-4 w-4" />
-                  View all ZRC 20 tokens
-                </Button>
-              </Link>
+              {tokenContractsList.length > ZRC_20_ITEMS_DISPLAY_LIMIT && (
+                <Link className="w-full" to={ROUTES.ALL_ZRC_20_TOKENS}>
+                  <Button className="w-full" type="button" variant="outline">
+                    <Logs className="mr-2 h-4 w-4" />
+                    View all ZRC 20 tokens
+                  </Button>
+                </Link>
+              )}
             </CardFooter>
           </Card>
         </>

@@ -7,38 +7,42 @@ import TokenListItemLoading from "../../TokenListItemLoading/TokenListItemLoadin
 
 type ZRC20TokenProps = {
   contractAddress: string;
+  triggerReRender?: () => void;
 };
 
-const ZRC20Token = observer(({ contractAddress }: ZRC20TokenProps) => {
-  const { zondStore } = useStore();
-  const { zondConnection, activeAccount, getZrc20TokenDetails } = zondStore;
-  const { blockchain } = zondConnection;
-  const { accountAddress } = activeAccount;
+const ZRC20Token = observer(
+  ({ contractAddress, triggerReRender }: ZRC20TokenProps) => {
+    const { zondStore } = useStore();
+    const { zondConnection, activeAccount, getZrc20TokenDetails } = zondStore;
+    const { blockchain } = zondConnection;
+    const { accountAddress } = activeAccount;
 
-  const [token, setToken] =
-    useState<Awaited<ReturnType<typeof getZrc20TokenDetails>>["token"]>();
+    const [token, setToken] =
+      useState<Awaited<ReturnType<typeof getZrc20TokenDetails>>["token"]>();
 
-  useEffect(() => {
-    (async () => {
-      const tokenDetails = await getZrc20TokenDetails(contractAddress);
-      if (!tokenDetails.error) {
-        setToken(tokenDetails.token);
-      }
-    })();
-  }, [blockchain, accountAddress]);
+    useEffect(() => {
+      (async () => {
+        const tokenDetails = await getZrc20TokenDetails(contractAddress);
+        if (!tokenDetails.error) {
+          setToken(tokenDetails.token);
+        }
+      })();
+    }, [blockchain, accountAddress]);
 
-  return !token ? (
-    <TokenListItemLoading />
-  ) : (
-    <TokenListItem
-      isZrc20Token={true}
-      contractAddress={contractAddress}
-      decimals={Number(token.decimals)}
-      balance={getOptimalTokenBalance(token.balance.toString(), token.symbol)}
-      name={token.name}
-      symbol={token.symbol}
-    />
-  );
-});
+    return !token ? (
+      <TokenListItemLoading />
+    ) : (
+      <TokenListItem
+        isZrc20Token={true}
+        contractAddress={contractAddress}
+        decimals={Number(token.decimals)}
+        balance={getOptimalTokenBalance(token.balance.toString(), token.symbol)}
+        name={token.name}
+        symbol={token.symbol}
+        triggerReRender={triggerReRender}
+      />
+    );
+  },
+);
 
 export default ZRC20Token;

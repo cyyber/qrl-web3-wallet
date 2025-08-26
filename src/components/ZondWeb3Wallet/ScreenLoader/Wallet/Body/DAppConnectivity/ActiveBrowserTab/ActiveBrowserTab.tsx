@@ -9,10 +9,20 @@ import {
 import { ROUTES } from "@/router/router";
 import { useStore } from "@/stores/store";
 import { cva } from "class-variance-authority";
-import { Unlink } from "lucide-react";
+import { Check, Unlink, X } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useNavigate } from "react-router-dom";
 import ActiveBrowserTabIcon from "./ActiveBrowserTabIcon/ActiveBrowserTabIcon";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/UI/Dialog";
+import { useState } from "react";
 
 const connectivityStatusClasses = cva("h-3 w-3 rounded-full", {
   variants: {
@@ -32,7 +42,10 @@ const ActiveBrowserTab = observer(() => {
   const { hasDAppConnected, currentTabData, disconnectFromCurrentTab } =
     dAppRequestStore;
 
+  const [disconnectDialogOpen, setDisconnectDialogOpen] = useState(false);
+
   const disconnect = async () => {
+    setDisconnectDialogOpen(false);
     await disconnectFromCurrentTab();
     navigate(ROUTES.HOME);
   };
@@ -67,7 +80,7 @@ const ActiveBrowserTab = observer(() => {
                   variant="destructive"
                   size="icon"
                   aria-label="Disconnect"
-                  onClick={disconnect}
+                  onClick={() => setDisconnectDialogOpen(true)}
                 >
                   <Unlink size="16" />
                 </Button>
@@ -76,6 +89,42 @@ const ActiveBrowserTab = observer(() => {
                 <Label>Disconnect</Label>
               </TooltipContent>
             </Tooltip>
+            <Dialog
+              open={disconnectDialogOpen}
+              onOpenChange={setDisconnectDialogOpen}
+            >
+              <DialogContent className="w-80 rounded-md">
+                <DialogHeader className="text-left">
+                  <DialogTitle>Disconnect</DialogTitle>
+                  <DialogDescription>
+                    Do you want to disconnect '{currentTabData?.urlOrigin}' from
+                    wallet?
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter className="flex flex-row gap-4">
+                  <DialogClose asChild>
+                    <Button
+                      className="w-full"
+                      type="button"
+                      variant="outline"
+                      aria-label="Cancel Disconnect"
+                    >
+                      <X className="mr-2 h-4 w-4" />
+                      No
+                    </Button>
+                  </DialogClose>
+                  <Button
+                    className="w-full"
+                    type="button"
+                    aria-label="Confirm Disconnect"
+                    onClick={disconnect}
+                  >
+                    <Check className="mr-2 h-4 w-4" />
+                    Yes
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         )}
       </Card>

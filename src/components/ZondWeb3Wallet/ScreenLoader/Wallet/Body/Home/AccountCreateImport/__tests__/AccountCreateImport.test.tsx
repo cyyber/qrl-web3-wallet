@@ -6,6 +6,17 @@ import { MemoryRouter } from "react-router-dom";
 import AccountCreateImport from "../AccountCreateImport";
 import { TooltipProvider } from "@/components/UI/Tooltip";
 
+jest.mock("@/utilities/storageUtil", () => {
+  const originalModule = jest.requireActual<
+    typeof import("@/utilities/storageUtil")
+  >("@/utilities/storageUtil");
+  return {
+    ...originalModule,
+    getTokenContractsList: jest.fn(async () => [
+      "Zd180388b9a863728fdc2e865d5fea87ce100eb2f",
+    ]),
+  };
+});
 jest.mock(
   "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/Home/AccountCreateImport/ActiveAccountDisplay/ActiveAccountDisplay",
   () => () => <div>Mocked Active Account Display</div>,

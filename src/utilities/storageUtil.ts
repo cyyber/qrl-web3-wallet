@@ -21,11 +21,12 @@ const DAPPS_IDENTIFIER = "DAPPS";
 const ALL_DAPPS_IDENTIFIER = "ALL_DAPPS";
 const DAPPS_REQUEST_DATA_IDENTIFIER = "DAPPS_REQUEST_DATA";
 
+const TOKENS_IDENTIFIER = "TOKENS";
+const ALL_TOKENS_IDENTIFIER = "ALL_TOKENS";
+
 const ACTIVE_PAGE_IDENTIFIER = "ACTIVE_PAGE";
 
 const TRANSACTION_VALUES_IDENTIFIER = "TRANSACTION_VALUES";
-
-const TOKENS_LIST_IDENTIFIER = "TOKENS_LIST";
 
 type TransactionValuesType = {
   receiverAddress?: string;
@@ -237,22 +238,50 @@ class StorageUtil {
     contractAddress: string,
   ) {
     const { chainId } = await this.getActiveBlockChain();
-    const tokensListIdentifier = `${chainId}_${TOKENS_LIST_IDENTIFIER}_${accountAddress.toUpperCase()}`;
-    let storedTokensList = await this.getTokenContractsList(accountAddress);
-    storedTokensList.push(contractAddress);
 
-    await browser.storage.local.set({
-      [tokensListIdentifier]: Array.from(new Set(storedTokensList)),
-    });
+    const storageData = await browser.storage.local.get(TOKENS_IDENTIFIER);
+    if (!storageData[TOKENS_IDENTIFIER]) {
+      storageData[TOKENS_IDENTIFIER] = {};
+    }
+    if (!storageData[TOKENS_IDENTIFIER][ALL_TOKENS_IDENTIFIER]) {
+      storageData[TOKENS_IDENTIFIER][ALL_TOKENS_IDENTIFIER] = {};
+    }
+    if (
+      !storageData[TOKENS_IDENTIFIER][ALL_TOKENS_IDENTIFIER][accountAddress]
+    ) {
+      storageData[TOKENS_IDENTIFIER][ALL_TOKENS_IDENTIFIER][accountAddress] =
+        {};
+    }
+    if (
+      !storageData[TOKENS_IDENTIFIER][ALL_TOKENS_IDENTIFIER][accountAddress][
+        chainId
+      ]
+    ) {
+      storageData[TOKENS_IDENTIFIER][ALL_TOKENS_IDENTIFIER][accountAddress][
+        chainId
+      ] = {};
+    }
+    const storedTokenContracts =
+      storageData[TOKENS_IDENTIFIER][ALL_TOKENS_IDENTIFIER][accountAddress][
+        chainId
+      ]?.tokens ?? [];
+    storageData[TOKENS_IDENTIFIER][ALL_TOKENS_IDENTIFIER][accountAddress][
+      chainId
+    ].tokens = Array.from(new Set([...storedTokenContracts, contractAddress]));
+
+    await browser.storage.local.set(storageData);
   }
 
   static async getTokenContractsList(accountAddress: string) {
     const { chainId } = await this.getActiveBlockChain();
-    const tokensListIdentifier = `${chainId}_${TOKENS_LIST_IDENTIFIER}_${accountAddress.toUpperCase()}`;
-    const storedTokensList =
-      await browser.storage.local.get(tokensListIdentifier);
 
-    return (storedTokensList?.[tokensListIdentifier] ?? []) as string[];
+    const storageData = await browser.storage.local.get(TOKENS_IDENTIFIER);
+    const storedTokenContracts =
+      storageData[TOKENS_IDENTIFIER][ALL_TOKENS_IDENTIFIER][accountAddress][
+        chainId
+      ]?.tokens ?? [];
+
+    return storedTokenContracts as string[];
   }
 
   static async clearFromTokenContractsList(
@@ -260,16 +289,17 @@ class StorageUtil {
     contractAddress: string,
   ) {
     const { chainId } = await this.getActiveBlockChain();
-    const tokensListIdentifier = `${chainId}_${TOKENS_LIST_IDENTIFIER}_${accountAddress.toUpperCase()}`;
-    let storedTokensList = await this.getTokenContractsList(accountAddress);
 
-    await browser.storage.local.set({
-      [tokensListIdentifier]: Array.from(
-        new Set(
-          storedTokensList.filter((address) => address !== contractAddress),
-        ),
-      ),
-    });
+    const storageData = await browser.storage.local.get(TOKENS_IDENTIFIER);
+    const storedTokenContracts =
+      await this.getTokenContractsList(accountAddress);
+    storageData[TOKENS_IDENTIFIER][ALL_TOKENS_IDENTIFIER][accountAddress][
+      chainId
+    ].tokens = storedTokenContracts.filter(
+      (token) => token !== contractAddress,
+    );
+
+    await browser.storage.local.set({ ...storageData });
   }
 
   /**

@@ -153,7 +153,7 @@ const OtherChainItem = observer(
               <DialogHeader className="text-left">
                 <DialogTitle>Delete chain</DialogTitle>
                 <DialogDescription>
-                  Do you want to delete the chain {chainName}?
+                  Do you want to delete the chain '{chainName}'?
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter className="flex flex-row gap-4">

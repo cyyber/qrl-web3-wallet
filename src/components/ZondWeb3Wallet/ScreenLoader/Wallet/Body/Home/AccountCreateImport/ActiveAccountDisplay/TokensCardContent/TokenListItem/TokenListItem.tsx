@@ -1,14 +1,35 @@
 import { Button } from "@/components/UI/Button";
 import { Card } from "@/components/UI/Card";
-import { Label } from "@/components/UI/Label";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/UI/Tooltip";
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/UI/Dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/UI/DropdownMenu";
 import { ROUTES } from "@/router/router";
+import { useStore } from "@/stores/store";
+import StorageUtil from "@/utilities/storageUtil";
 import { getRandomTailwindTextColor } from "@/utilities/stylingUtil";
-import { Send, TextSelect } from "lucide-react";
+import {
+  Check,
+  CircleMinus,
+  EllipsisVertical,
+  Send,
+  TextSelect,
+  X,
+} from "lucide-react";
+import { observer } from "mobx-react-lite";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 type TokenListItemProps = {
@@ -19,69 +40,137 @@ type TokenListItemProps = {
   balance: string;
   name: string;
   symbol: string;
+  triggerReRender?: () => void;
 };
 
-const TokenListItem = ({
-  isZrc20Token = false,
-  contractAddress,
-  decimals,
-  icon,
-  balance,
-  name,
-  symbol,
-}: TokenListItemProps) => {
-  const navigate = useNavigate();
+const TokenListItem = observer(
+  ({
+    isZrc20Token = false,
+    contractAddress,
+    decimals,
+    icon,
+    balance,
+    name,
+    symbol,
+    triggerReRender,
+  }: TokenListItemProps) => {
+    const navigate = useNavigate();
+    const { zondStore } = useStore();
+    const { activeAccount } = zondStore;
+    const { accountAddress } = activeAccount;
 
-  const onSend = () => {
-    navigate(ROUTES.TOKEN_TRANSFER, {
-      state: {
-        tokenDetails: {
-          isZrc20Token,
-          tokenContractAddress: contractAddress,
-          tokenDecimals: decimals,
-          tokenIcon: icon,
-          tokenBalance: balance,
-          tokenName: name,
-          tokenSymbol: symbol,
+    const [hideDialogOpen, setHideDialogOpen] = useState(false);
+
+    const onSend = () => {
+      navigate(ROUTES.TOKEN_TRANSFER, {
+        state: {
+          tokenDetails: {
+            isZrc20Token,
+            tokenContractAddress: contractAddress,
+            tokenDecimals: decimals,
+            tokenIcon: icon,
+            tokenBalance: balance,
+            tokenName: name,
+            tokenSymbol: symbol,
+          },
         },
-      },
-    });
-  };
+      });
+    };
 
-  return (
-    <Card className="flex h-16 w-full animate-appear-in items-center justify-between gap-4 p-4 text-foreground">
-      <div className="flex items-center gap-4">
-        {!!icon ? (
-          <img className="h-8 w-8" src={icon} />
-        ) : (
-          <span className={getRandomTailwindTextColor(symbol)}>
-            <TextSelect size={32} />
-          </span>
-        )}
-        <div className="flex w-full flex-col gap-1">
-          <div className="text-xs font-bold">{balance}</div>
-          <div className="text-xs">{name}</div>
+    const onHide = async () => {
+      setHideDialogOpen(false);
+      await StorageUtil.clearFromTokenContractsList(
+        accountAddress,
+        contractAddress ?? "",
+      );
+      triggerReRender?.();
+    };
+
+    return (
+      <Card className="flex h-16 w-full animate-appear-in items-center justify-between gap-4 p-4 text-foreground">
+        <div className="flex items-center gap-4">
+          {!!icon ? (
+            <img className="h-8 w-8" src={icon} />
+          ) : (
+            <span className={getRandomTailwindTextColor(symbol)}>
+              <TextSelect size={32} />
+            </span>
+          )}
+          <div className="flex w-full flex-col gap-1">
+            <div className="text-xs font-bold">{balance}</div>
+            <div className="text-xs">{name}</div>
+          </div>
         </div>
-      </div>
-      <Tooltip delayDuration={0}>
-        <TooltipTrigger asChild>
-          <Button
-            className="size-7 hover:bg-accent hover:text-secondary"
-            variant="outline"
-            type="button"
-            size="icon"
-            aria-label={symbol}
-            onClick={onSend}
-          >
-            <Send size="16" />
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent side="left">
-          <Label>Send {symbol}</Label>
-        </TooltipContent>
-      </Tooltip>
-    </Card>
-  );
-};
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              className="size-7 hover:bg-accent hover:text-secondary"
+              variant="outline"
+              size="icon"
+              aria-label="More"
+            >
+              <EllipsisVertical size="16" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start">
+            <DropdownMenuGroup>
+              <DropdownMenuItem
+                className="cursor-pointer data-[highlighted]:text-secondary"
+                onClick={onSend}
+              >
+                <div className="flex gap-2">
+                  <Send size="16" />
+                  <button aria-label={`Send ${symbol}`}>Send {symbol}</button>
+                </div>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                disabled={!isZrc20Token}
+                className="cursor-pointer data-[highlighted]:text-secondary"
+                onClick={() => setHideDialogOpen(true)}
+              >
+                <div className="flex gap-2">
+                  <CircleMinus size="16" />
+                  <button aria-label="Hide chain">Hide Token</button>
+                </div>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <Dialog open={hideDialogOpen} onOpenChange={setHideDialogOpen}>
+          <DialogContent className="w-80 rounded-md">
+            <DialogHeader className="text-left">
+              <DialogTitle>Hide</DialogTitle>
+              <DialogDescription>
+                Do you want to hide '{symbol}' from wallet?
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="flex flex-row gap-4">
+              <DialogClose asChild>
+                <Button
+                  className="w-full"
+                  type="button"
+                  variant="outline"
+                  aria-label="Cancel Hide"
+                >
+                  <X className="mr-2 h-4 w-4" />
+                  No
+                </Button>
+              </DialogClose>
+              <Button
+                className="w-full"
+                type="button"
+                aria-label="Confirm Hide"
+                onClick={onHide}
+              >
+                <Check className="mr-2 h-4 w-4" />
+                Yes
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </Card>
+    );
+  },
+);
 
 export default TokenListItem;
