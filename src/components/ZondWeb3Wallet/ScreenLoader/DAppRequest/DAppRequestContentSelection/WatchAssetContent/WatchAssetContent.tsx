@@ -6,6 +6,7 @@ import { observer } from "mobx-react-lite";
 import ChainBadge from "../../../Wallet/Header/ChainBadge/ChainBadge";
 import WatchAssetInfo from "./WatchAssetInfo/WatchAssetInfo";
 import StorageUtil from "@/utilities/storageUtil";
+import WatchAssetVerification from "./WatchAssetVerification/WatchAssetVerification";
 
 const WatchAssetContent = observer(() => {
   const { dAppRequestStore, zondStore } = useStore();
@@ -47,6 +48,7 @@ const WatchAssetContent = observer(() => {
       </div>
       <CardContent className="space-y-6">
         <WatchAssetInfo />
+        <WatchAssetVerification />
         <div className="font-bold">Do you want to add this token?</div>
       </CardContent>
       <CardFooter className="grid grid-cols-2 gap-4">
