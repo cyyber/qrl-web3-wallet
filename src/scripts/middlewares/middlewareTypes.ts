@@ -46,3 +46,10 @@ export type ConnectedAccountsDataType = {
   blockchains: BlockchainDataType[];
   permissions: Permission[];
 };
+
+export type TokenContractType = {
+  address: string;
+  symbol: string;
+  decimals: number;
+  image: string;
+};

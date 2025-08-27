@@ -59,7 +59,7 @@ const AccountCreateImport = observer(() => {
     (async () => {
       const storedTokens =
         await StorageUtil.getTokenContractsList(accountAddress);
-      setTokenContractsList(storedTokens);
+      setTokenContractsList(storedTokens.map((token) => token?.address));
     })();
   }, [accountAddress]);
 

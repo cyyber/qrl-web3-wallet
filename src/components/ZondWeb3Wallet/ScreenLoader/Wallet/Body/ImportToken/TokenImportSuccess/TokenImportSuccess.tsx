@@ -40,7 +40,12 @@ const TokenImportSuccess = observer(
       StringUtil.getSplitAddress(contractAddress);
 
     const onConfirmImport = async () => {
-      await StorageUtil.setTokenContractsList(accountAddress, contractAddress);
+      await StorageUtil.setTokenContractsList(accountAddress, {
+        address: contractAddress,
+        symbol: symbol ?? "",
+        decimals: parseInt(decimals?.toString() ?? "0"),
+        image: "",
+      });
       navigate(ROUTES.HOME, { state: { hasTokensPreference: true } });
     };
 

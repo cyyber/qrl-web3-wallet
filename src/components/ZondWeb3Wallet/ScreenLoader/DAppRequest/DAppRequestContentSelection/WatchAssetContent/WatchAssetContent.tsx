@@ -22,15 +22,17 @@ const WatchAssetContent = observer(() => {
   const { isProcessing } = approvalProcessingStatus;
 
   const paramsObject = dAppRequestData?.params[0];
-  const contractAddress = paramsObject?.options?.address ?? "";
+  const tokenContract = paramsObject?.options;
 
   const addBlockchain = async () => {
     const onPermissionCallBack = async (hasApproved: boolean) => {
       if (hasApproved) {
-        await StorageUtil.setTokenContractsList(
-          accountAddress,
-          contractAddress,
-        );
+        await StorageUtil.setTokenContractsList(accountAddress, {
+          address: tokenContract?.address ?? "",
+          symbol: tokenContract?.symbol ?? "",
+          decimals: parseInt(tokenContract?.decimals ?? 0),
+          image: tokenContract?.image ?? "",
+        });
         addToResponseData({ result: true });
       }
     };

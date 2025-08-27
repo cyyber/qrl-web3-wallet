@@ -28,7 +28,7 @@ const ZRC20Tokens = observer(
       (async () => {
         const storedTokens =
           await StorageUtil.getTokenContractsList(accountAddress);
-        setTokenContractsList(storedTokens);
+        setTokenContractsList(storedTokens.map((token) => token?.address));
       })();
     }, [blockchain, accountAddress, reRender]);
 

@@ -6,6 +6,7 @@ import {
 import {
   ConnectedAccountsDataType,
   DAppRequestType,
+  TokenContractType,
 } from "@/scripts/middlewares/middlewareTypes";
 import browser from "webextension-polyfill";
 
@@ -235,7 +236,7 @@ class StorageUtil {
    */
   static async setTokenContractsList(
     accountAddress: string,
-    contractAddress: string,
+    tokenContract: TokenContractType,
   ) {
     const { chainId } = await this.getActiveBlockChain();
 
@@ -262,12 +263,15 @@ class StorageUtil {
       ] = {};
     }
     const storedTokenContracts =
-      storageData[TOKENS_IDENTIFIER][ALL_TOKENS_IDENTIFIER][accountAddress][
-        chainId
-      ]?.tokens ?? [];
+      await this.getTokenContractsList(accountAddress);
     storageData[TOKENS_IDENTIFIER][ALL_TOKENS_IDENTIFIER][accountAddress][
       chainId
-    ].tokens = Array.from(new Set([...storedTokenContracts, contractAddress]));
+    ].tokens = [
+      ...storedTokenContracts?.filter(
+        (token) => token.address !== tokenContract.address,
+      ),
+      tokenContract,
+    ];
 
     await browser.storage.local.set(storageData);
   }
@@ -277,11 +281,11 @@ class StorageUtil {
 
     const storageData = await browser.storage.local.get(TOKENS_IDENTIFIER);
     const storedTokenContracts =
-      storageData[TOKENS_IDENTIFIER][ALL_TOKENS_IDENTIFIER][accountAddress][
-        chainId
-      ]?.tokens ?? [];
+      storageData?.[TOKENS_IDENTIFIER]?.[ALL_TOKENS_IDENTIFIER]?.[
+        accountAddress
+      ]?.[chainId]?.tokens ?? [];
 
-    return storedTokenContracts as string[];
+    return storedTokenContracts as TokenContractType[];
   }
 
   static async clearFromTokenContractsList(
@@ -296,7 +300,7 @@ class StorageUtil {
     storageData[TOKENS_IDENTIFIER][ALL_TOKENS_IDENTIFIER][accountAddress][
       chainId
     ].tokens = storedTokenContracts.filter(
-      (token) => token !== contractAddress,
+      (token) => token.address !== contractAddress,
     );
 
     await browser.storage.local.set({ ...storageData });
