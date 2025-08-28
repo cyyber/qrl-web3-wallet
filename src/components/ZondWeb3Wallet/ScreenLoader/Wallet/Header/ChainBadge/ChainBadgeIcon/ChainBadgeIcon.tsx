@@ -1,4 +1,5 @@
 import { useStore } from "@/stores/store";
+import { getRandomTailwindTextColor } from "@/utilities/stylingUtil";
 import { Loader, Network, WifiOff } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
@@ -22,7 +23,12 @@ const ChainBadgeIcon = observer(() => {
   if (!isConnected)
     return <WifiOff className="h-3 w-3" data-testid="wifi-off-icon" />;
   if (hasUrlError)
-    return <Network className="h-3 w-3" data-testid="network-icon" />;
+    return (
+      <Network
+        className={`h-3 w-3 ${getRandomTailwindTextColor(chainName)}`}
+        data-testid="network-icon"
+      />
+    );
 
   return (
     <img

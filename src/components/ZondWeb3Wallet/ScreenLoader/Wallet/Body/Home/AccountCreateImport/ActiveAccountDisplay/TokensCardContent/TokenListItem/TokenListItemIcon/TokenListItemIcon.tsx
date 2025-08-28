@@ -1,7 +1,20 @@
 import { getRandomTailwindTextColor } from "@/utilities/stylingUtil";
-import { TextSelect } from "lucide-react";
+import { cva } from "class-variance-authority";
+import { FileBox } from "lucide-react";
 import { observer } from "mobx-react-lite";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+
+const tokenIconClasses = cva("h-8 w-8 flex-shrink-0", {
+  variants: {
+    shouldDisplayFallback: {
+      true: ["hidden"],
+      false: ["block"],
+    },
+  },
+  defaultVariants: {
+    shouldDisplayFallback: false,
+  },
+});
 
 type TokenListItemIconProps = {
   icon?: string;
@@ -10,18 +23,33 @@ type TokenListItemIconProps = {
 
 const TokenListItemIcon = observer(
   ({ icon, symbol }: TokenListItemIconProps) => {
+    const [isLoading, setIsLoading] = useState(true);
     const [hasSrcError, setHasSrcError] = useState(false);
 
-    return hasSrcError ? (
-      <span className={getRandomTailwindTextColor(symbol)}>
-        <TextSelect size={32} />
-      </span>
-    ) : (
-      <img
-        className="h-8 w-8"
-        src={icon ?? ""}
-        onError={() => setHasSrcError(true)}
-      />
+    const shouldDisplayFallback = useMemo(
+      () => isLoading || hasSrcError,
+      [isLoading, hasSrcError],
+    );
+
+    return (
+      <>
+        {shouldDisplayFallback && (
+          <FileBox
+            className={`shrink-0 ${getRandomTailwindTextColor(symbol)}`}
+            size={32}
+          />
+        )}
+        <img
+          className={tokenIconClasses({ shouldDisplayFallback })}
+          src={icon ?? ""}
+          alt={symbol}
+          onLoad={() => setIsLoading(false)}
+          onError={() => {
+            setIsLoading(false);
+            setHasSrcError(true);
+          }}
+        />
+      </>
     );
   },
 );

@@ -1,7 +1,6 @@
 import { getRandomTailwindTextColor } from "@/utilities/stylingUtil";
 import { cva } from "class-variance-authority";
 import { Network } from "lucide-react";
-import { has } from "mobx";
 import { useMemo, useState } from "react";
 
 const chainIconClasses = cva("h-6 w-6 flex-shrink-0", {
@@ -27,7 +26,7 @@ const ChainIcon = ({ src, alt }: ChainIconType) => {
 
   const shouldDisplayFallback = useMemo(
     () => isLoading || hasSrcError,
-    [isLoading, has],
+    [isLoading, hasSrcError],
   );
 
   return (
