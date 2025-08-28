@@ -7,11 +7,12 @@ import TokenListItemLoading from "../../TokenListItemLoading/TokenListItemLoadin
 
 type ZRC20TokenProps = {
   contractAddress: string;
+  tokenImage: string;
   triggerReRender?: () => void;
 };
 
 const ZRC20Token = observer(
-  ({ contractAddress, triggerReRender }: ZRC20TokenProps) => {
+  ({ contractAddress, tokenImage, triggerReRender }: ZRC20TokenProps) => {
     const { zondStore } = useStore();
     const { zondConnection, activeAccount, getZrc20TokenDetails } = zondStore;
     const { blockchain } = zondConnection;
@@ -39,6 +40,7 @@ const ZRC20Token = observer(
         balance={getOptimalTokenBalance(token.balance.toString(), token.symbol)}
         name={token.name}
         symbol={token.symbol}
+        image={tokenImage}
         triggerReRender={triggerReRender}
       />
     );

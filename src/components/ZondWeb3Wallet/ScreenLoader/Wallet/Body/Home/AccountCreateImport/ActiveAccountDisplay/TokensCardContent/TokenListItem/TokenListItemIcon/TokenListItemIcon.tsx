@@ -17,7 +17,7 @@ const tokenIconClasses = cva("h-8 w-8 flex-shrink-0", {
 });
 
 type TokenListItemIconProps = {
-  icon?: string;
+  icon: string;
   symbol: string;
 };
 
@@ -41,7 +41,7 @@ const TokenListItemIcon = observer(
         )}
         <img
           className={tokenIconClasses({ shouldDisplayFallback })}
-          src={icon ?? ""}
+          src={icon}
           alt={symbol}
           onLoad={() => setIsLoading(false)}
           onError={() => {

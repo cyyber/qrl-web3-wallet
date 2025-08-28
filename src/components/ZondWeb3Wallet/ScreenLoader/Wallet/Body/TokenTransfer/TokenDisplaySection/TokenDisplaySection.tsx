@@ -2,20 +2,20 @@ import { getRandomTailwindTextColor } from "@/utilities/stylingUtil";
 import { TextSelect } from "lucide-react";
 
 type TokenDisplaySectionProps = {
-  tokenIcon: string;
+  tokenImage: string;
   tokenSymbol: string;
   tokenName: string;
 };
 
 const TokenDisplaySection = ({
-  tokenIcon,
+  tokenImage,
   tokenSymbol,
   tokenName,
 }: TokenDisplaySectionProps) => {
   return (
     <div className="flex gap-6">
-      {!!tokenIcon ? (
-        <img className="h-16 w-16" src={tokenIcon} />
+      {!!tokenImage ? (
+        <img className="h-16 w-16" src={tokenImage} />
       ) : (
         <span className={getRandomTailwindTextColor(tokenSymbol)}>
           <TextSelect size={64} />

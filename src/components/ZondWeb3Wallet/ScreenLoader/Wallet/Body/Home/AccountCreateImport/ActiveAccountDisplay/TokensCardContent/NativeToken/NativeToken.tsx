@@ -10,7 +10,7 @@ const NativeToken = observer(() => {
 
   return (
     <TokenListItem
-      icon={NATIVE_TOKEN.icon}
+      image={NATIVE_TOKEN.image}
       balance={getAccountBalance(accountAddress)}
       name={NATIVE_TOKEN.name}
       symbol={NATIVE_TOKEN.symbol}

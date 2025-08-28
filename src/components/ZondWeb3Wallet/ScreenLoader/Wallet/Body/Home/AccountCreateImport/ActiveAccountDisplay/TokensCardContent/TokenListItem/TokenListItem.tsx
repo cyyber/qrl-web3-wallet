@@ -29,7 +29,7 @@ type TokenListItemProps = {
   isZrc20Token?: boolean;
   contractAddress?: string;
   decimals?: number;
-  icon?: string;
+  image: string;
   balance: string;
   name: string;
   symbol: string;
@@ -41,7 +41,7 @@ const TokenListItem = observer(
     isZrc20Token = false,
     contractAddress,
     decimals,
-    icon,
+    image,
     balance,
     name,
     symbol,
@@ -61,7 +61,7 @@ const TokenListItem = observer(
             isZrc20Token,
             tokenContractAddress: contractAddress,
             tokenDecimals: decimals,
-            tokenIcon: icon,
+            tokenImage: image,
             tokenBalance: balance,
             tokenName: name,
             tokenSymbol: symbol,
@@ -82,7 +82,7 @@ const TokenListItem = observer(
     return (
       <Card className="flex h-16 w-full animate-appear-in items-center justify-between gap-4 p-4 text-foreground">
         <div className="flex items-center gap-4">
-          <TokenListItemIcon symbol={symbol} icon={icon} />
+          <TokenListItemIcon icon={image ?? ""} symbol={symbol} />
           <div className="flex w-full flex-col gap-1">
             <div className="text-xs font-bold">{balance}</div>
             <div className="text-xs">{name}</div>

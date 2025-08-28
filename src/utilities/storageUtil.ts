@@ -37,7 +37,7 @@ type TransactionValuesType = {
     isZrc20Token: boolean;
     tokenContractAddress: string;
     tokenDecimals: number;
-    tokenIcon: string;
+    tokenImage: string;
     tokenBalance: string;
     tokenName: string;
     tokenSymbol: string;

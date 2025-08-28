@@ -14,7 +14,10 @@ describe("ZRC20Token", () => {
       <StoreProvider value={mockedStoreValues}>
         <MemoryRouter>
           <TooltipProvider>
-            <ZRC20Token contractAddress="0x0db3981cb93db985e4e3a62ff695f7a1b242dd7c" />
+            <ZRC20Token
+              contractAddress="0x0db3981cb93db985e4e3a62ff695f7a1b242dd7c"
+              tokenImage=""
+            />
           </TooltipProvider>
         </MemoryRouter>
       </StoreProvider>,
@@ -33,6 +36,7 @@ describe("ZRC20Token", () => {
                 name: "POWERCOIN",
                 symbol: "POW",
                 totalSupply: 100000,
+                image: "",
               },
               error: "",
             };

@@ -24,6 +24,7 @@ describe("TokenImportSuccess", () => {
               name: "MOCK TOKEN",
               symbol: "MCK",
               totalSupply: 100,
+              image: "",
             }}
           />
         </MemoryRouter>

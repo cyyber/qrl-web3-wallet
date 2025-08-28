@@ -4,6 +4,7 @@ import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import ZRC20Token from "./ZRC20Token/ZRC20Token";
 import { ZRC_20_ITEMS_DISPLAY_LIMIT } from "@/constants/zrc20Token";
+import { TokenContractType } from "@/scripts/middlewares/middlewareTypes";
 
 type ZRC20TokensProps = {
   shouldDisplayAllTokens?: boolean;
@@ -17,7 +18,9 @@ const ZRC20Tokens = observer(
     const { blockchain } = zondConnection;
 
     const [reRender, setReRender] = useState(0);
-    const [tokenContractsList, setTokenContractsList] = useState<string[]>([]);
+    const [tokenContractsList, setTokenContractsList] = useState<
+      TokenContractType[]
+    >([]);
 
     const numberOfTokens = tokenContractsList.length;
     const displayLimit = shouldDisplayAllTokens
@@ -28,7 +31,7 @@ const ZRC20Tokens = observer(
       (async () => {
         const storedTokens =
           await StorageUtil.getTokenContractsList(accountAddress);
-        setTokenContractsList(storedTokens.map((token) => token?.address));
+        setTokenContractsList(storedTokens);
       })();
     }, [blockchain, accountAddress, reRender]);
 
@@ -42,10 +45,11 @@ const ZRC20Tokens = observer(
 
     return (
       <>
-        {tokenContractsList.slice(0, displayLimit).map((contractAddress) => (
+        {tokenContractsList.slice(0, displayLimit).map(({ address, image }) => (
           <ZRC20Token
-            key={contractAddress}
-            contractAddress={contractAddress}
+            key={address}
+            contractAddress={address}
+            tokenImage={image}
             triggerReRender={triggerReRender}
           />
         ))}

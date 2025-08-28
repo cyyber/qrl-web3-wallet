@@ -13,7 +13,7 @@ describe("TokenDisplaySection", () => {
       <StoreProvider value={mockedStoreValues}>
         <MemoryRouter>
           <TokenDisplaySection
-            tokenIcon="icon.png"
+            tokenImage="icon.png"
             tokenName="MOCK TOKEN"
             tokenSymbol="MCK"
           />

@@ -69,7 +69,7 @@ const TokenTransfer = observer(() => {
   const [isZrc20Token, setIsZrc20Token] = useState(false);
   const [tokenContractAddress, setTokenContractAddress] = useState("");
   const [tokenDecimals, setTokenDecimals] = useState(0);
-  const [tokenIcon, setTokenIcon] = useState(NATIVE_TOKEN.icon);
+  const [tokenImage, setTokenImage] = useState(NATIVE_TOKEN.image);
   const [tokenBalance, setTokenBalance] = useState("");
   const [tokenName, setTokenName] = useState(NATIVE_TOKEN.name);
   const [tokenSymbol, setTokenSymbol] = useState(NATIVE_TOKEN.symbol);
@@ -174,7 +174,7 @@ const TokenTransfer = observer(() => {
           isZrc20Token,
           tokenContractAddress,
           tokenDecimals,
-          tokenIcon,
+          tokenImage,
           tokenBalance,
           tokenName,
           tokenSymbol,
@@ -185,7 +185,7 @@ const TokenTransfer = observer(() => {
           setIsZrc20Token(tokenDetailsFromState?.isZrc20Token);
           setTokenContractAddress(tokenDetailsFromState?.tokenContractAddress);
           setTokenDecimals(tokenDetailsFromState?.tokenDecimals);
-          setTokenIcon(tokenDetailsFromState?.tokenIcon);
+          setTokenImage(tokenDetailsFromState?.tokenImage);
           setTokenBalance(tokenDetailsFromState?.tokenBalance);
           setTokenName(tokenDetailsFromState?.tokenName);
           setTokenSymbol(tokenDetailsFromState?.tokenSymbol);
@@ -196,7 +196,7 @@ const TokenTransfer = observer(() => {
             tokenDetailsFromStorage?.tokenContractAddress,
           );
           setTokenDecimals(tokenDetailsFromStorage?.tokenDecimals);
-          setTokenIcon(tokenDetailsFromStorage?.tokenIcon);
+          setTokenImage(tokenDetailsFromStorage?.tokenImage);
           setTokenBalance(tokenDetailsFromStorage?.tokenBalance);
           setTokenName(tokenDetailsFromStorage?.tokenName);
           setTokenSymbol(tokenDetailsFromStorage?.tokenSymbol);
@@ -221,7 +221,7 @@ const TokenTransfer = observer(() => {
           isZrc20Token,
           tokenContractAddress,
           tokenDecimals,
-          tokenIcon,
+          tokenImage,
           tokenBalance,
           tokenName,
           tokenSymbol,
@@ -234,7 +234,7 @@ const TokenTransfer = observer(() => {
     isZrc20Token,
     tokenContractAddress,
     tokenDecimals,
-    tokenIcon,
+    tokenImage,
     tokenBalance,
     tokenName,
     tokenSymbol,
@@ -251,7 +251,7 @@ const TokenTransfer = observer(() => {
           <Card className="w-full">
             <CardHeader className="flex flex-col gap-4 pb-4">
               <TokenDisplaySection
-                tokenIcon={tokenIcon}
+                tokenImage={tokenImage}
                 tokenName={tokenName}
                 tokenSymbol={tokenSymbol}
               />

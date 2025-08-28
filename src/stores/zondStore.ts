@@ -326,7 +326,7 @@ class ZondStore {
           Number(balanceUnformatted) / Math.pow(10, Number(decimals));
         return {
           ...tokenDetails,
-          token: { name, symbol, decimals, totalSupply, balance },
+          token: { name, symbol, decimals, totalSupply, balance, image: "" },
         };
       } catch (error) {
         return {
