@@ -1,5 +1,5 @@
 import { getRandomTailwindTextColor } from "@/utilities/stylingUtil";
-import { TextSelect } from "lucide-react";
+import { FileBox } from "lucide-react";
 
 type TokenDisplaySectionProps = {
   tokenImage: string;
@@ -17,9 +17,10 @@ const TokenDisplaySection = ({
       {!!tokenImage ? (
         <img className="h-16 w-16" src={tokenImage} />
       ) : (
-        <span className={getRandomTailwindTextColor(tokenSymbol)}>
-          <TextSelect size={64} />
-        </span>
+        <FileBox
+          className={`shrink-0 ${getRandomTailwindTextColor(tokenSymbol)}`}
+          size={64}
+        />
       )}
       <div className="flex flex-col">
         <div className="text-2xl font-bold">{tokenSymbol}</div>

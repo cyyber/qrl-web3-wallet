@@ -11,7 +11,8 @@ import { ROUTES } from "@/router/router";
 import { StoreType, useStore } from "@/stores/store";
 import StorageUtil from "@/utilities/storageUtil";
 import StringUtil from "@/utilities/stringUtil";
-import { Download, TextSelect, X } from "lucide-react";
+import { getRandomTailwindTextColor } from "@/utilities/stylingUtil";
+import { Download, FileBox, X } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useNavigate } from "react-router-dom";
 
@@ -54,9 +55,12 @@ const TokenImportSuccess = observer(
         <CardHeader>
           <CardTitle>Import token</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-8">
+        <CardContent className="space-y-4">
           <div className="flex flex-col gap-4">
-            <TextSelect size={64} />
+            <FileBox
+              className={`shrink-0 ${getRandomTailwindTextColor(symbol)}`}
+              size={64}
+            />
             <div className="flex flex-col gap-1">
               <div>Contract address</div>
               <div className="flex flex-wrap gap-1 font-bold text-secondary">
