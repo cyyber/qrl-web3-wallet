@@ -45,7 +45,7 @@ const FormSchema = z.object({
 const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
   const navigate = useNavigate();
   const { zondStore } = useStore();
-  const { refreshBlockchainData, addChain, editChain } = zondStore;
+  const { initializeBlockchain, addChain, editChain } = zondStore;
 
   const [rpcUrls, setRpcUrls] = useState<string[]>([]);
   const [defaultRpcUrl, setDefaultRpcUrl] = useState("");
@@ -157,7 +157,7 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
     const { updatedChainList } = await editChain(blockchainData);
     await StorageUtil.setAllBlockChains(updatedChainList);
     navigate(ROUTES.CHAIN_CONNECTIVITY);
-    await refreshBlockchainData();
+    await initializeBlockchain();
   };
 
   async function onSubmit(formData: z.infer<typeof FormSchema>) {
