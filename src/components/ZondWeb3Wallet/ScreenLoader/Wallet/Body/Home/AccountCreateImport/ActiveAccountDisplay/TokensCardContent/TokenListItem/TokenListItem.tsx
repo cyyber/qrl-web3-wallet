@@ -19,18 +19,11 @@ import {
 import { ROUTES } from "@/router/router";
 import { useStore } from "@/stores/store";
 import StorageUtil from "@/utilities/storageUtil";
-import { getRandomTailwindTextColor } from "@/utilities/stylingUtil";
-import {
-  Check,
-  CircleMinus,
-  EllipsisVertical,
-  Send,
-  TextSelect,
-  X,
-} from "lucide-react";
+import { Check, CircleMinus, EllipsisVertical, Send, X } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import TokenListItemIcon from "./TokenListItemIcon/TokenListItemIcon";
 
 type TokenListItemProps = {
   isZrc20Token?: boolean;
@@ -89,13 +82,7 @@ const TokenListItem = observer(
     return (
       <Card className="flex h-16 w-full animate-appear-in items-center justify-between gap-4 p-4 text-foreground">
         <div className="flex items-center gap-4">
-          {!!icon ? (
-            <img className="h-8 w-8" src={icon} />
-          ) : (
-            <span className={getRandomTailwindTextColor(symbol)}>
-              <TextSelect size={32} />
-            </span>
-          )}
+          <TokenListItemIcon symbol={symbol} icon={icon} />
           <div className="flex w-full flex-col gap-1">
             <div className="text-xs font-bold">{balance}</div>
             <div className="text-xs">{name}</div>
