@@ -37,6 +37,7 @@ const TokenListItemIcon = observer(
           <FileBox
             className={`shrink-0 ${getRandomTailwindTextColor(symbol)}`}
             size={32}
+            data-testid="filebox-icon"
           />
         )}
         <img

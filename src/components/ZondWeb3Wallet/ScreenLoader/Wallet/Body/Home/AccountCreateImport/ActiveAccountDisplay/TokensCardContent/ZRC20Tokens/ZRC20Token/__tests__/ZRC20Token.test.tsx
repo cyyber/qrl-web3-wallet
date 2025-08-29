@@ -1,10 +1,41 @@
 import { mockedStore } from "@/__mocks__/mockedStore";
 import { StoreProvider } from "@/stores/store";
-import { afterEach, describe, expect, it } from "@jest/globals";
+import { afterEach, describe, expect, it, jest } from "@jest/globals";
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import ZRC20Token from "../ZRC20Token";
 import { TooltipProvider } from "@/components/UI/Tooltip";
+
+jest.mock("@/utilities/storageUtil", () => {
+  const originalModule = jest.requireActual<
+    typeof import("@/utilities/storageUtil")
+  >("@/utilities/storageUtil");
+  return {
+    ...originalModule,
+    getTokenContractsList: jest.fn(async () => [
+      {
+        address: "Z28c4113a9d3a2e836f28c23ed8e3c1e7c243f566",
+        image: "testImage1",
+      },
+      {
+        address: "Z978918b7b544ad491d0b294cc6ac4d7bb0ef7112",
+        image: "testImage2",
+      },
+      {
+        address: "Z0db3981cb93db985e4e3a62ff695f7a1b242dd7c",
+        image: "testImage3",
+      },
+    ]),
+  };
+});
+jest.mock(
+  "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/Home/AccountCreateImport/ActiveAccountDisplay/TokensCardContent/TokenListItemLoading/TokenListItemLoading",
+  () => () => <div>Mocked Token List Item Loading</div>,
+);
+jest.mock(
+  "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/Home/AccountCreateImport/ActiveAccountDisplay/TokensCardContent/TokenListItem/TokenListItem",
+  () => () => <div>Mocked Token List Item</div>,
+);
 
 describe("ZRC20Token", () => {
   afterEach(cleanup);
@@ -15,7 +46,7 @@ describe("ZRC20Token", () => {
         <MemoryRouter>
           <TooltipProvider>
             <ZRC20Token
-              contractAddress="0x0db3981cb93db985e4e3a62ff695f7a1b242dd7c"
+              contractAddress="Z0db3981cb93db985e4e3a62ff695f7a1b242dd7c"
               tokenImage=""
             />
           </TooltipProvider>
@@ -46,11 +77,7 @@ describe("ZRC20Token", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText("65.0 POW")).toBeInTheDocument();
-      expect(screen.getByText("POWERCOIN")).toBeInTheDocument();
-      const sendButton = screen.getByRole("button", { name: "POW" });
-      expect(sendButton).toBeInTheDocument();
-      expect(sendButton).toBeEnabled();
+      expect(screen.getByText("Mocked Token List Item")).toBeInTheDocument();
     });
   });
 });

@@ -142,7 +142,9 @@ const OtherChainItem = observer(
                 >
                   <div className="flex gap-2">
                     <Trash size="16" />
-                    <button aria-label="Delete chain">Delete chain</button>
+                    <button disabled={!isCustomChain} aria-label="Delete chain">
+                      Delete chain
+                    </button>
                   </div>
                 </DropdownMenuItem>
               </DropdownMenuGroup>

@@ -25,8 +25,8 @@ describe("NativeToken", () => {
 
     expect(screen.getByText("0.0 ZND")).toBeInTheDocument();
     expect(screen.getByText("Zond")).toBeInTheDocument();
-    const sendButton = screen.getByRole("button", { name: "ZND" });
-    expect(sendButton).toBeInTheDocument();
-    expect(sendButton).toBeEnabled();
+    const moreButton = screen.getByRole("button", { name: "More" });
+    expect(moreButton).toBeInTheDocument();
+    expect(moreButton).toBeEnabled();
   });
 });

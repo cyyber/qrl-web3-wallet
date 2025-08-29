@@ -66,6 +66,7 @@ describe("ActiveBrowserTab", () => {
       mockedStore({
         dAppRequestStore: {
           hasDAppConnected: true,
+          currentTabData: { urlOrigin: "testUrlOrigin" },
           disconnectFromCurrentTab: mockedDisconnectFromCurrentTab,
         },
       }),
@@ -74,6 +75,21 @@ describe("ActiveBrowserTab", () => {
     const disconnectButton = screen.getByRole("button", { name: "Disconnect" });
     expect(disconnectButton).toBeInTheDocument();
     await userEvent.click(disconnectButton);
+    const noButton = screen.getByRole("button", { name: "Cancel Disconnect" });
+    expect(noButton).toBeInTheDocument();
+    expect(noButton).toBeEnabled();
+    const yesButton = screen.getByRole("button", {
+      name: "Confirm Disconnect",
+    });
+    expect(yesButton).toBeInTheDocument();
+    expect(yesButton).toBeEnabled();
+    expect(screen.getByText("Disconnect")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Do you want to disconnect 'testUrlOrigin' from wallet?",
+      ),
+    ).toBeInTheDocument();
+    await userEvent.click(yesButton);
     expect(mockedDisconnectFromCurrentTab).toHaveBeenCalledTimes(1);
   });
 });

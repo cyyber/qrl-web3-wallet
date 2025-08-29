@@ -6,6 +6,7 @@ import { ComponentProps } from "react";
 import { MemoryRouter } from "react-router-dom";
 import ZRC20Tokens from "../ZRC20Tokens";
 import { TooltipProvider } from "@/components/UI/Tooltip";
+import { ZRC_20_ITEMS_DISPLAY_LIMIT } from "@/constants/zrc20Token";
 
 jest.mock("@/utilities/storageUtil", () => {
   const originalModule = jest.requireActual<
@@ -14,12 +15,25 @@ jest.mock("@/utilities/storageUtil", () => {
   return {
     ...originalModule,
     getTokenContractsList: jest.fn(async () => [
-      "0x28c4113a9d3a2e836f28c23ed8e3c1e7c243f566",
-      "0x978918b7b544ad491d0b294cc6ac4d7bb0ef7112",
-      "0x0db3981cb93db985e4e3a62ff695f7a1b242dd7c",
+      {
+        address: "Z28c4113a9d3a2e836f28c23ed8e3c1e7c243f566",
+        image: "testImage1",
+      },
+      {
+        address: "Z978918b7b544ad491d0b294cc6ac4d7bb0ef7112",
+        image: "testImage2",
+      },
+      {
+        address: "Z0db3981cb93db985e4e3a62ff695f7a1b242dd7c",
+        image: "testImage3",
+      },
     ]),
   };
 });
+jest.mock(
+  "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/Home/AccountCreateImport/ActiveAccountDisplay/TokensCardContent/ZRC20Tokens/ZRC20Token/ZRC20Token",
+  () => () => <div>Mocked ZRC 20 token</div>,
+);
 
 describe("ZRC20Tokens", () => {
   afterEach(cleanup);
@@ -85,42 +99,17 @@ describe("ZRC20Tokens", () => {
     renderComponent(undefined, { shouldDisplayAllTokens: true });
 
     await waitFor(() => {
-      expect(screen.getByText("12.0 CO1")).toBeInTheDocument();
-      expect(screen.getByText("COIN1")).toBeInTheDocument();
-      const co1SendButton = screen.getByRole("button", { name: "CO1" });
-      expect(co1SendButton).toBeInTheDocument();
-      expect(co1SendButton).toBeEnabled();
-      expect(screen.getByText("56.0 CO2")).toBeInTheDocument();
-      expect(screen.getByText("COIN2")).toBeInTheDocument();
-      const co2SendButton = screen.getByRole("button", { name: "CO2" });
-      expect(co2SendButton).toBeInTheDocument();
-      expect(co2SendButton).toBeEnabled();
-      expect(screen.getByText("96.0 CO3")).toBeInTheDocument();
-      expect(screen.getByText("COIN3")).toBeInTheDocument();
-      const co3SendButton = screen.getByRole("button", { name: "CO3" });
-      expect(co3SendButton).toBeInTheDocument();
-      expect(co3SendButton).toBeEnabled();
+      expect(screen.getAllByText("Mocked ZRC 20 token")).toHaveLength(3);
     });
   });
 
-  it("should display only 2 tokens if shouldDisplayAllTokens is false ", async () => {
+  it("should display only allowed number of tokens if shouldDisplayAllTokens is false ", async () => {
     renderComponent(undefined, { shouldDisplayAllTokens: false });
 
     await waitFor(() => {
-      expect(screen.getByText("12.0 CO1")).toBeInTheDocument();
-      expect(screen.getByText("COIN1")).toBeInTheDocument();
-      const co1SendButton = screen.getByRole("button", { name: "CO1" });
-      expect(co1SendButton).toBeInTheDocument();
-      expect(co1SendButton).toBeEnabled();
-      expect(screen.getByText("56.0 CO2")).toBeInTheDocument();
-      expect(screen.getByText("COIN2")).toBeInTheDocument();
-      const co2SendButton = screen.getByRole("button", { name: "CO2" });
-      expect(co2SendButton).toBeInTheDocument();
-      expect(co2SendButton).toBeEnabled();
-      expect(screen.queryByText("96.0 CO3")).not.toBeInTheDocument();
-      expect(screen.queryByText("COIN3")).not.toBeInTheDocument();
-      const co3SendButton = screen.queryByRole("button", { name: "CO3" });
-      expect(co3SendButton).not.toBeInTheDocument();
+      expect(screen.getAllByText("Mocked ZRC 20 token")).toHaveLength(
+        ZRC_20_ITEMS_DISPLAY_LIMIT,
+      );
     });
   });
 });

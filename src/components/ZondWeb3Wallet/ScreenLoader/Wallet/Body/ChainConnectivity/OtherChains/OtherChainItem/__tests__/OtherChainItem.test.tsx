@@ -139,6 +139,48 @@ describe("OtherChains", () => {
     expect(deleteChainButton).toBeEnabled();
   });
 
+  it("should disable the delete button is the chain is not custom", async () => {
+    const mockedTriggerReRender = jest.fn();
+    renderComponent(
+      mockedStore({
+        dAppRequestStore: {
+          currentTabData: { urlOrigin: "http://testUrlOrigin" },
+        },
+      }),
+      {
+        blockchain: {
+          chainId: "0x5",
+          chainName: "Test chain name",
+          rpcUrls: [],
+          blockExplorerUrls: [],
+          iconUrls: [],
+          nativeCurrency: {
+            name: "Test native currency",
+            symbol: "Test symbol",
+            decimals: 18,
+          },
+          defaultRpcUrl: "http://testDefaultRpcUrl",
+          defaultBlockExplorerUrl: "http://testDefaultExplorerUrl",
+          defaultIconUrl: "http://testDefaultIconUrl",
+          isTestnet: false,
+          defaultWsRpcUrl: "http://testDefaultRpcUrl",
+          isCustomChain: false,
+        },
+        triggerReRender: mockedTriggerReRender,
+      },
+    );
+
+    const moreButton = screen.getByRole("button", {
+      name: "More",
+    });
+    await userEvent.click(moreButton);
+    const deleteChainButton = screen.getByRole("button", {
+      name: "Delete chain",
+    });
+    expect(deleteChainButton).toBeInTheDocument();
+    expect(deleteChainButton).toBeDisabled();
+  });
+
   it("should call the setAllBlockChains method on clicking delete button", async () => {
     const mockedTriggerReRender = jest.fn();
     renderComponent(
@@ -181,7 +223,7 @@ describe("OtherChains", () => {
     await userEvent.click(deleteChainButton);
     expect(screen.getByText("Delete chain")).toBeInTheDocument();
     expect(
-      screen.getByText("Do you want to delete the chain Test chain name?"),
+      screen.getByText("Do you want to delete the chain 'Test chain name'?"),
     ).toBeInTheDocument();
     const deleteCancelButton = screen.getByRole("button", {
       name: "Cancel Delete",

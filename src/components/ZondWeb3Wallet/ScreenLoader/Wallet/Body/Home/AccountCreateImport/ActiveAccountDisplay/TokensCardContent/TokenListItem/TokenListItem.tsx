@@ -117,7 +117,9 @@ const TokenListItem = observer(
               >
                 <div className="flex gap-2">
                   <CircleMinus size="16" />
-                  <button aria-label="Hide chain">Hide Token</button>
+                  <button disabled={!isZrc20Token} aria-label="Hide Token">
+                    Hide Token
+                  </button>
                 </div>
               </DropdownMenuItem>
             </DropdownMenuGroup>
