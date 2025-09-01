@@ -1,28 +1,53 @@
 import { getRandomTailwindTextColor } from "@/utilities/stylingUtil";
 import { cva } from "class-variance-authority";
-import { Network } from "lucide-react";
-import { useMemo, useState } from "react";
+import { Link } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 
-const chainIconClasses = cva("h-6 w-6 flex-shrink-0", {
+const chainFallbackIconClasses = cva("flex-shrink-0", {
+  variants: {
+    chainIconSize: {
+      small: ["h-3 w-3"],
+      medium: ["h-6 w-6"],
+    },
+  },
+  defaultVariants: {
+    chainIconSize: "medium",
+  },
+});
+
+const chainIconClasses = cva("flex-shrink-0", {
   variants: {
     shouldDisplayFallback: {
       true: ["hidden"],
       false: ["block"],
     },
+    chainIconSize: {
+      small: ["h-3 w-3"],
+      medium: ["h-6 w-6"],
+    },
   },
   defaultVariants: {
     shouldDisplayFallback: false,
+    chainIconSize: "medium",
   },
 });
+
+type ChainIconSize = "small" | "medium";
 
 type ChainIconType = {
   src: string;
   alt: string;
+  chainIconSize?: ChainIconSize;
 };
 
-const ChainIcon = ({ src, alt }: ChainIconType) => {
+const ChainIcon = ({ src, alt, chainIconSize }: ChainIconType) => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasSrcError, setHasSrcError] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(true);
+    setHasSrcError(false);
+  }, [src, alt]);
 
   const shouldDisplayFallback = useMemo(
     () => isLoading || hasSrcError,
@@ -32,13 +57,16 @@ const ChainIcon = ({ src, alt }: ChainIconType) => {
   return (
     <>
       {shouldDisplayFallback && (
-        <Network
-          className={`h-6 w-6 flex-shrink-0 ${getRandomTailwindTextColor(alt)}`}
-          data-testid="network-icon"
+        <Link
+          className={chainFallbackIconClasses({
+            chainIconSize,
+            className: getRandomTailwindTextColor(alt),
+          })}
+          data-testid="link-icon"
         />
       )}
       <img
-        className={chainIconClasses({ shouldDisplayFallback })}
+        className={chainIconClasses({ shouldDisplayFallback, chainIconSize })}
         src={src}
         alt={alt}
         onLoad={() => setIsLoading(false)}

@@ -64,7 +64,7 @@ const EditDAppConnectedAccounts = observer(() => {
       <div className="relative z-10 p-8">
         <BackButton />
         <Card>
-          <CardHeader className="flex-row">
+          <CardHeader className="flex-row justify-between">
             <CardTitle>Edit connected accounts</CardTitle>
             <ActiveBrowserTabIcon
               favIconUrl={currentTabData?.favIconUrl}
@@ -82,6 +82,7 @@ const EditDAppConnectedAccounts = observer(() => {
               className="w-full"
               type="button"
               variant="outline"
+              aria-label="Cancel"
               onClick={() => {
                 navigate(ROUTES.DAPP_CONNECTIVITY);
               }}

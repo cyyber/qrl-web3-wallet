@@ -2,7 +2,7 @@ import { getRandomTailwindTextColor } from "@/utilities/stylingUtil";
 import { cva } from "class-variance-authority";
 import { FileBox } from "lucide-react";
 import { observer } from "mobx-react-lite";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const tokenIconClasses = cva("h-8 w-8 flex-shrink-0", {
   variants: {
@@ -25,6 +25,11 @@ const TokenListItemIcon = observer(
   ({ icon, symbol }: TokenListItemIconProps) => {
     const [isLoading, setIsLoading] = useState(true);
     const [hasSrcError, setHasSrcError] = useState(false);
+
+    useEffect(() => {
+      setIsLoading(true);
+      setHasSrcError(false);
+    }, [icon, symbol]);
 
     const shouldDisplayFallback = useMemo(
       () => isLoading || hasSrcError,

@@ -41,6 +41,6 @@ describe("ChainIcon", () => {
     const img = screen.getByRole("img");
     fireEvent.error(img);
     expect(img).toHaveClass("hidden");
-    expect(screen.getByTestId("network-icon")).toBeInTheDocument();
+    expect(screen.getByTestId("link-icon")).toBeInTheDocument();
   });
 });

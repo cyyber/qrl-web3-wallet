@@ -1,10 +1,10 @@
 import { mockedStore } from "@/__mocks__/mockedStore";
+import { TooltipProvider } from "@/components/UI/Tooltip";
 import { StoreProvider } from "@/stores/store";
-import { afterEach, describe, expect, it, jest } from "@jest/globals";
-import { cleanup, render, screen } from "@testing-library/react";
+import { describe, expect, it, jest } from "@jest/globals";
+import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import DAppConnectedAccounts from "../DAppConnectedAccounts";
-import { TooltipProvider } from "@/components/UI/Tooltip";
 
 jest.mock(
   "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/AccountList/AccountId/AccountId",
@@ -12,8 +12,6 @@ jest.mock(
 );
 
 describe("DAppConnectedAccounts", () => {
-  afterEach(cleanup);
-
   const renderComponent = (
     mockedStoreValues = mockedStore({
       dAppRequestStore: {

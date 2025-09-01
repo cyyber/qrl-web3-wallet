@@ -1,9 +1,14 @@
 import { mockedStore } from "@/__mocks__/mockedStore";
 import { StoreProvider } from "@/stores/store";
-import { afterEach, describe, expect, it } from "@jest/globals";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, jest } from "@jest/globals";
+import { cleanup, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import ChainBadgeIcon from "../ChainBadgeIcon";
+
+jest.mock(
+  "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/ChainConnectivity/ChainIcon/ChainIcon",
+  () => () => <div>Mocked Chain Icon</div>,
+);
 
 describe("ChainBadgeIcon", () => {
   afterEach(cleanup);
@@ -33,12 +38,10 @@ describe("ChainBadgeIcon", () => {
       }),
     );
 
-    const img = screen.getByRole("img");
-    expect(img).toHaveAttribute("src", "http://testIconUrl");
-    expect(img).toHaveAttribute("alt", "Test Chain Name");
+    expect(screen.getByText("Mocked Chain Icon")).toBeInTheDocument();
     expect(screen.queryByTestId("loader-icon")).not.toBeInTheDocument();
     expect(screen.queryByTestId("wifi-off-icon")).not.toBeInTheDocument();
-    expect(screen.queryByTestId("network-icon")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("link-icon")).not.toBeInTheDocument();
   });
 
   it("should render the loader if the chain is loading", () => {
@@ -54,7 +57,7 @@ describe("ChainBadgeIcon", () => {
 
     expect(screen.getByTestId("loader-icon")).toBeInTheDocument();
     expect(screen.queryByTestId("wifi-off-icon")).not.toBeInTheDocument();
-    expect(screen.queryByTestId("network-icon")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("link-icon")).not.toBeInTheDocument();
   });
 
   it("should render the not connected icon if the chain is not connected", () => {
@@ -70,17 +73,6 @@ describe("ChainBadgeIcon", () => {
 
     expect(screen.queryByTestId("loader-icon")).not.toBeInTheDocument();
     expect(screen.getByTestId("wifi-off-icon")).toBeInTheDocument();
-    expect(screen.queryByTestId("network-icon")).not.toBeInTheDocument();
-  });
-
-  it("should render fallback icon if image load fails", () => {
-    renderComponent();
-
-    const img = screen.getByRole("img");
-    fireEvent.error(img);
-    expect(img).not.toBeInTheDocument();
-    expect(screen.queryByTestId("loader-icon")).not.toBeInTheDocument();
-    expect(screen.queryByTestId("wifi-off-icon")).not.toBeInTheDocument();
-    expect(screen.getByTestId("network-icon")).toBeInTheDocument();
+    expect(screen.queryByTestId("link-icon")).not.toBeInTheDocument();
   });
 });

@@ -29,6 +29,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import UrlSelections from "./UrlSelections/UrlSelections";
+import ChainIcon from "../../../ChainIcon/ChainIcon";
 
 type AddEditChainFormType = {
   chainToEdit?: BlockchainDataType;
@@ -182,8 +183,12 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
     <Form {...form}>
       <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
         <Card>
-          <CardHeader>
+          <CardHeader className="flex-row items-end justify-between">
             <CardTitle>{labelText}</CardTitle>
+            <ChainIcon
+              src={defaultIconUrl}
+              alt={chainToEdit?.chainName ?? ""}
+            />
           </CardHeader>
           <CardContent className="space-y-8">
             <FormField

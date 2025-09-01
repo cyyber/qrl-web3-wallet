@@ -21,7 +21,7 @@ const DAppConnectedBlockchains = observer(() => {
     <Card className="flex flex-col gap-4 p-4">
       <div className="flex gap-2">
         <div className="text-sm">
-          The following blockchains are allowed to be used by this website
+          The following blockchains are allowed to be used by this website.
         </div>
         <div className="shrink-0">
           <Tooltip delayDuration={0}>

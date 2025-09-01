@@ -35,7 +35,7 @@ describe("DAppBadgeIcon", () => {
     expect(img).toHaveAttribute("alt", "Test Title");
     expect(screen.queryByTestId("loader-icon")).not.toBeInTheDocument();
     expect(screen.queryByTestId("wifi-off-icon")).not.toBeInTheDocument();
-    expect(screen.queryByTestId("network-icon")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("link-icon")).not.toBeInTheDocument();
   });
 
   it("should render the not unlink icon if favIconUrl is not available", () => {

@@ -83,7 +83,7 @@ const EditDAppConnectedBlockchains = observer(() => {
       <div className="relative z-10 p-8">
         <BackButton />
         <Card>
-          <CardHeader className="flex-row">
+          <CardHeader className="flex-row justify-between">
             <CardTitle>Edit connected blockchains</CardTitle>
             <ActiveBrowserTabIcon
               favIconUrl={currentTabData?.favIconUrl}

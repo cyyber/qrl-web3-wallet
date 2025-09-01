@@ -1,8 +1,7 @@
 import { useStore } from "@/stores/store";
-import { getRandomTailwindTextColor } from "@/utilities/stylingUtil";
-import { Loader, Network, WifiOff } from "lucide-react";
+import { Loader, WifiOff } from "lucide-react";
 import { observer } from "mobx-react-lite";
-import { useEffect, useState } from "react";
+import ChainIcon from "../../../Body/ChainConnectivity/ChainIcon/ChainIcon";
 
 const ChainBadgeIcon = observer(() => {
   const { zondStore } = useStore();
@@ -10,33 +9,15 @@ const ChainBadgeIcon = observer(() => {
   const { isLoading, isConnected, blockchain } = zondConnection;
   const { chainName, defaultIconUrl } = blockchain;
 
-  const [hasUrlError, setHasUrlError] = useState(false);
-
-  useEffect(() => {
-    setHasUrlError(false);
-  }, [defaultIconUrl]);
-
   if (isLoading)
     return (
       <Loader className="h-3 w-3 animate-spin" data-testid="loader-icon" />
     );
   if (!isConnected)
     return <WifiOff className="h-3 w-3" data-testid="wifi-off-icon" />;
-  if (hasUrlError)
-    return (
-      <Network
-        className={`h-3 w-3 ${getRandomTailwindTextColor(chainName)}`}
-        data-testid="network-icon"
-      />
-    );
 
   return (
-    <img
-      className="h-3 w-3"
-      src={defaultIconUrl}
-      alt={chainName}
-      onError={() => setHasUrlError(true)}
-    />
+    <ChainIcon src={defaultIconUrl} alt={chainName} chainIconSize="small" />
   );
 });
 
