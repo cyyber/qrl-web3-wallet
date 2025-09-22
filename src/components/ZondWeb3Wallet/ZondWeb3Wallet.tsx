@@ -4,7 +4,7 @@ import { TooltipProvider } from "../UI/Tooltip";
 
 const ZondWeb3Wallet = () => {
   return (
-    <div className="flex min-h-[48rem] w-[23rem] flex-col overflow-x-hidden bg-background text-foreground">
+    <div className="relative flex h-[48rem] w-[23rem] flex-col bg-background text-foreground">
       <RouteMonitor />
       <TooltipProvider>
         <ScreenLoader />

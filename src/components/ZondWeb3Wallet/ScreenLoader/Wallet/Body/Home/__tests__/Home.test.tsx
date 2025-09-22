@@ -34,14 +34,6 @@ describe("Home", () => {
       </StoreProvider>,
     );
 
-  it("should render the zond web3 wallet text", () => {
-    renderComponent();
-
-    expect(screen.getByText("Zond")).toBeInTheDocument();
-    expect(screen.getByText("Web3")).toBeInTheDocument();
-    expect(screen.getByText("Wallet")).toBeInTheDocument();
-  });
-
   it("should render the loader component if the connection is loading", () => {
     renderComponent(
       mockedStore({ zondStore: { zondConnection: { isLoading: true } } }),

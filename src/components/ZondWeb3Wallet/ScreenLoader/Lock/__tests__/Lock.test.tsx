@@ -4,21 +4,21 @@ import { afterEach, describe, expect, it } from "@jest/globals";
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
-import { AccountUnlock } from "../AccountUnlock";
+import Lock from "../Lock";
 
-describe("AccountUnlock", () => {
+describe("Lock", () => {
   afterEach(cleanup);
 
   const renderComponent = (mockedStoreValues = mockedStore()) =>
     render(
       <StoreProvider value={mockedStoreValues}>
         <MemoryRouter>
-          <AccountUnlock />
+          <Lock />
         </MemoryRouter>
       </StoreProvider>,
     );
 
-  it("should render the account unlock component", () => {
+  it("should render the account lock component", () => {
     renderComponent(
       mockedStore({
         zondStore: {

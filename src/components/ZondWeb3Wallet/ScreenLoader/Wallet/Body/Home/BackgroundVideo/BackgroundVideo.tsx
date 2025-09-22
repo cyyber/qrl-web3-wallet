@@ -2,7 +2,7 @@ import { useStore } from "@/stores/store";
 import { cva } from "class-variance-authority";
 import { observer } from "mobx-react-lite";
 
-const backgroundVideoClasses = cva("fixed z-0 overflow-hidden", {
+const backgroundVideoClasses = cva("absolute inset-0 z-0 overflow-hidden", {
   variants: {
     isDarkMode: {
       true: ["top-0 -left-24 scale-150"],

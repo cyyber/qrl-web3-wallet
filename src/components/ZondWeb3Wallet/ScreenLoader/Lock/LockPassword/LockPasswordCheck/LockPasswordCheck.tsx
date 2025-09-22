@@ -16,70 +16,65 @@ import {
   FormMessage,
 } from "@/components/UI/Form";
 import { Input } from "@/components/UI/Input";
-import { useStore } from "@/stores/store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader, LockKeyholeOpen } from "lucide-react";
-import { observer } from "mobx-react-lite";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useStore } from "@/stores/store";
+import { observer } from "mobx-react-lite";
+import { useEffect, useState } from "react";
 
 const FormSchema = z.object({
-  password: z.string().min(8, "Password should be atleast 8 characters"),
+  password: z.string().min(1, "Enter your password"),
 });
 
-/**
- * This component is currently not in use, and will be used once the encryption funcitonality is available in the web3js library.
- */
-export const AccountUnlock = observer(() => {
-  const { zondStore } = useStore();
-  const {
-    activeAccount: { accountAddress },
-  } = zondStore;
+const LockPasswordCheck = observer(() => {
+  const { lockStore } = useStore();
+  const { unlock } = lockStore;
+
+  const [unlockAttempt, setUnlockAttempt] = useState(0);
+
+  useEffect(() => {
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+      setFocus("password");
+    }, 0);
+  }, [unlockAttempt]);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
-    mode: "onChange",
-    reValidateMode: "onSubmit",
-    defaultValues: {
-      password: "",
-    },
   });
   const {
     handleSubmit,
     control,
     formState: { isSubmitting, isValid },
+    setError,
+    setFocus,
   } = form;
 
   async function onSubmit(formData: z.infer<typeof FormSchema>) {
-    // Use form data for unlocking account
-    formData;
-
-    const unlocked = false;
-    if (unlocked) {
-      control.setError("password", {
-        message: "The entered password is correct",
-      });
-    } else {
-      control.setError("password", {
+    window.scrollTo(0, 0);
+    const unlocked = await unlock(formData.password);
+    if (!unlocked) {
+      setError("password", {
         message: "The entered password is incorrect",
       });
     }
+    setUnlockAttempt((attempt) => attempt + 1);
   }
 
   return (
     <Form {...form}>
       <form
         name="accountUnlock"
-        className="w-80"
+        className="w-full"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <Card>
+        <Card className="animate-appear-in">
           <CardHeader>
-            <CardTitle>
-              Unlock Z..{accountAddress.substring(accountAddress.length - 5)}
-            </CardTitle>
+            <CardTitle>Unlock Wallet</CardTitle>
             <CardDescription className="break-words">
-              {accountAddress}
+              Unlock the wallet with your password
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -97,7 +92,7 @@ export const AccountUnlock = observer(() => {
                       type="password"
                     />
                   </FormControl>
-                  <FormDescription>Enter the account password</FormDescription>
+                  <FormDescription>Enter the wallet password</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -122,3 +117,5 @@ export const AccountUnlock = observer(() => {
     </Form>
   );
 });
+
+export default LockPasswordCheck;

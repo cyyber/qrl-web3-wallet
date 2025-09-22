@@ -8,7 +8,10 @@ import {
   DAppRequestType,
   TokenContractType,
 } from "@/scripts/middlewares/middlewareTypes";
+import { KeyStore } from "@theqrl/web3";
 import browser from "webextension-polyfill";
+
+const KEYSTORES_IDENTIFIER = "KEYSTORES";
 
 const ACCOUNTS_IDENTIFIER = "ACCOUNTS";
 const ALL_ACCOUNTS_IDENTIFIER = "ALL_ACCOUNTS";
@@ -48,6 +51,26 @@ type TransactionValuesType = {
  * A utility for storing and retrieving states of different components to and from the browser storage.
  */
 class StorageUtil {
+  /**
+   * A function for storing the keystore data.
+   * Call the getKeystore function to retrieve the stored value, and clearKeystore for clearing the stored value.
+   */
+  static async setKeystores(keystore: KeyStore[]) {
+    await browser.storage.local.set({
+      [KEYSTORES_IDENTIFIER]: JSON.stringify(keystore),
+    });
+  }
+
+  static async getKeystores() {
+    const storageData = await browser.storage.local.get(KEYSTORES_IDENTIFIER);
+    const keyStore = storageData?.[KEYSTORES_IDENTIFIER];
+    return (keyStore ? JSON.parse(keyStore) : []) as KeyStore[];
+  }
+
+  static async clearKeystores() {
+    await browser.storage.local.remove(KEYSTORES_IDENTIFIER);
+  }
+
   /**
    * A function for storing the transaction state values, so that the user need not fill in the field values if the extension is closed and opened again.
    * Call the getTransactionValues fuction to retieve the stored value.
@@ -368,16 +391,20 @@ class StorageUtil {
   }
 
   static async getDAppsConnectedAccountsData(urlOrigin: string = "") {
-    const existingData = await browser.storage.local.get(DAPPS_IDENTIFIER);
-    return existingData?.[DAPPS_IDENTIFIER]?.[ALL_DAPPS_IDENTIFIER]?.[
+    const storageData = await browser.storage.local.get(DAPPS_IDENTIFIER);
+    return storageData?.[DAPPS_IDENTIFIER]?.[ALL_DAPPS_IDENTIFIER]?.[
       urlOrigin
     ] as ConnectedAccountsDataType | undefined;
   }
 
   static async clearDAppsConnectedAccountsData(urlOrigin: string = "") {
-    const existingData = await browser.storage.local.get(DAPPS_IDENTIFIER);
-    delete existingData[DAPPS_IDENTIFIER]?.[ALL_DAPPS_IDENTIFIER]?.[urlOrigin];
-    await browser.storage.local.set(existingData);
+    const storageData = await browser.storage.local.get(DAPPS_IDENTIFIER);
+    delete storageData[DAPPS_IDENTIFIER]?.[ALL_DAPPS_IDENTIFIER]?.[urlOrigin];
+    await browser.storage.local.set(storageData);
+  }
+
+  static async clearAllData() {
+    await browser.storage.local.clear();
   }
 }
 

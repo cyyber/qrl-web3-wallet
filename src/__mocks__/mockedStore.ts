@@ -150,6 +150,23 @@ const mockedStoreValues: StoreType = {
     fetchCurrentTabData: async () => {},
     disconnectFromCurrentTab: async () => {},
   },
+  lockStore: {
+    isServiceWorkerReady: true,
+    hasPasswordSet: false,
+    isLoading: false,
+    isLocked: false,
+    readLockState: async () => {},
+    unlock: async (password: string) => {
+      return !!password;
+    },
+    setupPassword: async (password: string) => {
+      password;
+    },
+    lock: async () => {},
+    initializePort: function (): void {
+      throw new Error("Function not implemented.");
+    },
+  },
 };
 
 export const mockedStore = (

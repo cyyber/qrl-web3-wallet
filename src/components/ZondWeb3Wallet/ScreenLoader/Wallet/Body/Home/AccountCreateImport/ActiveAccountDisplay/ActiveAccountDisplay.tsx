@@ -12,7 +12,7 @@ const ActiveAccountDisplay = observer(() => {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex text-2xl font-bold text-secondary">
+      <div className="flex animate-appear-in text-2xl font-bold text-secondary">
         {accountBalance}
       </div>
       <div className="text-sm">{`${prefix} ${addressSplit.join(" ")}`}</div>

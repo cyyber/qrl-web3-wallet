@@ -33,15 +33,24 @@ const ChainBadge = withSuspense(
       ),
   ),
 );
+const ZondWeb3WalletMoreOptions = withSuspense(
+  lazy(
+    () =>
+      import(
+        "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Header/ZondWeb3WalletMoreOptions/ZondWeb3WalletMoreOptions"
+      ),
+  ),
+);
 
 const Header = () => {
   return (
-    <div className="fixed top-0 z-20 flex h-16 w-full items-center justify-between border-b-2 border-secondary bg-background px-4">
+    <div className="fixed z-20 flex h-16 w-[23rem] items-center justify-between border-b-2 border-secondary bg-background px-4">
       <ZondWeb3WalletLogo />
-      <div className="flex gap-2">
+      <div className="flex items-center gap-2">
         <AccountBadge />
         <DAppBadge />
         <ChainBadge displayChainName={false} />
+        <ZondWeb3WalletMoreOptions />
       </div>
     </div>
   );

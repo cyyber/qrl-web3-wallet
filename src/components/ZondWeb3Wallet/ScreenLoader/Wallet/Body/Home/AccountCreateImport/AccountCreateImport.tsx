@@ -67,7 +67,7 @@ const AccountCreateImport = observer(() => {
     <div className="flex flex-col gap-8">
       {hasActiveAccount && (
         <>
-          <Card className="order-1 h-64 w-full animate-active-account-in overflow-hidden">
+          <Card className="order-1 h-64 w-full overflow-hidden">
             <CardHeader>
               <CardTitle>Active account</CardTitle>
             </CardHeader>
