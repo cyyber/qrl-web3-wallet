@@ -8,7 +8,11 @@ import { createContext, useContext } from "react";
 import type { PartialDeep } from "type-fest";
 
 const mockedStoreValues: StoreType = {
-  settingsStore: { isDarkMode: true, theme: "dark" },
+  settingsStore: {
+    isDarkMode: true,
+    theme: "dark",
+    isPopupWindow: true,
+  },
   zondStore: {
     activeAccount: {
       accountAddress: "Z20B714091cF2a62DADda2847803e3f1B9D2D3779",
@@ -163,9 +167,8 @@ const mockedStoreValues: StoreType = {
       password;
     },
     lock: async () => {},
-    initializePort: function (): void {
-      throw new Error("Function not implemented.");
-    },
+    initializePort: () => {},
+    initializeStorageListener: () => {},
   },
 };
 

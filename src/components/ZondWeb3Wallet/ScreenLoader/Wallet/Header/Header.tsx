@@ -1,4 +1,7 @@
 import withSuspense from "@/functions/withSuspense";
+import { useStore } from "@/stores/store";
+import { cva } from "class-variance-authority";
+import { observer } from "mobx-react-lite";
 import { lazy } from "react";
 
 const ZondWeb3WalletLogo = withSuspense(
@@ -42,9 +45,31 @@ const ZondWeb3WalletMoreOptions = withSuspense(
   ),
 );
 
-const Header = () => {
+const headerClasses = cva(
+  "fixed z-20 flex h-16 items-center justify-between border-b-2 border-secondary bg-background px-4",
+  {
+    variants: {
+      isPopupWindow: {
+        true: ["w-[23rem]"],
+        false: ["w-[22rem]"],
+      },
+    },
+    defaultVariants: {
+      isPopupWindow: true,
+    },
+  },
+);
+
+const Header = observer(() => {
+  const { settingsStore } = useStore();
+  const { isPopupWindow } = settingsStore;
+
   return (
-    <div className="fixed z-20 flex h-16 w-[23rem] items-center justify-between border-b-2 border-secondary bg-background px-4">
+    <div
+      className={headerClasses({
+        isPopupWindow,
+      })}
+    >
       <ZondWeb3WalletLogo />
       <div className="flex items-center gap-2">
         <AccountBadge />
@@ -54,6 +79,6 @@ const Header = () => {
       </div>
     </div>
   );
-};
+});
 
 export default Header;
