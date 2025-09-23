@@ -1,5 +1,5 @@
 import { LOCK_MANAGER_MESSAGES } from "@/scripts/lockManager/lockManager";
-import StorageUtil from "@/utilities/storageUtil";
+import StorageUtil, { LockState } from "@/utilities/storageUtil";
 import { action, makeAutoObservable } from "mobx";
 import browser from "webextension-polyfill";
 
@@ -19,6 +19,7 @@ class LockStore {
     });
 
     this.initializePort();
+    this.initializeStorageListener();
   }
 
   initializePort() {
@@ -28,6 +29,14 @@ class LockStore {
         this.isServiceWorkerReady = true;
         this.readLockState();
       }
+    });
+  }
+
+  initializeStorageListener() {
+    // If the locking system was triggered, we write timestamp to storage via `StorageUtil.updateLockStateTimeStamp`
+    //  to make sure that the extensions on all tabs are reflecting the lock state.
+    browser.storage.onChanged.addListener(async () => {
+      await this.readLockState();
     });
   }
 
@@ -85,6 +94,7 @@ class LockStore {
       name: LOCK_MANAGER_MESSAGES.IS_LOCKED,
     });
     this.isLocked = isLocked;
+    StorageUtil.updateLockStateTimeStamp(LockState.LOCKED);
   }
 
   // Unlocks the wallet and returns true if successful. Returns false otherwise.
@@ -97,6 +107,7 @@ class LockStore {
       name: LOCK_MANAGER_MESSAGES.IS_LOCKED,
     });
     this.isLocked = isLocked;
+    StorageUtil.updateLockStateTimeStamp(LockState.UNLOCKED);
     return !isLocked;
   }
 }

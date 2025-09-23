@@ -47,6 +47,13 @@ type TransactionValuesType = {
   };
 };
 
+export const LockState = Object.freeze({
+  LOCKED: "LOCKED",
+  UNLOCKED: "UNLOCKED",
+});
+
+type LockStateType = (typeof LockState)[keyof typeof LockState];
+
 /**
  * A utility for storing and retrieving states of different components to and from the browser storage.
  */
@@ -69,6 +76,13 @@ class StorageUtil {
 
   static async clearKeystores() {
     await browser.storage.local.remove(KEYSTORES_IDENTIFIER);
+  }
+
+  static async updateLockStateTimeStamp(lockState: LockStateType) {
+    const lockStatusIdentifier = `LOCK_MANAGER_${lockState}_TIMESTAMP`;
+    await browser.storage.local.set({
+      [lockStatusIdentifier]: Date.now(),
+    });
   }
 
   /**
