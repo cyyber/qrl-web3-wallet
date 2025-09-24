@@ -3,6 +3,9 @@ import StorageUtil, { LockState } from "@/utilities/storageUtil";
 import { action, makeAutoObservable } from "mobx";
 import browser from "webextension-polyfill";
 
+const MAX_LOCK_MANAGER_RETRY = 3;
+const LOCK_MANAGER_RETRY_DELAY = 2000;
+
 class LockStore {
   port?: browser.Runtime.Port = undefined;
   isServiceWorkerReady = false;
@@ -22,14 +25,53 @@ class LockStore {
     this.initializeStorageListener();
   }
 
-  initializePort() {
-    this.port = browser.runtime.connect({ name: LOCK_MANAGER_MESSAGES.PORT });
-    this.port.onMessage.addListener((message) => {
-      if (message.name === LOCK_MANAGER_MESSAGES.IS_LOCK_MANAGER_READY) {
-        this.isServiceWorkerReady = true;
-        this.readLockState();
+  keepServiceWorkerActive() {
+    setInterval(() => {
+      browser.runtime
+        .connect({
+          name: LOCK_MANAGER_MESSAGES.LOCK_MANAGER_KEEP_LIVE,
+        })
+        .postMessage(LOCK_MANAGER_MESSAGES.LOCK_MANAGER_KEEP_LIVE);
+    }, 3000);
+  }
+
+  initializePort(retryCount = 0) {
+    try {
+      this.port?.disconnect();
+      this.port = browser.runtime.connect({ name: LOCK_MANAGER_MESSAGES.PORT });
+      this.port?.onDisconnect?.addListener(() => {
+        const lastErr = browser.runtime.lastError;
+        if (lastErr) {
+          console.warn(
+            "Lock Manager: Port disconnected with error:",
+            lastErr.message,
+          );
+        } else {
+          console.warn("Lock Manager: Port disconnected");
+        }
+        this.isServiceWorkerReady = false;
+        if (retryCount < MAX_LOCK_MANAGER_RETRY) {
+          setTimeout(() => {
+            this.initializePort(retryCount + 1);
+          }, LOCK_MANAGER_RETRY_DELAY);
+        }
+      });
+      this.port?.onMessage?.addListener((message) => {
+        if (message.name === LOCK_MANAGER_MESSAGES.IS_LOCK_MANAGER_READY) {
+          this.isServiceWorkerReady = true;
+          this.readLockState();
+        }
+      });
+      this.keepServiceWorkerActive();
+    } catch (error) {
+      console.warn("Lock Manager: Error connecting to service worker:", error);
+      this.isServiceWorkerReady = false;
+      if (retryCount < MAX_LOCK_MANAGER_RETRY) {
+        setTimeout(() => {
+          this.initializePort(retryCount + 1);
+        }, LOCK_MANAGER_RETRY_DELAY);
       }
-    });
+    }
   }
 
   initializeStorageListener() {
@@ -70,7 +112,6 @@ class LockStore {
 
   async readLockState() {
     if (!this.isServiceWorkerReady) {
-      this.port?.disconnect();
       this.initializePort();
       return;
     }
