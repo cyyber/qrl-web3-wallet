@@ -10,7 +10,9 @@ const zondWalletBodyClasses = cva(
   {
     variants: {
       isPopupWindow: {
-        false: ["overflow-y-scroll overflow-x-hidden border-4 rounded-md"],
+        false: [
+          "overflow-y-scroll overflow-x-hidden border-2 rounded-md shadow-2xl",
+        ],
       },
     },
     defaultVariants: {
