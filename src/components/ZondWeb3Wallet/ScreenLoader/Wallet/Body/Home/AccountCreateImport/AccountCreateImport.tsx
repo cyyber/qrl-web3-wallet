@@ -115,9 +115,7 @@ const AccountCreateImport = observer(() => {
       )}
       <Card className={addAccountsClasses({ hasAccountCreationPreference })}>
         <CardHeader>
-          <CardTitle>
-            {hasActiveAccount ? "Add accounts" : "Let's start"}
-          </CardTitle>
+          <CardTitle>Add accounts</CardTitle>
           <CardDescription>
             You are connected to the blockchain. Create a new account or import
             an existing account.
