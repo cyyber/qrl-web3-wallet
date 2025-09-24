@@ -5,13 +5,22 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/UI/DropdownMenu";
+import { APP_INDEX_FILE } from "@/constants/zondWeb3Wallet";
 import { useStore } from "@/stores/store";
-import { EllipsisVertical, LockKeyhole } from "lucide-react";
+import { EllipsisVertical, Expand, LockKeyhole } from "lucide-react";
 import { observer } from "mobx-react-lite";
+import browser from "webextension-polyfill";
 
 const ZondWeb3WalletMoreOptions = observer(() => {
-  const { lockStore } = useStore();
+  const { lockStore, settingsStore } = useStore();
+  const { isPopupWindow } = settingsStore;
   const { lock } = lockStore;
+
+  const openInFullscreen = () => {
+    browser.tabs.create({
+      url: browser.runtime.getURL(APP_INDEX_FILE),
+    });
+  };
 
   return (
     <DropdownMenu>
@@ -20,6 +29,17 @@ const ZondWeb3WalletMoreOptions = observer(() => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start">
         <DropdownMenuGroup>
+          {isPopupWindow && (
+            <DropdownMenuItem
+              className="cursor-pointer data-[highlighted]:text-secondary"
+              onClick={openInFullscreen}
+            >
+              <div className="flex gap-2">
+                <Expand size="16" />
+                <button aria-label="Fullscreen">Fullscreen</button>
+              </div>
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem
             className="cursor-pointer data-[highlighted]:text-secondary"
             onClick={lock}
@@ -34,4 +54,5 @@ const ZondWeb3WalletMoreOptions = observer(() => {
     </DropdownMenu>
   );
 });
+
 export default ZondWeb3WalletMoreOptions;

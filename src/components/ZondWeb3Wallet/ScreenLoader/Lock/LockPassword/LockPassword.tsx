@@ -1,3 +1,4 @@
+import { APP_INDEX_FILE } from "@/constants/zondWeb3Wallet";
 import { useStore } from "@/stores/store";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
@@ -6,21 +7,20 @@ import LockPasswordCheck from "./LockPasswordCheck/LockPasswordCheck";
 import Onboarding from "./Onboarding/Onboarding";
 
 const LockPassword = observer(() => {
-  const { lockStore } = useStore();
+  const { lockStore, settingsStore } = useStore();
+  const { isPopupWindow } = settingsStore;
   const { hasPasswordSet, isLocked } = lockStore;
 
   const [isOnboarding, setIsOnboarding] = useState(false);
 
   useEffect(() => {
-    const onboardingHash = "#onboarding";
-    const windowHash = window?.location?.hash;
     if (!hasPasswordSet) {
-      if (windowHash === onboardingHash) {
-        setIsOnboarding(true);
-      } else if (windowHash !== onboardingHash) {
+      if (isPopupWindow) {
         browser.tabs.create({
-          url: browser.runtime.getURL(`index.html${onboardingHash}`),
+          url: browser.runtime.getURL(APP_INDEX_FILE),
         });
+      } else {
+        setIsOnboarding(true);
       }
     }
   }, []);
