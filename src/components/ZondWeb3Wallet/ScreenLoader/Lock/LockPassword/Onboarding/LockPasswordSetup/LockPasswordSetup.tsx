@@ -62,11 +62,11 @@ const LockPasswordSetup = observer(() => {
   return (
     <Form {...form}>
       <form
-        name="accountUnlock"
+        name="accountPasswordSetup"
         className="w-full"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <Card className="animate-appear-in">
+        <Card className="animate-appear-in shadow-xl">
           <CardHeader>
             <CardTitle>Set Wallet Password</CardTitle>
             <CardDescription className="break-words">

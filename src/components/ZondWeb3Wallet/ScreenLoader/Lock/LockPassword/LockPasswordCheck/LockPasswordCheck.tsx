@@ -70,7 +70,7 @@ const LockPasswordCheck = observer(() => {
         className="w-full"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <Card className="animate-appear-in">
+        <Card className="animate-appear-in shadow-xl">
           <CardHeader>
             <CardTitle>Unlock Wallet</CardTitle>
             <CardDescription className="break-words">

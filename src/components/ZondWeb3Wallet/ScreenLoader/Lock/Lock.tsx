@@ -1,7 +1,6 @@
 import { useStore } from "@/stores/store";
 import { Loader } from "lucide-react";
 import { observer } from "mobx-react-lite";
-import CircuitBackground from "../Shared/CircuitBackground/CircuitBackground";
 import LockPassword from "./LockPassword/LockPassword";
 
 const Lock = observer(() => {
@@ -10,11 +9,14 @@ const Lock = observer(() => {
 
   return (
     <>
-      <CircuitBackground />
+      <img
+        className="absolute inset-0 h-full w-full animate-pulse overflow-hidden object-cover object-center"
+        src="circuit.svg"
+      />
       <div className="absolute inset-0 z-10 flex w-[23rem] flex-col items-center gap-12 p-8">
         <div className="relative flex flex-col gap-8">
           <img
-            className="absolute -right-20 -top-16 z-0 opacity-50"
+            className="absolute -right-20 -top-16 z-0"
             src="icons/qrl/default.png"
           />
           <div className="relative z-10 text-6xl font-bold">
