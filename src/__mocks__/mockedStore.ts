@@ -166,8 +166,9 @@ const mockedStoreValues: StoreType = {
     setupPassword: async (password: string) => {
       password;
     },
-    lock: async () => {},
+    keepServiceWorkerActive: () => {},
     initializePort: () => {},
+    lock: async () => {},
     initializeStorageListener: () => {},
   },
 };
