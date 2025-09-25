@@ -16,7 +16,7 @@ const ZondWeb3WalletMoreOptions = observer(() => {
   const { isPopupWindow } = settingsStore;
   const { lock } = lockStore;
 
-  const openInFullscreen = () => {
+  const openInTab = () => {
     browser.tabs.create({
       url: browser.runtime.getURL(APP_INDEX_FILE),
     });
@@ -32,11 +32,11 @@ const ZondWeb3WalletMoreOptions = observer(() => {
           {isPopupWindow && (
             <DropdownMenuItem
               className="cursor-pointer data-[highlighted]:text-secondary"
-              onClick={openInFullscreen}
+              onClick={openInTab}
             >
               <div className="flex gap-2">
                 <Expand size="16" />
-                <button aria-label="Fullscreen">Fullscreen</button>
+                <button aria-label="Open in tab">Open In Tab</button>
               </div>
             </DropdownMenuItem>
           )}
