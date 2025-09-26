@@ -27,7 +27,7 @@ const OnboardingCompleted = () => {
       <CardFooter>
         <Button className="w-full" onClick={() => window.close()}>
           <Check className="mr-2 h-4 w-4" />
-          Close
+          Done
         </Button>
       </CardFooter>
     </Card>
