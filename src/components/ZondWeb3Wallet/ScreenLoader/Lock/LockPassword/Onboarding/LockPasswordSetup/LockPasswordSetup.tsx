@@ -17,11 +17,10 @@ import {
 } from "@/components/UI/Form";
 import { Input } from "@/components/UI/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { KeyRound, Loader } from "lucide-react";
+import { MoveRight } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useStore } from "@/stores/store";
-import { observer } from "mobx-react-lite";
+import { ONBOARDING_STEPS, OnboardingStepType } from "../Onboarding";
 
 const FormSchema = z
   .object({
@@ -35,10 +34,15 @@ const FormSchema = z
     path: ["reEnteredPassword"],
   });
 
-const LockPasswordSetup = observer(() => {
-  const { lockStore } = useStore();
-  const { setupPassword } = lockStore;
+type LockPasswordSetupProps = {
+  selectStep: (step: OnboardingStepType) => void;
+  setNewPassword: (password: string) => void;
+};
 
+const LockPasswordSetup = ({
+  selectStep,
+  setNewPassword,
+}: LockPasswordSetupProps) => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     mode: "onChange",
@@ -54,9 +58,9 @@ const LockPasswordSetup = observer(() => {
     formState: { isSubmitting, isValid },
   } = form;
 
-  async function onSubmit(formData: z.infer<typeof FormSchema>) {
+  function onSubmit(formData: z.infer<typeof FormSchema>) {
     window.scrollTo(0, 0);
-    await setupPassword(formData?.reEnteredPassword);
+    setNewPassword(formData?.reEnteredPassword);
   }
 
   return (
@@ -115,22 +119,18 @@ const LockPasswordSetup = observer(() => {
           </CardContent>
           <CardFooter>
             <Button
-              disabled={isSubmitting || !isValid}
+              disabled={!isValid}
               className="w-full"
-              type="submit"
+              onClick={() => selectStep(ONBOARDING_STEPS.ADD_OR_IMPORT_ACCOUNT)}
             >
-              {isSubmitting ? (
-                <Loader className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <KeyRound className="mr-2 h-4 w-4" />
-              )}
-              {isSubmitting ? "Setting Password" : "Set Password"}
+              <MoveRight className="mr-2 h-4 w-4" />
+              Continue
             </Button>
           </CardFooter>
         </Card>
       </form>
     </Form>
   );
-});
+};
 
 export default LockPasswordSetup;

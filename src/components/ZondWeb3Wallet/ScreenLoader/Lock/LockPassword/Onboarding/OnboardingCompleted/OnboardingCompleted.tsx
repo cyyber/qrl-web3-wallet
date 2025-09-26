@@ -7,10 +7,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/UI/Card";
-import { MoveRight } from "lucide-react";
-import { ONBOARDING_STEPS, OnboardingStepType } from "../Onboarding";
 import { useStore } from "@/stores/store";
 import { cva } from "class-variance-authority";
+import { Check } from "lucide-react";
 import { observer } from "mobx-react-lite";
 
 const videoClasses = cva("w-full scale-[2.5]", {
@@ -25,11 +24,7 @@ const videoClasses = cva("w-full scale-[2.5]", {
   },
 });
 
-type WelcomeProps = {
-  selectStep: (step: OnboardingStepType) => void;
-};
-
-const Welcome = observer(({ selectStep }: WelcomeProps) => {
+const OnboardingCompleted = observer(() => {
   const { settingsStore } = useStore();
   const { isDarkMode, theme } = settingsStore;
 
@@ -38,9 +33,9 @@ const Welcome = observer(({ selectStep }: WelcomeProps) => {
   return (
     <Card className="animate-appear-in shadow-xl">
       <CardHeader>
-        <CardTitle>Welcome</CardTitle>
+        <CardTitle>That's All</CardTitle>
         <CardDescription className="break-words">
-          Let's start using the Zond Web3 Wallet
+          The Zond Web3 Wallet is now ready for use.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -56,16 +51,13 @@ const Welcome = observer(({ selectStep }: WelcomeProps) => {
         </div>
       </CardContent>
       <CardFooter>
-        <Button
-          className="w-full"
-          onClick={() => selectStep(ONBOARDING_STEPS.SET_PASSWORD)}
-        >
-          <MoveRight className="mr-2 h-4 w-4" />
-          Continue
+        <Button className="w-full" onClick={() => window.close()}>
+          <Check className="mr-2 h-4 w-4" />
+          Close
         </Button>
       </CardFooter>
     </Card>
   );
 });
 
-export default Welcome;
+export default OnboardingCompleted;
