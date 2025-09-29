@@ -4,6 +4,8 @@ import { useState } from "react";
 import Welcome from "./Welcome/Welcome";
 import AddOrImportAccount from "./AddOrImportAccount/AddOrImportAccount";
 import OnboardingCompleted from "./OnboardingCompleted/OnboardingCompleted";
+import { Web3BaseWalletAccount } from "@theqrl/web3";
+import { useStore } from "@/stores/store";
 
 export const ONBOARDING_STEPS = Object.freeze({
   WELCOME: "WELCOME",
@@ -16,6 +18,10 @@ export type OnboardingStepType =
   (typeof ONBOARDING_STEPS)[keyof typeof ONBOARDING_STEPS];
 
 const Onboarding = observer(() => {
+  const { lockStore, zondStore } = useStore();
+  const { setupPassword } = lockStore;
+  const { setActiveAccount } = zondStore;
+
   const [step, setStep] = useState<OnboardingStepType>(
     ONBOARDING_STEPS.WELCOME,
   );
@@ -27,6 +33,11 @@ const Onboarding = observer(() => {
 
   const setNewPassword = (password: string) => {
     setPassword(password);
+  };
+
+  const addAnAccountToWallet = (account: Web3BaseWalletAccount) => {
+    setActiveAccount(account.address);
+    setupPassword(password);
   };
 
   if (step === ONBOARDING_STEPS.WELCOME)
@@ -41,7 +52,12 @@ const Onboarding = observer(() => {
     );
 
   if (step === ONBOARDING_STEPS.ADD_OR_IMPORT_ACCOUNT)
-    return <AddOrImportAccount selectStep={selectStep} />;
+    return (
+      <AddOrImportAccount
+        selectStep={selectStep}
+        addAnAccountToWallet={addAnAccountToWallet}
+      />
+    );
 
   if (step === ONBOARDING_STEPS.COMPLETED) return <OnboardingCompleted />;
 });

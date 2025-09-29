@@ -64,7 +64,7 @@ const AccountCreateImport = observer(() => {
   }, [accountAddress]);
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex animate-appear-in flex-col gap-8">
       {hasActiveAccount && (
         <>
           <Card className="order-1 h-64 w-full overflow-hidden">
@@ -117,8 +117,7 @@ const AccountCreateImport = observer(() => {
         <CardHeader>
           <CardTitle>Add accounts</CardTitle>
           <CardDescription>
-            You are connected to the blockchain. Create a new account or import
-            an existing account.
+            Create a new account or import an existing account.
           </CardDescription>
         </CardHeader>
         <CardFooter className="flex-col gap-4">

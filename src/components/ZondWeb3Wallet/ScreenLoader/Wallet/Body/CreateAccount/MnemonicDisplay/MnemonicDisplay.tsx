@@ -23,6 +23,7 @@ import { Web3BaseWalletAccount } from "@theqrl/web3";
 import { ArrowRight, HardDriveDownload, Undo } from "lucide-react";
 import { lazy } from "react";
 import HexSeedListing from "./HexSeedListing/HexSeedListing";
+import StringUtil from "@/utilities/stringUtil";
 
 const MnemonicWordListing = withSuspense(
   lazy(
@@ -47,32 +48,12 @@ const MnemonicDisplay = ({
   const mnemonicPhrases = getMnemonicFromHexSeed(accountHexSeed);
 
   const onDownload = () => {
-    const mnemonicObject = {
-      "Public Information": {
-        Address: accountAddress,
-        Note: "This is your public account address, and can be shared with others for receiving ZND to your account.",
-      },
-      "Private Information": {
-        "Hex Seed": accountHexSeed,
-        "Mnemonic Phrases": mnemonicPhrases,
-        Note: "This is your secret key(mnemomic phrases, a 32 words combination), and should be kept safe somewhere. This is required to recover your account and to send ZND from your account to others account. If lost, you will lose access to your account and funds.",
-      },
-    };
-    const blobData = JSON.stringify(mnemonicObject, null, 2);
-    const blob = new Blob([blobData], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const anchorElement = document.createElement("a");
-    anchorElement.href = url;
-    anchorElement.download = "Secret Mnemonic Phrases.json";
-    document.body.appendChild(anchorElement);
-    anchorElement.click();
-    document.body.removeChild(anchorElement);
-    URL.revokeObjectURL(url);
+    if (account) StringUtil.downloadRecoveryPhrases(account);
   };
 
   const cardDescription = `Don't lose this mnemonic phrases. Download it right now. You may need this someday to import or recover your new account ${accountAddress?.substring(0, 6)} ... ${accountAddress?.substring(accountAddress?.length - 5)}`;
   const continueWarning =
-    "You should only continue if you have downloaded the mnemonic phrases. If you haven't, go back, download, and then continue. There is no going back once you click the continue button.";
+    "It is highly recommended that you continue after downloading the recovery mnemonic phrases. If you already have, please continue.";
 
   return (
     <Card className="text-ellipsis">

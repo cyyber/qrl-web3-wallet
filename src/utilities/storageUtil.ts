@@ -62,16 +62,16 @@ class StorageUtil {
    * A function for storing the keystore data.
    * Call the getKeystore function to retrieve the stored value, and clearKeystore for clearing the stored value.
    */
-  static async setKeystores(keystore: KeyStore[]) {
+  static async setKeystores(keystores: KeyStore[]) {
     await browser.storage.local.set({
-      [KEYSTORES_IDENTIFIER]: JSON.stringify(keystore),
+      [KEYSTORES_IDENTIFIER]: JSON.stringify(keystores),
     });
   }
 
   static async getKeystores() {
     const storageData = await browser.storage.local.get(KEYSTORES_IDENTIFIER);
-    const keyStore = storageData?.[KEYSTORES_IDENTIFIER];
-    return (keyStore ? JSON.parse(keyStore) : []) as KeyStore[];
+    const keyStores = storageData?.[KEYSTORES_IDENTIFIER];
+    return (keyStores ? JSON.parse(keyStores) : []) as KeyStore[];
   }
 
   static async clearKeystores() {

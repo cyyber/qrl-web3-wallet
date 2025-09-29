@@ -3,7 +3,6 @@ import { useStore } from "@/stores/store";
 import { Loader } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { lazy } from "react";
-import ConnectionFailed from "./ConnectionFailed/ConnectionFailed";
 
 const AccountCreateImport = withSuspense(
   lazy(
@@ -25,7 +24,7 @@ const BackgroundVideo = withSuspense(
 const Home = observer(() => {
   const { zondStore } = useStore();
   const { zondConnection } = zondStore;
-  const { isLoading, isConnected } = zondConnection;
+  const { isLoading } = zondConnection;
 
   return (
     <>
@@ -34,9 +33,7 @@ const Home = observer(() => {
         {isLoading ? (
           <Loader className="animate-spin text-foreground" size="86" />
         ) : (
-          <div className="flex animate-appear-in flex-col items-center gap-8">
-            {isConnected ? <AccountCreateImport /> : <ConnectionFailed />}
-          </div>
+          <AccountCreateImport />
         )}
       </div>
     </>

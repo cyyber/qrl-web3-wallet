@@ -12,16 +12,17 @@ export const LOCK_MANAGER_MESSAGES = {
   LOCK: "LOCK_MANAGER_LOCK",
   UNLOCK: "LOCK_MANAGER_UNLOCK",
   LOCK_MANAGER_KEEP_LIVE: "LOCK_MANAGER_KEEP_LIVE",
+  MNEMONIC_PHRASES: "MNEMONIC_PHRASES",
 } as const;
 
 /**
  * The lock manager, which is part of the extension service worker handles lock related data and functions.
  */
 class LockManager {
-  private static decryptedSeed?: string;
+  private static decryptedMnemonicPhrases?: string;
 
   static lock() {
-    this.clearDecryptedSeed();
+    this.clearDecryptedMnemonicPhrases();
   }
 
   static async unlock(password: string) {
@@ -32,11 +33,11 @@ class LockManager {
         throw new Error("Invalid password");
       }
       // Use the web3.js decrypt function here once available
-      const seed =
-        "0x54e2c50efc39510986b61ccbfeaf68112de19a534af400d82d828e2f6de2ca2e9e530fa8909c3bcc76df137e117f2dde";
-      this.setDecryptedSeed(seed);
+      const mnemonicPhrases =
+        "fondly closet award series fish obey retail smell yet wary banana tailor only cuba virtue attic coca china convex taiwan skinny trendy floor wind motor serum small ideal bear tendon lime tact";
+      this.setDecryptedMnemonicPhrases(mnemonicPhrases);
     } catch (err: any) {
-      this.clearDecryptedSeed();
+      this.clearDecryptedMnemonicPhrases();
     }
   }
 
@@ -47,23 +48,27 @@ class LockManager {
       // If the keystore is missing in the storage, either the password was not set
       // or the storage was manually deleted.
       await StorageUtil.clearAllData();
-      this.clearDecryptedSeed();
+      this.clearDecryptedMnemonicPhrases();
       hasPasswordSet = false;
     }
-    return { isLocked: !!(this.decryptedSeed === undefined), hasPasswordSet };
+    return {
+      isLocked: !!(this.decryptedMnemonicPhrases === undefined),
+      hasPasswordSet,
+    };
   }
 
-  private static setDecryptedSeed(seed: string) {
-    this.decryptedSeed = seed;
+  private static setDecryptedMnemonicPhrases(seed: string) {
+    this.decryptedMnemonicPhrases = seed;
   }
 
-  static getDecryptedSeed(): string {
-    if (!this.decryptedSeed) throw new Error("Zond Web3 Wallet is locked");
-    return this.decryptedSeed;
+  static getDecryptedMnemonicPhrases(): string {
+    if (!this.decryptedMnemonicPhrases)
+      throw new Error("Zond Web3 Wallet is locked");
+    return this.decryptedMnemonicPhrases;
   }
 
-  private static clearDecryptedSeed() {
-    this.decryptedSeed = undefined;
+  private static clearDecryptedMnemonicPhrases() {
+    this.decryptedMnemonicPhrases = undefined;
   }
 
   static async lockManagerListener(message: MessageType) {
@@ -73,41 +78,10 @@ class LockManager {
       return await LockManager.unlock(message?.data?.password);
     } else if (message.name === LOCK_MANAGER_MESSAGES.LOCK) {
       return LockManager.lock();
+    } else if (message.name === LOCK_MANAGER_MESSAGES.MNEMONIC_PHRASES) {
+      return LockManager.getDecryptedMnemonicPhrases();
     }
   }
-
-  //   (async () => {
-  //     switch (message?.type) {
-  //       case "VAULT_GET_ADDRESS": {
-  //         // example: return the stored address from keystore
-  //         const ks = await this.getKeyStore();
-  //         sendResponse({ address: ks?.address ?? null });
-  //         return;
-  //       }
-  //       case "VAULT_PERFORM_SIGN": {
-  //         // example operation that uses decrypted seed
-  //         try {
-  //           if (this.isLocked()) {
-  //             sendResponse({ success: false, error: "locked" });
-  //             return;
-  //           }
-  //           const seed = this.getDecryptedSeed();
-  //           // perform signing with seed (placeholder)
-  //           const { payload } = message;
-  //           // const signature = signWithSeed(seed, payload);
-  //           const signature = "signed:" + JSON.stringify(payload); // stub
-  //           sendResponse({ success: true, signature });
-  //           return;
-  //         } catch (e: any) {
-  //           sendResponse({ success: false, error: e?.message ?? "error" });
-  //           return;
-  //         }
-  //       }
-  //       default:
-  //         // not handled here
-  //         return;
-  //     }
-  //   })
 }
 
 export default LockManager;

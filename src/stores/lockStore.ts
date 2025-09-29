@@ -83,7 +83,6 @@ class LockStore {
   }
 
   async setupPassword(password: string) {
-    console.log(">>>password: ", password);
     // TODO: use the web3.js encrypt to generate the encryption data
     const keystores = await StorageUtil.getKeystores();
     const keystore = {

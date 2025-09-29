@@ -59,7 +59,6 @@ const LockPasswordSetup = ({
   } = form;
 
   function onSubmit(formData: z.infer<typeof FormSchema>) {
-    window.scrollTo(0, 0);
     setNewPassword(formData?.reEnteredPassword);
   }
 
