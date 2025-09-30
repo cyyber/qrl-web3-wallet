@@ -3,7 +3,7 @@ import { useStore } from "@/stores/store";
 import { Web3BaseWalletAccount } from "@theqrl/web3";
 import { observer } from "mobx-react-lite";
 import { lazy, useState } from "react";
-import AccountCreationForm from "./AccountCreationForm/AccountCreationForm";
+import StartAccountCreation from "./StartAccountCreation/StartAccountCreation";
 import AccountCreationSuccess from "./AccountCreationSuccess/AccountCreationSuccess";
 import CircuitBackground from "../../../Shared/CircuitBackground/CircuitBackground";
 
@@ -52,7 +52,7 @@ const CreateAccount = observer(() => {
             />
           )
         ) : (
-          <AccountCreationForm onAccountCreated={onAccountCreated} />
+          <StartAccountCreation onAccountCreated={onAccountCreated} />
         )}
       </div>
     </>

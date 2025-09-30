@@ -4,9 +4,9 @@ import { afterEach, describe, expect, it, jest } from "@jest/globals";
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
-import AccountCreationForm from "../AccountCreationForm";
+import StartAccountCreation from "../StartAccountCreation";
 
-describe("AccountCreationForm", () => {
+describe("StartAccountCreation", () => {
   afterEach(cleanup);
 
   const mockedOnAccountCreated = jest.fn();
@@ -14,7 +14,7 @@ describe("AccountCreationForm", () => {
     render(
       <StoreProvider value={mockedStoreValues}>
         <MemoryRouter>
-          <AccountCreationForm onAccountCreated={mockedOnAccountCreated} />
+          <StartAccountCreation onAccountCreated={mockedOnAccountCreated} />
         </MemoryRouter>
       </StoreProvider>,
     );
