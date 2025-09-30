@@ -52,7 +52,8 @@ const FormSchema = z.object({
 const ImportAccount = observer(() => {
   const [account, setAccount] = useState<Web3BaseWalletAccount>();
   const [hasAccountImported, setHasAccountImported] = useState(false);
-  const { zondStore } = useStore();
+  const { lockStore, zondStore } = useStore();
+  const { encryptAccount, getWalletPassword } = lockStore;
   const { zondInstance, setActiveAccount } = zondStore;
 
   async function onSubmit(formData: z.infer<typeof FormSchema>) {
@@ -64,6 +65,8 @@ const ImportAccount = observer(() => {
         window.scrollTo(0, 0);
         setAccount(account);
         await setActiveAccount(account.address);
+        const password = await getWalletPassword();
+        encryptAccount(account, password);
         setHasAccountImported(true);
       } else {
         control.setError("mnemonicPhrases", {

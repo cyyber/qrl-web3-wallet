@@ -27,7 +27,7 @@ export const LOCK_MANAGER_MESSAGES = {
   LOCK: "LOCK_MANAGER_LOCK",
   UNLOCK: "LOCK_MANAGER_UNLOCK",
   LOCK_MANAGER_KEEP_LIVE: "LOCK_MANAGER_KEEP_LIVE",
-  MNEMONIC_PHRASES: "MNEMONIC_PHRASES",
+  GET_DECRYPTED_KEYS: "GET_DECRYPTED_KEYS",
 } as const;
 
 /**
@@ -120,7 +120,7 @@ class LockManager {
       return await LockManager.unlock(message?.data?.password);
     } else if (message.name === LOCK_MANAGER_MESSAGES.LOCK) {
       return LockManager.lock();
-    } else if (message.name === LOCK_MANAGER_MESSAGES.MNEMONIC_PHRASES) {
+    } else if (message.name === LOCK_MANAGER_MESSAGES.GET_DECRYPTED_KEYS) {
       return LockManager.getDecryptedKeys();
     } else if (message.name === LOCK_MANAGER_MESSAGES.ENCRYPT_ACCOUNT) {
       return await LockManager.encryptAccount(message?.data ?? {});

@@ -37,7 +37,7 @@ const Onboarding = observer(() => {
 
   const addAnAccountToWallet = async (account: Web3BaseWalletAccount) => {
     setActiveAccount(account.address);
-    await encryptAccount(password, account);
+    await encryptAccount(account, password);
   };
 
   if (step === ONBOARDING_STEPS.WELCOME)

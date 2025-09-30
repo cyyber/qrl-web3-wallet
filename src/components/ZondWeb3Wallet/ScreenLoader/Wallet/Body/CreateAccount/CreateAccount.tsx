@@ -17,18 +17,21 @@ const MnemonicDisplay = withSuspense(
 );
 
 const CreateAccount = observer(() => {
-  const { zondStore } = useStore();
+  const { lockStore, zondStore } = useStore();
+  const { encryptAccount, getWalletPassword } = lockStore;
   const { setActiveAccount } = zondStore;
 
   const [account, setAccount] = useState<Web3BaseWalletAccount>();
   const [hasAccountCreated, setHasAccountCreated] = useState(false);
   const [hasMnemonicNoted, setHasMnemonicNoted] = useState(false);
 
-  const onAccountCreated = (account?: Web3BaseWalletAccount) => {
+  const onAccountCreated = async (account?: Web3BaseWalletAccount) => {
     window.scrollTo(0, 0);
     if (account) {
       setAccount(account);
-      setActiveAccount(account?.address);
+      await setActiveAccount(account?.address);
+      const password = await getWalletPassword();
+      encryptAccount(account, password);
       setHasAccountCreated(true);
     }
   };

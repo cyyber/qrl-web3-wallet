@@ -3,6 +3,7 @@ import {
   DEFAULT_BLOCKCHAIN,
 } from "@/configuration/zondBlockchainConfig";
 import { StoreType } from "@/stores/store";
+import { Web3BaseWalletAccount } from "@theqrl/web3";
 import deepmerge from "deepmerge";
 import { createContext, useContext } from "react";
 import type { PartialDeep } from "type-fest";
@@ -163,13 +164,20 @@ const mockedStoreValues: StoreType = {
     unlock: async (password: string) => {
       return !!password;
     },
-    encryptAccount: async (password: string) => {
+    encryptAccount: async (
+      account: Web3BaseWalletAccount,
+      password: string,
+    ) => {
+      account;
       password;
     },
     keepServiceWorkerActive: () => {},
     initializePort: () => {},
     lock: async () => {},
     initializeStorageListener: () => {},
+    getWalletPassword: async () => {
+      return "";
+    },
   },
 };
 

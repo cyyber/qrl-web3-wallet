@@ -19,6 +19,7 @@ class LockStore {
 
   constructor() {
     makeAutoObservable(this, {
+      getWalletPassword: action.bound,
       encryptAccount: action.bound,
       readLockState: action.bound,
       lock: action.bound,
@@ -86,7 +87,15 @@ class LockStore {
     });
   }
 
-  async encryptAccount(password: string, account: Web3BaseWalletAccount) {
+  async getWalletPassword() {
+    const decryptedKeys = await browser.runtime.sendMessage({
+      name: LOCK_MANAGER_MESSAGES.GET_DECRYPTED_KEYS,
+    });
+    const password: string = decryptedKeys?.[0]?.password ?? "";
+    return password;
+  }
+
+  async encryptAccount(account: Web3BaseWalletAccount, password: string) {
     const accountData: EncryptAccountType = {
       seed: account?.seed ?? "",
       password: password ?? "",
