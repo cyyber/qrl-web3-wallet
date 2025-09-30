@@ -19,7 +19,7 @@ export type OnboardingStepType =
 
 const Onboarding = observer(() => {
   const { lockStore, zondStore } = useStore();
-  const { setupPassword } = lockStore;
+  const { encryptAccount } = lockStore;
   const { setActiveAccount } = zondStore;
 
   const [step, setStep] = useState<OnboardingStepType>(
@@ -35,9 +35,9 @@ const Onboarding = observer(() => {
     setPassword(password);
   };
 
-  const addAnAccountToWallet = (account: Web3BaseWalletAccount) => {
+  const addAnAccountToWallet = async (account: Web3BaseWalletAccount) => {
     setActiveAccount(account.address);
-    setupPassword(password);
+    await encryptAccount(password, account);
   };
 
   if (step === ONBOARDING_STEPS.WELCOME)

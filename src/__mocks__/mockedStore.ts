@@ -163,7 +163,7 @@ const mockedStoreValues: StoreType = {
     unlock: async (password: string) => {
       return !!password;
     },
-    setupPassword: async (password: string) => {
+    encryptAccount: async (password: string) => {
       password;
     },
     keepServiceWorkerActive: () => {},

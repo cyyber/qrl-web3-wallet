@@ -54,7 +54,7 @@ const FormSchema = z.object({
 
 type AddOrImportAccountProps = {
   selectStep: (step: OnboardingStepType) => void;
-  addAnAccountToWallet: (account: Web3BaseWalletAccount) => void;
+  addAnAccountToWallet: (account: Web3BaseWalletAccount) => Promise<void>;
 };
 
 const AddOrImportAccount = observer(
@@ -89,15 +89,15 @@ const AddOrImportAccount = observer(
       formState: { isSubmitting, isValid },
     } = form;
 
-    const onAddAccount = () => {
+    const onAddAccount = async () => {
       const { zond } = new Web3();
       const account = zond?.accounts?.create();
       setAddedAccount(account);
-      addAnAccountToWallet(account);
+      await addAnAccountToWallet(account);
     };
 
-    const onImportAccount = (account: Web3BaseWalletAccount) => {
-      addAnAccountToWallet(account);
+    const onImportAccount = async (account: Web3BaseWalletAccount) => {
+      await addAnAccountToWallet(account);
     };
 
     async function onSubmit(formData: z.infer<typeof FormSchema>) {
