@@ -1,13 +1,4 @@
 import { Button } from "@/components/UI/Button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/UI/Form";
-import { Input } from "@/components/UI/Input";
 import { Label } from "@/components/UI/Label";
 import {
   Tooltip,
@@ -17,7 +8,6 @@ import {
 import { getHexSeedFromMnemonic } from "@/functions/getHexSeedFromMnemonic";
 import { useStore } from "@/stores/store";
 import StringUtil from "@/utilities/stringUtil";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Dilithium } from "@theqrl/wallet.js";
 import { bytesToHex } from "@theqrl/web3-utils";
 import { parseAndValidateSeed } from "@theqrl/web3-zond-accounts";
@@ -25,15 +15,10 @@ import { Buffer } from "buffer";
 import { Copy } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-const FormSchema = z.object({
-  mnemonicPhrases: z.string().min(1, "Mnemonic phrases are required"),
-});
 
 const PersonalSign = observer(() => {
-  const { zondStore, dAppRequestStore } = useStore();
+  const { lockStore, zondStore, dAppRequestStore } = useStore();
+  const { getMnemonicPhrases } = lockStore;
   const { zondInstance, zondConnection } = zondStore;
   const { isConnected } = zondConnection;
   const {
@@ -41,9 +26,7 @@ const PersonalSign = observer(() => {
     setOnPermissionCallBack,
     setCanProceed,
     addToResponseData,
-    approvalProcessingStatus,
   } = dAppRequestStore;
-  const { isProcessing } = approvalProcessingStatus;
 
   const params = dAppRequestData?.params;
   const challenge = Buffer.from(params?.[0]?.slice(2) ?? "", "hex").toString(
@@ -70,7 +53,7 @@ const PersonalSign = observer(() => {
 
   const personalSign = async () => {
     try {
-      const mnemonicPhrases = watch().mnemonicPhrases.trim();
+      const mnemonicPhrases = await getMnemonicPhrases(fromAddress ?? "");
       const seed = getHexSeedFromMnemonic(mnemonicPhrases);
       const addressFromMnemonic =
         zondInstance?.accounts.seedToAccount(seed)?.address;
@@ -100,84 +83,40 @@ const PersonalSign = observer(() => {
     }
   };
 
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    mode: "onChange",
-    reValidateMode: "onSubmit",
-    defaultValues: {
-      mnemonicPhrases: "",
-    },
-  });
-  const {
-    watch,
-    control,
-    formState: { isValid },
-  } = form;
-
   useEffect(() => {
-    setCanProceed(isValid);
-  }, [isValid]);
+    setCanProceed(true);
+  }, []);
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2 rounded-md p-2">
-        <div className="flex flex-col gap-1">
-          <div>From Address</div>
-          <div className="w-64 font-bold text-secondary">{`${prefixFromAddress} ${addressSplitFromAddress.join(" ")}`}</div>
-        </div>
-        <div className="flex flex-col gap-1">
-          <div>Message</div>
-          <div className="flex justify-between gap-2">
-            <div className="max-h-[8rem] w-full overflow-hidden break-words font-bold text-secondary">
-              {challenge}
-            </div>
-            <Tooltip delayDuration={0}>
-              <TooltipTrigger asChild>
-                <Button
-                  className="h-7 w-8 hover:text-secondary"
-                  variant="outline"
-                  size="icon"
-                  aria-label="Copy message"
-                  onClick={copyMessage}
-                >
-                  <Copy size="16" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="left">
-                <Label>Copy Message</Label>
-              </TooltipContent>
-            </Tooltip>
+    <div className="flex flex-col gap-2 rounded-md p-2">
+      <div className="flex flex-col gap-1">
+        <div>From Address</div>
+        <div className="w-64 font-bold text-secondary">{`${prefixFromAddress} ${addressSplitFromAddress.join(" ")}`}</div>
+      </div>
+      <div className="flex flex-col gap-1">
+        <div>Message</div>
+        <div className="flex justify-between gap-2">
+          <div className="max-h-[8rem] w-full overflow-hidden break-words font-bold text-secondary">
+            {challenge}
           </div>
+          <Tooltip delayDuration={0}>
+            <TooltipTrigger asChild>
+              <Button
+                className="h-7 w-8 hover:text-secondary"
+                variant="outline"
+                size="icon"
+                aria-label="Copy message"
+                onClick={copyMessage}
+              >
+                <Copy size="16" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="left">
+              <Label>Copy Message</Label>
+            </TooltipContent>
+          </Tooltip>
         </div>
       </div>
-      <Form {...form}>
-        <form
-          name="zondSendTransactionContractDeployment"
-          aria-label="zondSendTransactionContractDeployment"
-          className="w-full"
-        >
-          <FormField
-            control={control}
-            name="mnemonicPhrases"
-            render={({ field }) => (
-              <FormItem>
-                <Label>Mnemonic Phrases</Label>
-                <FormControl>
-                  <Input
-                    {...field}
-                    aria-label={field.name}
-                    autoComplete="off"
-                    disabled={isProcessing}
-                    placeholder="Mnemonic Phrases"
-                  />
-                </FormControl>
-                <FormDescription>Paste the mnemonic phrases</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </form>
-      </Form>
     </div>
   );
 });
