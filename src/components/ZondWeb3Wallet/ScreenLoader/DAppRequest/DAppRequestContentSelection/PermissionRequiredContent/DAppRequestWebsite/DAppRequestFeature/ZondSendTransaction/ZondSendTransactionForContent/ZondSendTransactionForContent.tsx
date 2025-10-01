@@ -1,13 +1,4 @@
 import { Button } from "@/components/UI/Button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/UI/Form";
-import { Input } from "@/components/UI/Input";
 import { Label } from "@/components/UI/Label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/UI/tabs";
 import {
@@ -18,17 +9,10 @@ import {
 import { getHexSeedFromMnemonic } from "@/functions/getHexSeedFromMnemonic";
 import { useStore } from "@/stores/store";
 import StringUtil from "@/utilities/stringUtil";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Copy } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { SEND_TRANSACTION_TYPES } from "../ZondSendTransaction";
-
-const FormSchema = z.object({
-  mnemonicPhrases: z.string().min(1, "Mnemonic phrases are required"),
-});
 
 type ZondSendTransactionForContentProps = {
   transactionType: keyof typeof SEND_TRANSACTION_TYPES;
@@ -36,7 +20,8 @@ type ZondSendTransactionForContentProps = {
 
 const ZondSendTransactionForContent = observer(
   ({ transactionType }: ZondSendTransactionForContentProps) => {
-    const { zondStore, dAppRequestStore } = useStore();
+    const { lockStore, zondStore, dAppRequestStore } = useStore();
+    const { getMnemonicPhrases } = lockStore;
     const { zondInstance, getGasFeeData, zondConnection } = zondStore;
     const { isConnected } = zondConnection;
     const {
@@ -44,9 +29,7 @@ const ZondSendTransactionForContent = observer(
       setOnPermissionCallBack,
       setCanProceed,
       addToResponseData,
-      approvalProcessingStatus,
     } = dAppRequestStore;
-    const { isProcessing } = approvalProcessingStatus;
 
     const params = dAppRequestData?.params[0];
     const accountFromAddress = params?.from;
@@ -80,9 +63,9 @@ const ZondSendTransactionForContent = observer(
 
     const deployContractOrInteract = async () => {
       const request = dAppRequestData?.params?.[0];
-      const mnemonicPhrases = watch().mnemonicPhrases.trim();
       try {
         const { from, to, data, gas, type, value } = request;
+        const mnemonicPhrases = await getMnemonicPhrases(from ?? "");
         const gasPrice = await zondInstance?.getGasPrice();
         let transactionObject: any = {
           from,
@@ -127,10 +110,9 @@ const ZondSendTransactionForContent = observer(
 
     const sendZndTransfer = async () => {
       const request = dAppRequestData?.params?.[0];
-      const mnemonicPhrases = watch().mnemonicPhrases.trim();
       try {
         const { from, to, gas, type, value } = request;
-
+        const mnemonicPhrases = await getMnemonicPhrases(from ?? "");
         if (!from) {
           throw new Error(
             "Sender address ('from') is missing for ZND transfer.",
@@ -188,137 +170,91 @@ const ZondSendTransactionForContent = observer(
         console.error("ZND Transfer failed:", error);
       }
     };
-
-    const form = useForm<z.infer<typeof FormSchema>>({
-      resolver: zodResolver(FormSchema),
-      mode: "onChange",
-      reValidateMode: "onSubmit",
-      defaultValues: {
-        mnemonicPhrases: "",
-      },
-    });
-    const {
-      watch,
-      control,
-      formState: { isValid },
-    } = form;
-
     useEffect(() => {
-      setCanProceed(isValid);
-    }, [isValid]);
+      setCanProceed(true);
+    }, []);
 
     return (
-      <div className="flex flex-col gap-6">
-        <Tabs defaultValue="details" className="w-full">
-          <TabsList className="w-full">
+      <Tabs defaultValue="details" className="w-full">
+        <TabsList className="w-full">
+          <TabsTrigger
+            value="details"
+            className="w-full data-[state=active]:text-secondary"
+          >
+            Details
+          </TabsTrigger>
+          {transactionType !== SEND_TRANSACTION_TYPES.ZND_TRANSFER && (
             <TabsTrigger
-              value="details"
+              value="data"
               className="w-full data-[state=active]:text-secondary"
             >
-              Details
+              Data
             </TabsTrigger>
-            {transactionType !== SEND_TRANSACTION_TYPES.ZND_TRANSFER && (
-              <TabsTrigger
-                value="data"
-                className="w-full data-[state=active]:text-secondary"
-              >
-                Data
-              </TabsTrigger>
-            )}
-          </TabsList>
-          <TabsContent value="details" className="rounded-md p-2">
-            <div className="flex flex-col gap-2">
+          )}
+        </TabsList>
+        <TabsContent value="details" className="rounded-md p-2">
+          <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-1">
+              <div>From Address</div>
+              <div className="w-64 font-bold text-secondary">{`${prefixFrom} ${addressSplitFrom.join(" ")}`}</div>
+            </div>
+            {(transactionType === SEND_TRANSACTION_TYPES.CONTRACT_INTERACTION ||
+              transactionType === SEND_TRANSACTION_TYPES.ZND_TRANSFER) && (
               <div className="flex flex-col gap-1">
-                <div>From Address</div>
-                <div className="w-64 font-bold text-secondary">{`${prefixFrom} ${addressSplitFrom.join(" ")}`}</div>
+                <div>
+                  {transactionType ===
+                  SEND_TRANSACTION_TYPES.CONTRACT_INTERACTION
+                    ? "Contract "
+                    : "To "}
+                  Address
+                </div>
+                <div className="w-64 font-bold text-secondary">{`${prefixTo} ${addressSplitTo.join(" ")}`}</div>
               </div>
-              {(transactionType ===
-                SEND_TRANSACTION_TYPES.CONTRACT_INTERACTION ||
-                transactionType === SEND_TRANSACTION_TYPES.ZND_TRANSFER) && (
-                <div className="flex flex-col gap-1">
-                  <div>
-                    {transactionType ===
-                    SEND_TRANSACTION_TYPES.CONTRACT_INTERACTION
-                      ? "Contract "
-                      : "To "}
-                    Address
-                  </div>
-                  <div className="w-64 font-bold text-secondary">{`${prefixTo} ${addressSplitTo.join(" ")}`}</div>
-                </div>
-              )}
-              {transactionType === SEND_TRANSACTION_TYPES.ZND_TRANSFER && (
-                <div className="flex flex-col gap-1">
-                  <div>Value</div>
-                  <div className="font-bold text-secondary">
-                    {value.toString()}
-                  </div>
-                </div>
-              )}
+            )}
+            {transactionType === SEND_TRANSACTION_TYPES.ZND_TRANSFER && (
               <div className="flex flex-col gap-1">
-                <div>Gas Limit</div>
+                <div>Value</div>
                 <div className="font-bold text-secondary">
-                  {gasLimit.toString()}
+                  {value.toString()}
                 </div>
+              </div>
+            )}
+            <div className="flex flex-col gap-1">
+              <div>Gas Limit</div>
+              <div className="font-bold text-secondary">
+                {gasLimit.toString()}
+              </div>
+            </div>
+          </div>
+        </TabsContent>
+        {transactionType !== SEND_TRANSACTION_TYPES.ZND_TRANSFER && (
+          <TabsContent value="data" className="rounded-md p-2">
+            <div className="flex flex-col gap-1">
+              <div>Data</div>
+              <div className="flex gap-2">
+                <div className="max-h-[8rem] w-full overflow-hidden break-words font-bold text-secondary">
+                  {data}
+                </div>
+                <Tooltip delayDuration={0}>
+                  <TooltipTrigger asChild>
+                    <Button
+                      className="h-7 w-8 hover:text-secondary"
+                      variant="outline"
+                      size="icon"
+                      onClick={copyData}
+                    >
+                      <Copy size="16" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="left">
+                    <Label>Copy Data</Label>
+                  </TooltipContent>
+                </Tooltip>
               </div>
             </div>
           </TabsContent>
-          {transactionType !== SEND_TRANSACTION_TYPES.ZND_TRANSFER && (
-            <TabsContent value="data" className="rounded-md p-2">
-              <div className="flex flex-col gap-1">
-                <div>Data</div>
-                <div className="flex gap-2">
-                  <div className="max-h-[8rem] w-full overflow-hidden break-words font-bold text-secondary">
-                    {data}
-                  </div>
-                  <Tooltip delayDuration={0}>
-                    <TooltipTrigger asChild>
-                      <Button
-                        className="h-7 w-8 hover:text-secondary"
-                        variant="outline"
-                        size="icon"
-                        onClick={copyData}
-                      >
-                        <Copy size="16" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent side="left">
-                      <Label>Copy Data</Label>
-                    </TooltipContent>
-                  </Tooltip>
-                </div>
-              </div>
-            </TabsContent>
-          )}
-        </Tabs>
-        <Form {...form}>
-          <form
-            name="zondSendTransactionContractDeployment"
-            aria-label="zondSendTransactionContractDeployment"
-            className="w-full"
-          >
-            <FormField
-              control={control}
-              name="mnemonicPhrases"
-              render={({ field }) => (
-                <FormItem>
-                  <Label>Mnemonic Phrases</Label>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      aria-label={field.name}
-                      autoComplete="off"
-                      disabled={isProcessing}
-                      placeholder="Mnemonic Phrases"
-                    />
-                  </FormControl>
-                  <FormDescription>Paste the mnemonic phrases</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </form>
-        </Form>
-      </div>
+        )}
+      </Tabs>
     );
   },
 );
