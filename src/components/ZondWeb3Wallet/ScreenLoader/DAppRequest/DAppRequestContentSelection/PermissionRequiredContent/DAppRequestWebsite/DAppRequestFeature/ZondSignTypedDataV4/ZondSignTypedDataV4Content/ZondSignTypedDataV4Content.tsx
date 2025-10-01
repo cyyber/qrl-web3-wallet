@@ -5,15 +5,6 @@ import {
   AccordionTrigger,
 } from "@/components/UI/Accordion";
 import { Button } from "@/components/UI/Button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/UI/Form";
-import { Input } from "@/components/UI/Input";
 import { Label } from "@/components/UI/Label";
 import {
   Tooltip,
@@ -23,7 +14,6 @@ import {
 import { getHexSeedFromMnemonic } from "@/functions/getHexSeedFromMnemonic";
 import { useStore } from "@/stores/store";
 import StringUtil from "@/utilities/stringUtil";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Dilithium } from "@theqrl/wallet.js";
 import { bytesToHex } from "@theqrl/web3-utils";
 import { getEncodedEip712Data } from "@theqrl/web3-zond-abi";
@@ -32,15 +22,10 @@ import { Buffer } from "buffer";
 import { Copy } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-const FormSchema = z.object({
-  mnemonicPhrases: z.string().min(1, "Mnemonic phrases are required"),
-});
 
 const ZondSignTypedDataV4Content = observer(() => {
-  const { zondStore, dAppRequestStore } = useStore();
+  const { lockStore, zondStore, dAppRequestStore } = useStore();
+  const { getMnemonicPhrases } = lockStore;
   const { zondInstance, zondConnection } = zondStore;
   const { isConnected } = zondConnection;
   const {
@@ -48,9 +33,7 @@ const ZondSignTypedDataV4Content = observer(() => {
     setOnPermissionCallBack,
     setCanProceed,
     addToResponseData,
-    approvalProcessingStatus,
   } = dAppRequestStore;
-  const { isProcessing } = approvalProcessingStatus;
 
   const params = dAppRequestData?.params;
   const fromAddress = params?.[0] ?? "";
@@ -91,7 +74,7 @@ const ZondSignTypedDataV4Content = observer(() => {
 
   const signTypedDataV4 = async () => {
     try {
-      const mnemonicPhrases = watch().mnemonicPhrases.trim();
+      const mnemonicPhrases = await getMnemonicPhrases(fromAddress ?? "");
       const seed = getHexSeedFromMnemonic(mnemonicPhrases);
       const addressFromMnemonic =
         zondInstance?.accounts.seedToAccount(seed)?.address;
@@ -119,23 +102,9 @@ const ZondSignTypedDataV4Content = observer(() => {
     }
   };
 
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    mode: "onChange",
-    reValidateMode: "onSubmit",
-    defaultValues: {
-      mnemonicPhrases: "",
-    },
-  });
-  const {
-    watch,
-    control,
-    formState: { isValid },
-  } = form;
-
   useEffect(() => {
-    setCanProceed(isValid);
-  }, [isValid]);
+    setCanProceed(true);
+  }, []);
 
   return (
     <div className="flex flex-col gap-6">
@@ -227,34 +196,6 @@ const ZondSignTypedDataV4Content = observer(() => {
           </AccordionContent>
         </AccordionItem>
       </Accordion>
-      <Form {...form}>
-        <form
-          name="zondSendTransactionContractDeployment"
-          aria-label="zondSendTransactionContractDeployment"
-          className="w-full"
-        >
-          <FormField
-            control={control}
-            name="mnemonicPhrases"
-            render={({ field }) => (
-              <FormItem>
-                <Label>Mnemonic Phrases</Label>
-                <FormControl>
-                  <Input
-                    {...field}
-                    aria-label={field.name}
-                    autoComplete="off"
-                    disabled={isProcessing}
-                    placeholder="Mnemonic Phrases"
-                  />
-                </FormControl>
-                <FormDescription>Paste the mnemonic phrases</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </form>
-      </Form>
     </div>
   );
 });
