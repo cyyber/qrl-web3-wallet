@@ -45,7 +45,6 @@ const FormSchema = z
   .object({
     receiverAddress: z.string().min(1, "Receiver address is required"),
     amount: z.coerce.number().gt(0, "Amount should be more than 0"),
-    mnemonicPhrases: z.string().min(1, "Menmonic phrases are required"),
   })
   .refine((fields) => validator.isAddressString(fields.receiverAddress), {
     message: "Address is invalid",
@@ -55,7 +54,8 @@ const FormSchema = z
 const TokenTransfer = observer(() => {
   const { state } = useLocation();
   const navigate = useNavigate();
-  const { zondStore } = useStore();
+  const { lockStore, zondStore } = useStore();
+  const { getMnemonicPhrases } = lockStore;
   const {
     activeAccount,
     signAndSendNativeToken,
@@ -75,20 +75,22 @@ const TokenTransfer = observer(() => {
   const [tokenSymbol, setTokenSymbol] = useState(NATIVE_TOKEN.symbol);
 
   const sendNativeToken = async (formData: z.infer<typeof FormSchema>) => {
+    const mnemonicPhrases = await getMnemonicPhrases(accountAddress);
     return await signAndSendNativeToken(
       accountAddress,
       formData.receiverAddress,
       formData.amount,
-      formData.mnemonicPhrases,
+      mnemonicPhrases,
     );
   };
 
   const sendZrc20Token = async (formData: z.infer<typeof FormSchema>) => {
+    const mnemonicPhrases = await getMnemonicPhrases(accountAddress);
     return await signAndSendZrc20Token(
       accountAddress,
       formData.receiverAddress,
       formData.amount,
-      formData.mnemonicPhrases,
+      mnemonicPhrases,
       tokenContractAddress,
       tokenDecimals,
     );
@@ -105,7 +107,7 @@ const TokenTransfer = observer(() => {
       const { transactionReceipt, error } = transactionData;
 
       if (error) {
-        control.setError("mnemonicPhrases", {
+        control.setError("amount", {
           message: `An error occured. ${error}`,
         });
       } else {
@@ -117,13 +119,13 @@ const TokenTransfer = observer(() => {
           await fetchAccounts();
           window.scrollTo(0, 0);
         } else {
-          control.setError("mnemonicPhrases", {
+          control.setError("amount", {
             message: `Transaction failed.`,
           });
         }
       }
     } catch (error) {
-      control.setError("mnemonicPhrases", {
+      control.setError("amount", {
         message: `An error occured. ${error}`,
       });
     }
@@ -131,7 +133,7 @@ const TokenTransfer = observer(() => {
 
   const resetForm = async () => {
     await StorageUtil.clearTransactionValues();
-    reset({ receiverAddress: "", amount: 0, mnemonicPhrases: "" });
+    reset({ receiverAddress: "", amount: 0 });
   };
 
   const cancelTransaction = () => {
@@ -147,7 +149,6 @@ const TokenTransfer = observer(() => {
       const storedTransactionValues = await StorageUtil.getTransactionValues();
       return {
         amount: storedTransactionValues?.amount ?? 0,
-        mnemonicPhrases: storedTransactionValues?.mnemonicPhrases ?? "",
         receiverAddress: storedTransactionValues?.receiverAddress ?? "",
       };
     },
@@ -205,7 +206,6 @@ const TokenTransfer = observer(() => {
 
         await StorageUtil.setTransactionValues({
           amount: watch().amount,
-          mnemonicPhrases: watch().mnemonicPhrases,
           receiverAddress: watch().receiverAddress,
           tokenDetails,
         });
@@ -301,6 +301,7 @@ const TokenTransfer = observer(() => {
                               disabled={isSubmitting}
                               placeholder="Amount"
                               type="number"
+                              step="any"
                             />
                           </FormControl>
                           <FormDescription>Amount to send</FormDescription>
@@ -310,28 +311,6 @@ const TokenTransfer = observer(() => {
                     />
                     <div className="w-8 pt-8 text-lg">{tokenSymbol}</div>
                   </div>
-                  <FormField
-                    control={control}
-                    name="mnemonicPhrases"
-                    render={({ field }) => (
-                      <FormItem>
-                        <Label>Mnemonic Phrases</Label>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            aria-label={field.name}
-                            autoComplete="off"
-                            disabled={isSubmitting}
-                            placeholder="Mnemonic phrases"
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          Your secret mnemonic phrases
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
                   <GasFeeNotice
                     isZrc20Token={isZrc20Token}
                     tokenContractAddress={tokenContractAddress}

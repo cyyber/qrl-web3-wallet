@@ -1,4 +1,5 @@
 import {
+  DecryptedKeyType,
   EncryptAccountType,
   LOCK_MANAGER_MESSAGES,
 } from "@/scripts/lockManager/lockManager";
@@ -20,6 +21,7 @@ class LockStore {
   constructor() {
     makeAutoObservable(this, {
       getWalletPassword: action.bound,
+      getMnemonicPhrases: action.bound,
       encryptAccount: action.bound,
       readLockState: action.bound,
       lock: action.bound,
@@ -93,6 +95,19 @@ class LockStore {
     });
     const password: string = decryptedKeys?.[0]?.password ?? "";
     return password;
+  }
+
+  async getMnemonicPhrases(accountAddress: string) {
+    const decryptedKeys: DecryptedKeyType[] = await browser.runtime.sendMessage(
+      {
+        name: LOCK_MANAGER_MESSAGES.GET_DECRYPTED_KEYS,
+      },
+    );
+    const accountKey = decryptedKeys?.find(
+      (key) => key?.address?.toLowerCase() === accountAddress?.toLowerCase(),
+    );
+    const mnemonicPhrases: string = accountKey?.mnemonicPhrases ?? "";
+    return mnemonicPhrases;
   }
 
   async encryptAccount(account: Web3BaseWalletAccount, password: string) {

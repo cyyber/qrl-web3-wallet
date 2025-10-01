@@ -178,6 +178,9 @@ const mockedStoreValues: StoreType = {
     getWalletPassword: async () => {
       return "";
     },
+    getMnemonicPhrases: async (accountAddress: string) => {
+      return accountAddress;
+    },
   },
 };
 

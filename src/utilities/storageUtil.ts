@@ -35,7 +35,6 @@ const TRANSACTION_VALUES_IDENTIFIER = "TRANSACTION_VALUES";
 type TransactionValuesType = {
   receiverAddress?: string;
   amount?: number;
-  mnemonicPhrases?: string;
   tokenDetails?: {
     isZrc20Token: boolean;
     tokenContractAddress: string;
@@ -108,7 +107,6 @@ class StorageUtil {
     let transactionValues: TransactionValuesType = {
       receiverAddress: "",
       amount: 0,
-      mnemonicPhrases: "",
     };
 
     const storedTransactionValues = await browser.storage.local.get(

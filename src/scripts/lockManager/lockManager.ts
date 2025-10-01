@@ -13,7 +13,7 @@ export type EncryptAccountType = {
   password: string;
 };
 
-type DecryptedKeyType = {
+export type DecryptedKeyType = {
   password: string;
   address: string;
   mnemonicPhrases: string;
