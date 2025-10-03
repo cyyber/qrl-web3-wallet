@@ -1,11 +1,11 @@
-import { observer } from "mobx-react-lite";
-import LockPasswordSetup from "./LockPasswordSetup/LockPasswordSetup";
-import { useState } from "react";
-import Welcome from "./Welcome/Welcome";
-import AddOrImportAccount from "./AddOrImportAccount/AddOrImportAccount";
-import OnboardingCompleted from "./OnboardingCompleted/OnboardingCompleted";
-import { Web3BaseWalletAccount } from "@theqrl/web3";
 import { useStore } from "@/stores/store";
+import { Web3BaseWalletAccount } from "@theqrl/web3";
+import { observer } from "mobx-react-lite";
+import { useState } from "react";
+import AddOrImportAccount from "./AddOrImportAccount/AddOrImportAccount";
+import LockPasswordSetup from "./LockPasswordSetup/LockPasswordSetup";
+import OnboardingCompleted from "./OnboardingCompleted/OnboardingCompleted";
+import Welcome from "./Welcome/Welcome";
 
 export const ONBOARDING_STEPS = Object.freeze({
   WELCOME: "WELCOME",

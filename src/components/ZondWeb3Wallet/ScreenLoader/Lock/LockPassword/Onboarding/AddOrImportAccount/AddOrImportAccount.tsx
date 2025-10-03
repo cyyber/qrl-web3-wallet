@@ -7,30 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/UI/Card";
-import { useStore } from "@/stores/store";
-import {
-  Download,
-  HardDriveDownload,
-  MoveRight,
-  Plus,
-  Undo,
-  X,
-} from "lucide-react";
-import { observer } from "mobx-react-lite";
-import { ONBOARDING_STEPS, OnboardingStepType } from "../Onboarding";
-import Web3, { Web3BaseWalletAccount } from "@theqrl/web3";
-import AccountAddressDisplay from "./AccountAddressDisplay/AccountAddressDisplay";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/UI/Form";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Dialog,
   DialogClose,
@@ -41,12 +17,36 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/UI/Dialog";
-import { useState } from "react";
-import { Label } from "@/components/UI/Label";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/UI/Form";
 import { Input } from "@/components/UI/Input";
+import { Label } from "@/components/UI/Label";
 import MnemonicWordListing from "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/CreateAccount/MnemonicDisplay/MnemonicWordListing/MnemonicWordListing";
 import { getHexSeedFromMnemonic } from "@/functions/getHexSeedFromMnemonic";
+import { useStore } from "@/stores/store";
 import StringUtil from "@/utilities/stringUtil";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Web3, { Web3BaseWalletAccount } from "@theqrl/web3";
+import {
+  Download,
+  HardDriveDownload,
+  MoveRight,
+  Plus,
+  Undo,
+  X,
+} from "lucide-react";
+import { observer } from "mobx-react-lite";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { ONBOARDING_STEPS, OnboardingStepType } from "../Onboarding";
+import AccountAddressDisplay from "./AccountAddressDisplay/AccountAddressDisplay";
 
 const FormSchema = z.object({
   mnemonicPhrases: z.string().min(1, "Mnemonic phrases are required"),
@@ -275,7 +275,7 @@ const AddOrImportAccount = observer(
                           className="w-full"
                           type="button"
                           disabled={isSubmitting || !isValid}
-                          aria-label="Add"
+                          aria-label="Import"
                           onClick={handleSubmit(onSubmit)}
                         >
                           <Download className="mr-2 h-4 w-4" />

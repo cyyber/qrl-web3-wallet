@@ -21,7 +21,10 @@ const OnboardingCompleted = () => {
       </CardHeader>
       <CardContent>
         <div className="relative flex h-32 w-full overflow-hidden">
-          <img src="onboarding-completed.png" />
+          <img
+            src="onboarding-completed.png"
+            data-testid="onboarding-completed"
+          />
         </div>
       </CardContent>
       <CardFooter>

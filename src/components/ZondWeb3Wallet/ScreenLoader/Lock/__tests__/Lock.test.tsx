@@ -1,10 +1,14 @@
 import { mockedStore } from "@/__mocks__/mockedStore";
 import { StoreProvider } from "@/stores/store";
-import { afterEach, describe, expect, it } from "@jest/globals";
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { afterEach, describe, expect, it, jest } from "@jest/globals";
+import { cleanup, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import Lock from "../Lock";
+
+jest.mock(
+  "@/components/ZondWeb3Wallet/ScreenLoader/Lock/LockPassword/LockPassword",
+  () => () => <div>Mocked Lock Password</div>,
+);
 
 describe("Lock", () => {
   afterEach(cleanup);
@@ -18,110 +22,27 @@ describe("Lock", () => {
       </StoreProvider>,
     );
 
-  it("should render the account lock component", () => {
+  it("should render the loading of lock component", () => {
     renderComponent(
       mockedStore({
-        zondStore: {
-          activeAccount: {
-            accountAddress: "Z2090E9F38771876FB6Fc51a6b464121d3cC093A1",
-          },
-        },
+        lockStore: { isLoading: true },
       }),
     );
 
-    expect(screen.getByRole("heading", { level: 3 })).toHaveTextContent(
-      "Unlock Z..093A1",
-    );
-    expect(
-      screen.getByText("Z2090E9F38771876FB6Fc51a6b464121d3cC093A1"),
-    ).toBeInTheDocument();
-    expect(screen.getByLabelText("password")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Unlock" })).toBeInTheDocument();
+    expect(screen.getByText("Zond Web3 Wallet")).toBeInTheDocument();
+    expect(screen.getByTestId("loader-icon")).toBeInTheDocument();
+    expect(screen.queryByText("Mocked Lock Password")).not.toBeInTheDocument();
   });
 
-  it("should display the field error if password validation fails", async () => {
+  it("should render the lock component", () => {
     renderComponent(
       mockedStore({
-        zondStore: {
-          activeAccount: {
-            accountAddress: "Z2090E9F38771876FB6Fc51a6b464121d3cC093A1",
-          },
-        },
+        lockStore: { isLoading: false },
       }),
     );
 
-    const passwordField = screen.getByLabelText("password");
-    await waitFor(() => {
-      userEvent.type(passwordField, "te");
-    });
-    await waitFor(() => {
-      expect(
-        screen.getByText("Password should be atleast 8 characters"),
-      ).toBeInTheDocument();
-    });
-  });
-
-  it("should not display the field error if password validation succeeds", async () => {
-    renderComponent(
-      mockedStore({
-        zondStore: {
-          activeAccount: {
-            accountAddress: "Z2090E9F38771876FB6Fc51a6b464121d3cC093A1",
-          },
-        },
-      }),
-    );
-
-    const passwordField = screen.getByLabelText("password");
-    await waitFor(() => {
-      userEvent.type(passwordField, "test123456");
-    });
-    await waitFor(() => {
-      expect(
-        screen.queryByText("Password should be atleast 8 characters"),
-      ).not.toBeInTheDocument();
-    });
-  });
-
-  it("should render the unlock button disabled if the password field is empty", async () => {
-    renderComponent(
-      mockedStore({
-        zondStore: {
-          activeAccount: {
-            accountAddress: "Z2090E9F38771876FB6Fc51a6b464121d3cC093A1",
-          },
-        },
-      }),
-    );
-
-    const unlockButton = screen.getByRole("button", { name: "Unlock" });
-    const passwordField = screen.getByLabelText("password");
-    await waitFor(() => {
-      userEvent.type(passwordField, "te");
-    });
-    await waitFor(() => {
-      expect(unlockButton).toBeDisabled();
-    });
-  });
-
-  it("should render the unlock button enabled if the password field is filled", async () => {
-    renderComponent(
-      mockedStore({
-        zondStore: {
-          activeAccount: {
-            accountAddress: "Z2090E9F38771876FB6Fc51a6b464121d3cC093A1",
-          },
-        },
-      }),
-    );
-
-    const unlockButton = screen.getByRole("button", { name: "Unlock" });
-    const passwordField = screen.getByLabelText("password");
-    await waitFor(() => {
-      userEvent.type(passwordField, "test123456");
-    });
-    await waitFor(() => {
-      expect(unlockButton).toBeEnabled();
-    });
+    expect(screen.getByText("Zond Web3 Wallet")).toBeInTheDocument();
+    expect(screen.getByText("Mocked Lock Password")).toBeInTheDocument();
+    expect(screen.queryByTestId("loader-icon")).not.toBeInTheDocument();
   });
 });

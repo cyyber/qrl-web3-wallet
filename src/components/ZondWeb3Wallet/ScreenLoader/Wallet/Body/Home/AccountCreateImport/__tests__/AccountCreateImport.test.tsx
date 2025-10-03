@@ -46,10 +46,10 @@ describe("AccountCreateImport", () => {
       screen.queryByRole("button", { name: "Send Quanta" }),
     ).not.toBeInTheDocument();
     expect(screen.getByRole("heading", { level: 3 })).toHaveTextContent(
-      "Let's start",
+      "Add accounts",
     );
     expect(screen.getByRole("paragraph")).toHaveTextContent(
-      "You are connected to the blockchain. Create a new account or import an existing account.",
+      "Create a new account or import an existing account.",
     );
     const createNewButton = screen.getByRole("button", {
       name: "Create a new account",
@@ -90,7 +90,7 @@ describe("AccountCreateImport", () => {
       "Add accounts",
     );
     expect(screen.getByRole("paragraph")).toHaveTextContent(
-      "You are connected to the blockchain. Create a new account or import an existing account.",
+      "Create a new account or import an existing account.",
     );
     const sendQuantaButton = screen.getByRole("button", {
       name: "Send Quanta",

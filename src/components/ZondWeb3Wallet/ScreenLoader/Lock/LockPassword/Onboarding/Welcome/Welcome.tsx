@@ -51,7 +51,11 @@ const Welcome = observer(({ selectStep }: WelcomeProps) => {
             <div className="font-bold">Resistant Ledger</div>
           </div>
           <video autoPlay muted loop className={videoClasses({ isDarkMode })}>
-            <source src={videoSource} type="video/mp4" />
+            <source
+              src={videoSource}
+              type="video/mp4"
+              data-testid="welcome-video"
+            />
           </video>
         </div>
       </CardContent>

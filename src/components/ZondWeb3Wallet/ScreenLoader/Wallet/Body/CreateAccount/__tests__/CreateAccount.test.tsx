@@ -1,7 +1,7 @@
 import { mockedStore } from "@/__mocks__/mockedStore";
 import { StoreProvider } from "@/stores/store";
 import { afterEach, describe, expect, it } from "@jest/globals";
-import { act, cleanup, render, screen } from "@testing-library/react";
+import { act, cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import CreateAccount from "../CreateAccount";
@@ -18,17 +18,20 @@ describe("CreateAccount", () => {
       </StoreProvider>,
     );
 
-  it("should render the account creation form for creating account if the account is not yet created", () => {
+  it("should render the account creation form for creating account if the account is not yet created", async () => {
     renderComponent();
 
-    expect(screen.getByRole("heading", { level: 3 })).toHaveTextContent(
-      "Create new account",
-    );
-    expect(screen.getByLabelText("password")).toBeInTheDocument();
-    expect(screen.getByLabelText("reEnteredPassword")).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Create account" }),
-    ).toBeInTheDocument();
+    waitFor(() => {
+      expect(screen.getByRole("heading", { level: 3 })).toHaveTextContent(
+        "Create a new account",
+      );
+      expect(screen.getByRole("heading", { level: 3 })).toHaveTextContent(
+        "You can add a new account to this wallet. After creating the account, ensure you keep the account recovery phrases safe.",
+      );
+      expect(
+        screen.getByRole("button", { name: "Create account" }),
+      ).toBeInTheDocument();
+    });
   });
 
   it("should render the mnemonic display component once the account is created", async () => {
@@ -57,10 +60,6 @@ describe("CreateAccount", () => {
       }),
     );
 
-    const passwordField = screen.getByLabelText("password");
-    await userEvent.type(passwordField, "test123456");
-    const reEnteredPasswordField = screen.getByLabelText("reEnteredPassword");
-    await userEvent.type(reEnteredPasswordField, "test123456");
     const createAccountButton = screen.getByRole("button", {
       name: "Create account",
     });
@@ -107,10 +106,6 @@ describe("CreateAccount", () => {
       }),
     );
 
-    const passwordField = screen.getByLabelText("password");
-    await userEvent.type(passwordField, "test123456");
-    const reEnteredPasswordField = screen.getByLabelText("reEnteredPassword");
-    await userEvent.type(reEnteredPasswordField, "test123456");
     const createAccountButton = screen.getByRole("button", {
       name: "Create account",
     });
@@ -125,7 +120,7 @@ describe("CreateAccount", () => {
       "Important!",
     );
     expect(screen.getByRole("paragraph")).toHaveTextContent(
-      "You should only continue if you have downloaded the mnemonic phrases. If you haven't, go back, download, and then continue. There is no going back once you click the continue button.",
+      "It is highly recommended that you continue after downloading the recovery mnemonic phrases. If you already have, please continue.",
     );
     const continueConfirmButton = screen.getByRole("button", {
       name: "Continue",

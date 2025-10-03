@@ -5,10 +5,9 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import ScreenLoader from "../ScreenLoader";
 
-jest.mock(
-  "@/components/ZondWeb3Wallet/ScreenLoader/ScreenLoading/ScreenLoading",
-  () => () => <div>Mocked Screen Loading</div>,
-);
+jest.mock("@/components/ZondWeb3Wallet/ScreenLoader/ScreenLoader", () => () => (
+  <div>Mocked Screen Loading</div>
+));
 jest.mock(
   "@/components/ZondWeb3Wallet/ScreenLoader/DAppRequest/DAppRequest",
   () => () => <div>Mocked DApp Request</div>,

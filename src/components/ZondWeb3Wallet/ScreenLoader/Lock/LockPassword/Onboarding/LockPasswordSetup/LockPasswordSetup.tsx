@@ -24,10 +24,10 @@ import { ONBOARDING_STEPS, OnboardingStepType } from "../Onboarding";
 
 const FormSchema = z
   .object({
-    password: z.string().min(1, "Password must be atleast 8 characters"),
+    password: z.string().min(8, "Password must be atleast 8 characters"),
     reEnteredPassword: z
       .string()
-      .min(1, "Password must be atleast 8 characters"),
+      .min(8, "Password must be atleast 8 characters"),
   })
   .refine((fields) => fields.password === fields.reEnteredPassword, {
     message: "Passwords doesn't match",
@@ -60,6 +60,7 @@ const LockPasswordSetup = ({
 
   function onSubmit(formData: z.infer<typeof FormSchema>) {
     setNewPassword(formData?.reEnteredPassword);
+    selectStep(ONBOARDING_STEPS.ADD_OR_IMPORT_ACCOUNT);
   }
 
   return (
@@ -117,11 +118,7 @@ const LockPasswordSetup = ({
             />
           </CardContent>
           <CardFooter>
-            <Button
-              disabled={!isValid}
-              className="w-full"
-              onClick={() => selectStep(ONBOARDING_STEPS.ADD_OR_IMPORT_ACCOUNT)}
-            >
+            <Button disabled={!isValid} className="w-full">
               <MoveRight className="mr-2 h-4 w-4" />
               Continue
             </Button>

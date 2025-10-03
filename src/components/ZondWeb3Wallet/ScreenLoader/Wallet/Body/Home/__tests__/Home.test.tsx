@@ -17,10 +17,6 @@ jest.mock(
   "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/Home/AccountCreateImport/AccountCreateImport",
   () => () => <div>Mocked Account Create Import</div>,
 );
-jest.mock(
-  "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/Home/ConnectionFailed/ConnectionFailed",
-  () => () => <div>Mocked Connection Failed</div>,
-);
 
 describe("Home", () => {
   afterEach(cleanup);
@@ -52,19 +48,6 @@ describe("Home", () => {
       expect(
         screen.queryByText("Mocked Connection Failed"),
       ).not.toBeInTheDocument();
-    });
-  });
-
-  it("should render the connection failed component if not connected to the blockchain", async () => {
-    renderComponent(
-      mockedStore({ zondStore: { zondConnection: { isConnected: false } } }),
-    );
-
-    await waitFor(() => {
-      expect(
-        screen.queryByText("Mocked Account Create Import"),
-      ).not.toBeInTheDocument();
-      expect(screen.getByText("Mocked Connection Failed")).toBeInTheDocument();
     });
   });
 });

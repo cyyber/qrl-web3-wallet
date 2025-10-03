@@ -24,7 +24,11 @@ const Lock = observer(() => {
           </div>
         </div>
         {isLoading ? (
-          <Loader className="animate-spin text-foreground" size="86" />
+          <Loader
+            className="animate-spin text-foreground"
+            size="86"
+            data-testid="loader-icon"
+          />
         ) : (
           <LockPassword />
         )}

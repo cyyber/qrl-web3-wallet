@@ -128,13 +128,6 @@ describe("ZondSignTypedDataV4Content", () => {
     });
     expect(copyButton).toBeInTheDocument();
     expect(copyButton).toBeEnabled();
-    expect(screen.getByText("Mnemonic Phrases")).toBeInTheDocument();
-    const mnemonicPhrasesField = screen.getByRole("textbox", {
-      name: "mnemonicPhrases",
-    });
-    expect(mnemonicPhrasesField).toBeInTheDocument();
-    expect(mnemonicPhrasesField).toBeEnabled();
-    expect(screen.getByText("Paste the mnemonic phrases")).toBeInTheDocument();
   });
 
   it("should shrink the expandable section on clicking", async () => {

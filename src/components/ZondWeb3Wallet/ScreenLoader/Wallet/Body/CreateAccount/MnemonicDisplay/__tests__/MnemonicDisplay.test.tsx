@@ -66,7 +66,7 @@ describe("MnemonicDisplay", () => {
     });
     expect(
       screen.getByText(
-        "You should only continue if you have downloaded the mnemonic phrases. If you haven't, go back, download, and then continue. There is no going back once you click the continue button.",
+        "It is highly recommended that you continue after downloading the recovery mnemonic phrases. If you already have, please continue.",
       ),
     ).toBeInTheDocument();
     const confirmContinueButton = screen.getByRole("button", {

@@ -49,11 +49,6 @@ describe("TokenTransfer", () => {
     const amountField = screen.getByRole("spinbutton", { name: "amount" });
     expect(amountField).toBeInTheDocument();
     expect(amountField).toBeEnabled();
-    const mnemonicPhrasesField = screen.getByRole("textbox", {
-      name: "mnemonicPhrases",
-    });
-    expect(mnemonicPhrasesField).toBeInTheDocument();
-    expect(mnemonicPhrasesField).toBeEnabled();
     const cancelButton = screen.getByRole("button", { name: "Cancel" });
     expect(cancelButton).toBeInTheDocument();
     expect(cancelButton).toBeEnabled();
@@ -71,9 +66,6 @@ describe("TokenTransfer", () => {
       name: "receiverAddress",
     });
     const amountField = screen.getByRole("spinbutton", { name: "amount" });
-    const mnemonicPhrasesField = screen.getByRole("textbox", {
-      name: "mnemonicPhrases",
-    });
     await waitFor(
       async () => {
         await userEvent.type(
@@ -81,10 +73,6 @@ describe("TokenTransfer", () => {
           "Z20fB08fF1f1376A14C055E9F56df80563E16722b",
         );
         await userEvent.type(amountField, "2.5");
-        await userEvent.type(
-          mnemonicPhrasesField,
-          "knight paddy action glow play chew lame mature sock ill deadly olive blink marble breach mile hey mature tacit mean polo crawl khaya stud number speed viking windy jump subtle mildew sewage",
-        );
       },
       { timeout: 5000 },
     );
@@ -104,21 +92,6 @@ describe("TokenTransfer", () => {
     });
     expect(
       screen.getByText("Amount should be more than 0"),
-    ).toBeInTheDocument();
-  });
-
-  it("should display the error message if mnemonic phrases is empty", async () => {
-    renderComponent();
-
-    const mnemonicPhrasesField = screen.getByRole("textbox", {
-      name: "mnemonicPhrases",
-    });
-    await waitFor(async () => {
-      await userEvent.type(mnemonicPhrasesField, "0");
-      await userEvent.keyboard("{Backspace}");
-    });
-    expect(
-      screen.getByText("Menmonic phrases are required"),
     ).toBeInTheDocument();
   });
 
@@ -162,19 +135,12 @@ describe("TokenTransfer", () => {
       name: "receiverAddress",
     });
     const amountField = screen.getByRole("spinbutton", { name: "amount" });
-    const mnemonicPhrasesField = screen.getByRole("textbox", {
-      name: "mnemonicPhrases",
-    });
     await waitFor(async () => {
       await userEvent.type(
         receiverAddressField,
         "Z20fB08fF1f1376A14C055E9F56df80563E16722b",
       );
       await userEvent.type(amountField, "2.5");
-      await userEvent.type(
-        mnemonicPhrasesField,
-        "knight paddy action glow play chew lame mature sock ill deadly olive blink marble breach mile hey mature tacit mean polo crawl khaya stud number speed viking windy jump subtle mildew sewage",
-      );
     });
     const sendQuantaButton = screen.getByRole("button", {
       name: "Send ZND",
