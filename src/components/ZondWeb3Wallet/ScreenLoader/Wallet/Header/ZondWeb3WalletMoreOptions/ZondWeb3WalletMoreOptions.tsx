@@ -25,7 +25,11 @@ const ZondWeb3WalletMoreOptions = observer(() => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <EllipsisVertical size="16" className="cursor-pointer" />
+        <EllipsisVertical
+          size="16"
+          className="cursor-pointer"
+          data-testid="ellipsis-icon"
+        />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start">
         <DropdownMenuGroup>
