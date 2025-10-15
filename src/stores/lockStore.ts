@@ -90,10 +90,9 @@ class LockStore {
   }
 
   async getWalletPassword() {
-    const decryptedKeys = await browser.runtime.sendMessage({
-      name: LOCK_MANAGER_MESSAGES.GET_DECRYPTED_KEYS,
+    const password = await browser.runtime.sendMessage({
+      name: LOCK_MANAGER_MESSAGES.GET_WALLET_PASSWORD,
     });
-    const password: string = decryptedKeys?.[0]?.password ?? "";
     return password;
   }
 

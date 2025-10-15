@@ -28,6 +28,7 @@ export const LOCK_MANAGER_MESSAGES = {
   UNLOCK: "LOCK_MANAGER_UNLOCK",
   LOCK_MANAGER_KEEP_LIVE: "LOCK_MANAGER_KEEP_LIVE",
   GET_DECRYPTED_KEYS: "GET_DECRYPTED_KEYS",
+  GET_WALLET_PASSWORD: "GET_WALLET_PASSWORD",
 } as const;
 
 /**
@@ -69,8 +70,9 @@ class LockManager {
   static async isLocked() {
     let hasPasswordSet = true;
     const keyStores = await StorageUtil.getKeystores();
-    if (!keyStores.length) {
-      // If the keystore is missing in the storage, either the password was not set
+    const accounts = await StorageUtil.getAllAccounts();
+    if (!keyStores.length || !accounts.length) {
+      // If the keystore or account is missing in the storage, either the password was not set
       // or the storage was manually deleted.
       await StorageUtil.clearAllData();
       this.clearDecryptedKeys();
@@ -95,10 +97,17 @@ class LockManager {
         ).values(),
       ),
     );
+    await this.unlock(this.getWalletPassword());
   }
 
   private static setDecryptedKeys(decryptedKeys: DecryptedKeyType[]) {
     this.decryptedKeys = decryptedKeys;
+  }
+
+  static getWalletPassword() {
+    const decryptedKeys = this.getDecryptedKeys();
+    const password: string = decryptedKeys?.[0]?.password ?? "";
+    return password;
   }
 
   static getDecryptedKeys() {
@@ -122,6 +131,8 @@ class LockManager {
       return LockManager.lock();
     } else if (message.name === LOCK_MANAGER_MESSAGES.GET_DECRYPTED_KEYS) {
       return LockManager.getDecryptedKeys();
+    } else if (message.name === LOCK_MANAGER_MESSAGES.GET_WALLET_PASSWORD) {
+      return LockManager.getWalletPassword();
     } else if (message.name === LOCK_MANAGER_MESSAGES.ENCRYPT_ACCOUNT) {
       return await LockManager.encryptAccount(message?.data ?? {});
     }
