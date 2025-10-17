@@ -1,6 +1,9 @@
 import StorageUtil from "@/utilities/storageUtil";
 import { JsonRpcMiddleware } from "@theqrl/zond-wallet-provider/json-rpc-engine";
-import { providerErrors } from "@theqrl/zond-wallet-provider/rpc-errors";
+import {
+  providerErrors,
+  rpcErrors,
+} from "@theqrl/zond-wallet-provider/rpc-errors";
 import { Json, JsonRpcRequest } from "@theqrl/zond-wallet-provider/utils";
 import browser from "webextension-polyfill";
 import { RESTRICTED_METHODS } from "../constants/requestConstants";
@@ -18,6 +21,7 @@ import { DAppRequestType, DAppResponseType } from "./middlewareTypes";
 
 const ZOND_WALLET_DAPP_CONNECTION_REQUIRED_METHODS: string[] = [
   RESTRICTED_METHODS.WALLET_ADD_ZOND_CHAIN,
+  RESTRICTED_METHODS.WALLET_GET_CAPABILITIES,
   RESTRICTED_METHODS.WALLET_SWITCH_ZOND_CHAIN,
 ];
 
@@ -80,6 +84,30 @@ const checkRequestCanCompleteSilently = async (
     return {
       hasCompleted: false,
     };
+  } else if (req.method === RESTRICTED_METHODS.WALLET_GET_CAPABILITIES) {
+    try {
+      // @ts-ignore
+      const chains: string[] = req?.params?.[1] ?? [];
+      const capabilities: { [k: string]: any } = {};
+      chains.forEach((chain) => {
+        // TODO: Update this with delegation system once ready
+        const status: "ready" | "supported" = "ready";
+        capabilities[chain] = { atomic: { status } };
+      });
+
+      return {
+        hasCompleted: true,
+        completionResult: capabilities,
+      };
+    } catch (error) {
+      return {
+        hasCompleted: false,
+        completionResult: null,
+        completionError: rpcErrors.invalidParams({
+          message: "The wallet cannot parse the request.",
+        }),
+      };
+    }
   } else {
     return {
       hasCompleted: false,
@@ -110,6 +138,7 @@ const checkRequestCanProceed = async (req: JsonRpcRequest<JsonRpcRequest>) => {
     case RESTRICTED_METHODS.WALLET_REQUEST_PERMISSIONS:
       // @ts-ignore
       return await checkWalletRequestPermissionParams(req?.params?.[0]);
+    case RESTRICTED_METHODS.WALLET_GET_CAPABILITIES:
     case RESTRICTED_METHODS.ZOND_SEND_TRANSACTION:
     case RESTRICTED_METHODS.ZOND_SIGN_TYPED_DATA_V4:
     case RESTRICTED_METHODS.PERSONAL_SIGN:
@@ -186,10 +215,14 @@ export const restrictedMethodsMiddleware: JsonRpcMiddleware<
       }
 
       // check if the request can complete silently without user interaction
-      const { hasCompleted, completionResult } =
+      const { hasCompleted, completionResult, completionError } =
         await checkRequestCanCompleteSilently(req);
       if (hasCompleted) {
         res.result = completionResult;
+        return end();
+      } else if (completionError) {
+        // @ts-ignore
+        res.error = completionError;
         return end();
       }
 

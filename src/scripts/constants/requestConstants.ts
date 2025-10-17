@@ -46,6 +46,7 @@ export const UNRESTRICTED_METHODS = Object.freeze({
 export const RESTRICTED_METHODS = Object.freeze({
   PERSONAL_SIGN: "personal_sign",
   WALLET_ADD_ZOND_CHAIN: "wallet_addZondChain",
+  WALLET_GET_CAPABILITIES: "wallet_getCapabilities",
   WALLET_REQUEST_PERMISSIONS: "wallet_requestPermissions",
   WALLET_SWITCH_ZOND_CHAIN: "wallet_switchZondChain",
   WALLET_WATCH_ASSET: "wallet_watchAsset",

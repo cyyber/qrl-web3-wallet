@@ -18,6 +18,7 @@ const getFromAddress = (req: JsonRpcRequest<JsonRpcRequest>) => {
     case RESTRICTED_METHODS.ZOND_SEND_TRANSACTION:
       // @ts-ignore
       return req.params?.[0]?.from ?? "";
+    case RESTRICTED_METHODS.WALLET_GET_CAPABILITIES:
     case RESTRICTED_METHODS.ZOND_SIGN_TYPED_DATA_V4:
       // @ts-ignore
       return req.params?.[0];
