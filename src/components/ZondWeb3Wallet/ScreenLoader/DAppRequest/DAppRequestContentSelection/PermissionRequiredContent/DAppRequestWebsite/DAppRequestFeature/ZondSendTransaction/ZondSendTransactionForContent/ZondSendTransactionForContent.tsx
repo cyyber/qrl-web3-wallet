@@ -13,6 +13,7 @@ import { Copy } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
 import { SEND_TRANSACTION_TYPES } from "../ZondSendTransaction";
+import { utils } from "@theqrl/web3";
 
 type ZondSendTransactionForContentProps = {
   transactionType: keyof typeof SEND_TRANSACTION_TYPES;
@@ -176,7 +177,7 @@ const ZondSendTransactionForContent = observer(
 
     return (
       <Tabs defaultValue="details" className="w-full">
-        <TabsList className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger
             value="details"
             className="w-full data-[state=active]:text-secondary"
@@ -215,7 +216,7 @@ const ZondSendTransactionForContent = observer(
               <div className="flex flex-col gap-1">
                 <div>Value</div>
                 <div className="font-bold text-secondary">
-                  {value.toString()}
+                  {utils.fromWei(value, "ether")} ZND
                 </div>
               </div>
             )}
