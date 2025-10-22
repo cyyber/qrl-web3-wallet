@@ -13,6 +13,7 @@ import {
   checkUrlOriginHasBeenConnected,
   checkWalletAddZondChainParams,
   checkWalletRequestPermissionParams,
+  checkWalletSendCallsParams,
   checkWalletSwitchZondChainParams,
   checkWalletWatchAssetParams,
   updateAccountsAndBlockchainsForUrlOrigin,
@@ -138,6 +139,9 @@ const checkRequestCanProceed = async (req: JsonRpcRequest<JsonRpcRequest>) => {
     case RESTRICTED_METHODS.WALLET_REQUEST_PERMISSIONS:
       // @ts-ignore
       return await checkWalletRequestPermissionParams(req?.params?.[0]);
+    case RESTRICTED_METHODS.WALLET_SEND_CALLS:
+      // @ts-ignore
+      return await checkWalletSendCallsParams(req?.params?.[0]);
     case RESTRICTED_METHODS.WALLET_GET_CAPABILITIES:
     case RESTRICTED_METHODS.ZOND_SEND_TRANSACTION:
     case RESTRICTED_METHODS.ZOND_SIGN_TYPED_DATA_V4:
@@ -267,6 +271,17 @@ export const restrictedMethodsMiddleware: JsonRpcMiddleware<
               const dAppConnectedAccountsData =
                 await StorageUtil.getDAppsConnectedAccountsData(urlOrigin);
               res.result = dAppConnectedAccountsData?.permissions ?? [];
+              break;
+            case RESTRICTED_METHODS.WALLET_SEND_CALLS:
+              const batchId = restrictedMethodResult?.response?.batchId;
+              if (batchId) {
+                res.result = { id: batchId };
+              } else {
+                res.error = providerErrors.unsupportedMethod({
+                  message: restrictedMethodResult?.response?.error?.message,
+                  data: restrictedMethodResult?.response?.error,
+                });
+              }
               break;
             case RESTRICTED_METHODS.ZOND_SEND_TRANSACTION:
               const transactionHash =

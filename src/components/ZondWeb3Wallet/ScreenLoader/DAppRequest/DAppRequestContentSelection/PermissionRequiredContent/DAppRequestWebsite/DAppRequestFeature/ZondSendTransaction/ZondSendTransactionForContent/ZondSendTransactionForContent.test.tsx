@@ -135,7 +135,7 @@ describe("ZondSendTransactionForContent", () => {
       screen.getByText("Z 20EE9 76078 6AD48 aB90E 326c5 cd78c 6269B a10AB"),
     ).toBeInTheDocument();
     expect(screen.getByText("Value")).toBeInTheDocument();
-    expect(screen.getByText("48")).toBeInTheDocument();
+    expect(screen.getByText("0.000000000000000048 ZND")).toBeInTheDocument();
     expect(screen.getByText("Gas Limit")).toBeInTheDocument();
     expect(screen.getByText("117589")).toBeInTheDocument();
   });

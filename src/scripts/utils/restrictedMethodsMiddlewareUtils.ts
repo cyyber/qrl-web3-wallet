@@ -415,6 +415,59 @@ export const checkWalletRequestPermissionParams = async (paramObject: {
   };
 };
 
+export const checkWalletSendCallsParams = async (paramObject: {
+  [k: string]: any;
+}) => {
+  const isAnObject =
+    Boolean(paramObject) &&
+    typeof paramObject === "object" &&
+    !Array.isArray(paramObject);
+  if (!isAnObject) {
+    return {
+      canProceed: false,
+      proceedError: rpcErrors.invalidParams(),
+    };
+  }
+
+  const allowedKeys = ["version", "from", "chainId", "atomicRequired", "calls"];
+  const extraKeys = Object.keys(paramObject).filter((key) => {
+    return !allowedKeys.includes(key);
+  });
+  if (extraKeys.length) {
+    return {
+      canProceed: false,
+      proceedError: rpcErrors.invalidParams({
+        message: `Received unexpected keys on object parameter. Unsupported keys: ${extraKeys}`,
+      }),
+    };
+  }
+
+  const { version } = paramObject;
+  if (version !== "2.0.0") {
+    return {
+      canProceed: false,
+      proceedError: rpcErrors.invalidInput({
+        message: `Version ${version} not supported.`,
+      }),
+    };
+  }
+
+  const { calls } = paramObject;
+  if (!Array.isArray(calls)) {
+    return {
+      canProceed: false,
+      proceedError: rpcErrors.invalidParams({
+        message: `Expected calls to be an array'.`,
+      }),
+    };
+  }
+
+  return {
+    canProceed: true,
+    proceedError: undefined,
+  };
+};
+
 export const updateAccountsAndBlockchainsForUrlOrigin = async ({
   urlOrigin,
   accounts,
