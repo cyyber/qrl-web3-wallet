@@ -247,6 +247,10 @@ const prepareListeners = () => {
             new URL(message?.data?.senderData?.url ?? "").origin,
           );
         return connectedAccountsData?.accounts ?? [];
+      } else if (method === UNRESTRICTED_METHODS.WALLET_GET_CALL_STATUS) {
+        // TODO: Fetch the batch status from the smart contract here.
+        const batchStatus = { version: "2.0.0", chainId: "0x1" };
+        return getSerializableObject(batchStatus);
       } else if (method === UNRESTRICTED_METHODS.WALLET_GET_PERMISSIONS) {
         const dAppsConnectedAccountsData =
           await StorageUtil.getDAppsConnectedAccountsData(
