@@ -1,6 +1,6 @@
 import StorageUtil from "@/utilities/storageUtil";
 import { Bytes } from "@theqrl/web3";
-import { decrypt, encrypt } from "./tempWeb3js";
+import { decrypt, encrypt } from "@theqrl/web3-qrl-accounts";
 import { getMnemonicFromHexSeed } from "@/functions/getMnemonicFromHexSeed";
 
 type MessageType = {
@@ -46,15 +46,14 @@ class LockManager {
       const keyStores = await StorageUtil.getKeystores();
       if (!keyStores.length) return;
       const decryptedKeys: DecryptedKeyType[] = [];
-      keyStores.forEach((keyStore) => {
-        // TODO: Replace with web3.js decrypt
-        const { address, seed } = decrypt(keyStore, password);
+      for (const keyStore of keyStores) {
+        const { address, seed } = await decrypt(keyStore, password);
         decryptedKeys.push({
           password,
           address,
           mnemonicPhrases: getMnemonicFromHexSeed(seed),
         });
-      });
+      }
       this.setDecryptedKeys(
         Array.from(
           new Map(
@@ -87,8 +86,7 @@ class LockManager {
   static async encryptAccount(accountData: EncryptAccountType) {
     const { password, seed } = accountData;
     const keystores = await StorageUtil.getKeystores();
-    // TODO: Replace with web3.js encrypt
-    const encryptedKeyStore = encrypt(seed, password);
+    const encryptedKeyStore = await encrypt(seed, password);
     const updatedKeyStores = [...keystores, encryptedKeyStore];
     await StorageUtil.setKeystores(
       Array.from(
