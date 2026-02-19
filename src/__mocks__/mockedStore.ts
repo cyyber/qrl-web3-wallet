@@ -245,6 +245,15 @@ const mockedStoreValues: StoreType = {
     updateContact: async () => {},
     getContactByAddress: () => undefined,
   },
+  accountLabelsStore: {
+    labels: {},
+    isLoading: false,
+    loadLabels: async () => {},
+    syncLabels: async () => {},
+    setLabel: async () => {},
+    getLabel: () => "",
+    clearLabels: async () => {},
+  },
 };
 
 export const mockedStore = (

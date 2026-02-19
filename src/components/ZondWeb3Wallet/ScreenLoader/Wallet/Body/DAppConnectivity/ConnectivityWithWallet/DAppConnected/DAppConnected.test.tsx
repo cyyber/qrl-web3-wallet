@@ -37,8 +37,7 @@ describe("DAppConnected", () => {
         "The following accounts are connected, and can interact with this website.",
       ),
     ).toBeInTheDocument();
-    expect(screen.getByText("Q")).toBeInTheDocument();
-    expect(screen.getByText("20fB0")).toBeInTheDocument();
+    expect(screen.getByText("Q20fB0")).toBeInTheDocument();
     expect(screen.getByText("8fF1f")).toBeInTheDocument();
     expect(screen.getByText("1376A")).toBeInTheDocument();
     expect(screen.getByText("14C05")).toBeInTheDocument();

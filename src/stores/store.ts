@@ -1,4 +1,5 @@
 import { createContext, useContext } from "react";
+import AccountLabelsStore from "./accountLabelsStore";
 import ContactsStore from "./contactsStore";
 import DAppRequestStore from "./dAppRequestStore";
 import LedgerStore from "./ledgerStore";
@@ -15,6 +16,7 @@ class Store {
   ledgerStore;
   transactionHistoryStore;
   contactsStore;
+  accountLabelsStore;
 
   constructor() {
     this.lockStore = new LockStore();
@@ -24,6 +26,7 @@ class Store {
     this.ledgerStore = new LedgerStore();
     this.transactionHistoryStore = new TransactionHistoryStore();
     this.contactsStore = new ContactsStore();
+    this.accountLabelsStore = new AccountLabelsStore();
   }
 }
 

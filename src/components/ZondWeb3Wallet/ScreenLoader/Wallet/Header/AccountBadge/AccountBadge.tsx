@@ -11,6 +11,7 @@ import StringUtil from "@/utilities/stringUtil";
 import { cva } from "class-variance-authority";
 import { Wallet } from "lucide-react";
 import { observer } from "mobx-react-lite";
+import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 const badgeButtonClasses = cva(
@@ -30,12 +31,20 @@ const badgeButtonClasses = cva(
 const AccountBadge = observer(() => {
   const location = useLocation();
   const pathName = location.pathname;
-  const { zondStore } = useStore();
+  const { zondStore, accountLabelsStore } = useStore();
   const { activeAccount } = zondStore;
   const { accountAddress } = activeAccount;
 
+  useEffect(() => {
+    if (accountAddress) {
+      accountLabelsStore.loadLabels();
+    }
+  }, [accountAddress]);
+
+  const label = accountLabelsStore.getLabel(accountAddress);
   const { prefix, addressSplit } = StringUtil.getSplitAddress(accountAddress);
-  const account = `${prefix}${addressSplit[0]}...${addressSplit[addressSplit.length - 1]}`;
+  const abbreviatedAddress = `${prefix}${addressSplit[0]}...${addressSplit[addressSplit.length - 1]}`;
+  const account = label || abbreviatedAddress;
 
   return (
     !!accountAddress && (

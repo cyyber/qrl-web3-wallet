@@ -12,11 +12,10 @@ import {
   TabsTrigger,
 } from "@/components/UI/tabs";
 import { useStore } from "@/stores/store";
-import StorageUtil from "@/utilities/storageUtil";
 import StringUtil from "@/utilities/stringUtil";
 import { BookUser, Users, Wallet, History } from "lucide-react";
 import { observer } from "mobx-react-lite";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 
 type RecipientPickerProps = {
   open: boolean;
@@ -49,76 +48,41 @@ const AddressRow = ({ address, label, onClick }: AddressRowProps) => {
 
 const RecipientPicker = observer(
   ({ open, onOpenChange, onSelect }: RecipientPickerProps) => {
-    const { zondStore, contactsStore, transactionHistoryStore, ledgerStore } =
-      useStore();
+    const {
+      zondStore,
+      contactsStore,
+      transactionHistoryStore,
+      ledgerStore,
+      accountLabelsStore,
+    } = useStore();
     const { activeAccount, zondAccounts } = zondStore;
     const { accountAddress } = activeAccount;
     const { contacts } = contactsStore;
     const { transactions } = transactionHistoryStore;
 
-    const [accountLabels, setAccountLabels] = useState<Record<string, string>>(
-      {},
-    );
-
     useEffect(() => {
       if (open) {
         contactsStore.loadContacts();
-        syncAccountLabels();
+        accountLabelsStore.syncLabels(
+          zondAccounts.accounts ?? [],
+          ledgerStore.isLedgerAccount.bind(ledgerStore),
+        );
       }
     }, [open]);
-
-    const syncAccountLabels = async () => {
-      const allAccounts = zondAccounts.accounts ?? [];
-      const stored = await StorageUtil.getAccountLabels();
-      let changed = false;
-
-      // Collect already-used numbers to avoid collisions
-      const usedAccountNums = new Set<number>();
-      const usedLedgerNums = new Set<number>();
-      for (const label of Object.values(stored)) {
-        const accountMatch = label.match(/^Account (\d+)$/);
-        if (accountMatch) usedAccountNums.add(Number(accountMatch[1]));
-        const ledgerMatch = label.match(/^Ledger (\d+)$/);
-        if (ledgerMatch) usedLedgerNums.add(Number(ledgerMatch[1]));
-      }
-
-      const nextAvailable = (used: Set<number>) => {
-        let n = 1;
-        while (used.has(n)) n++;
-        used.add(n);
-        return n;
-      };
-
-      for (const a of allAccounts) {
-        if (!stored[a.accountAddress]) {
-          const isLedger = ledgerStore.isLedgerAccount(a.accountAddress);
-          const num = nextAvailable(
-            isLedger ? usedLedgerNums : usedAccountNums,
-          );
-          stored[a.accountAddress] = isLedger
-            ? `Ledger ${num}`
-            : `Account ${num}`;
-          changed = true;
-        }
-      }
-
-      if (changed) {
-        await StorageUtil.setAccountLabels(stored);
-      }
-      setAccountLabels(stored);
-    };
 
     const otherAccounts = useMemo(
       () =>
         (zondAccounts.accounts ?? [])
           .map((a) => ({
             address: a.accountAddress,
-            label: accountLabels[a.accountAddress] ?? a.accountAddress,
+            label:
+              accountLabelsStore.getLabel(a.accountAddress) ||
+              a.accountAddress,
           }))
           .filter(
             (a) => a.address.toLowerCase() !== accountAddress.toLowerCase(),
           ),
-      [zondAccounts.accounts, accountAddress, accountLabels],
+      [zondAccounts.accounts, accountAddress, accountLabelsStore.labels],
     );
 
     const recentAddresses = useMemo(() => {

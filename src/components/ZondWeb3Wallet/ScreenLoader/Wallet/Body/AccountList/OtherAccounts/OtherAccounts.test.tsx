@@ -1,7 +1,7 @@
 import { mockedStore } from "@/__mocks__/mockedStore";
 import { StoreProvider } from "@/stores/store";
 import { afterEach, describe, expect, it, jest } from "@jest/globals";
-import { act, cleanup, render, screen } from "@testing-library/react";
+import { act, cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { TooltipProvider } from "@/components/UI/Tooltip";
@@ -26,103 +26,73 @@ describe("OtherAccounts", () => {
       </StoreProvider>,
     );
 
-  it("should render the other accounts component", () => {
-    renderComponent(
-      mockedStore({
-        zondStore: {
-          activeAccount: {
-            accountAddress: "Q205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
-          },
-          zondAccounts: {
-            isLoading: false,
-            accounts: [
-              {
-                accountAddress: "Q205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
-                accountBalance: "2.4568 QRL",
-              },
-              {
-                accountAddress: "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
-                accountBalance: "0.3695 QRL",
-              },
-            ],
-          },
+  const twoAccountStore = (overrides: Record<string, any> = {}) =>
+    mockedStore({
+      zondStore: {
+        activeAccount: {
+          accountAddress: "Q205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
         },
-      }),
-    );
+        zondAccounts: {
+          isLoading: false,
+          accounts: [
+            {
+              accountAddress: "Q205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
+              accountBalance: "2.4568 QRL",
+            },
+            {
+              accountAddress: "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+              accountBalance: "0.3695 QRL",
+            },
+          ],
+        },
+        ...overrides,
+      },
+    });
+
+  const openMenu = async () => {
+    const trigger = screen.getByTestId("account-menu");
+    await userEvent.click(trigger);
+  };
+
+  it("should render the other accounts component", async () => {
+    renderComponent(twoAccountStore());
 
     expect(
       screen.getByText("Other accounts in the wallet"),
     ).toBeInTheDocument();
     expect(screen.getByText("Mocked Account Id")).toBeInTheDocument();
-    const switchToThisAccountButton = screen.getByRole("button", {
-      name: "Switch to this account",
-    });
-    expect(switchToThisAccountButton).toBeInTheDocument();
-    const copyButton = screen.getByRole("button", { name: "Copy Address" });
-    expect(copyButton).toBeInTheDocument();
+
+    await openMenu();
+    expect(
+      screen.getByRole("menuitem", { name: "Switch" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("menuitem", { name: "Copy Address" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("menuitem", { name: "Rename" }),
+    ).toBeInTheDocument();
   });
 
-  it("should call the setActiveAccount function on click of button", async () => {
+  it("should call the setActiveAccount function on click of switch", async () => {
     const mockedSetActiveAccount = jest.fn(async (activeAccount: string) => {
       activeAccount;
     });
     renderComponent(
-      mockedStore({
-        zondStore: {
-          activeAccount: {
-            accountAddress: "Q205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
-          },
-          setActiveAccount: mockedSetActiveAccount,
-          zondAccounts: {
-            isLoading: false,
-            accounts: [
-              {
-                accountAddress: "Q205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
-                accountBalance: "2.4568 QRL",
-              },
-              {
-                accountAddress: "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
-                accountBalance: "0.3695 QRL",
-              },
-            ],
-          },
-        },
-      }),
+      twoAccountStore({ setActiveAccount: mockedSetActiveAccount }),
     );
 
-    const switchToThisAccountButton = screen.getByRole("button", {
-      name: "Switch to this account",
-    });
-    expect(switchToThisAccountButton).toBeInTheDocument();
+    await openMenu();
     await act(async () => {
-      await userEvent.click(switchToThisAccountButton);
+      await userEvent.click(
+        screen.getByRole("menuitem", { name: "Switch" }),
+      );
     });
     expect(mockedSetActiveAccount).toBeCalledTimes(1);
   });
 
-  it("should call the copyAccount function on clicking the copy button", async () => {
-    renderComponent(
-      mockedStore({
-        zondStore: {
-          activeAccount: {
-            accountAddress: "Q205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
-          },
-          zondAccounts: {
-            isLoading: false,
-            accounts: [
-              {
-                accountAddress: "Q205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
-                accountBalance: "2.4568 QRL",
-              },
-              {
-                accountAddress: "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
-                accountBalance: "0.3695 QRL",
-              },
-            ],
-          },
-        },
-      }),
-    );
+  it("should call the copyAccount function on clicking the copy item", async () => {
+    renderComponent(twoAccountStore());
 
     const mockedWriteText = jest.fn();
     Object.defineProperty(navigator, "clipboard", {
@@ -131,12 +101,153 @@ describe("OtherAccounts", () => {
       },
       writable: true,
     });
-    const copyButton = screen.getByRole("button", { name: "Copy Address" });
-    expect(copyButton).toBeInTheDocument();
-    await userEvent.click(copyButton);
+
+    await openMenu();
+    await userEvent.click(
+      screen.getByRole("menuitem", { name: "Copy Address" }),
+    );
     expect(mockedWriteText).toBeCalledTimes(1);
     expect(mockedWriteText).toBeCalledWith(
       "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
     );
+  });
+
+  const storeWithLabel = (overrides: Record<string, any> = {}) => {
+    const labels: Record<string, string> = {
+      Q20fB08fF1f1376A14C055E9F56df80563E16722b: "Account 2",
+    };
+    return mockedStore({
+      zondStore: {
+        activeAccount: {
+          accountAddress: "Q205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
+        },
+        zondAccounts: {
+          isLoading: false,
+          accounts: [
+            {
+              accountAddress: "Q205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
+              accountBalance: "2.4568 QRL",
+            },
+            {
+              accountAddress: "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+              accountBalance: "0.3695 QRL",
+            },
+          ],
+        },
+      },
+      accountLabelsStore: {
+        labels,
+        getLabel: (addr: string) => labels[addr] ?? "",
+        ...overrides,
+      },
+    });
+  };
+
+  it("should show rename item in dropdown menu", async () => {
+    renderComponent(storeWithLabel());
+
+    await openMenu();
+    expect(
+      screen.getByRole("menuitem", { name: "Rename" }),
+    ).toBeInTheDocument();
+  });
+
+  it("should show edit input when rename is clicked", async () => {
+    renderComponent(storeWithLabel());
+
+    await openMenu();
+    await userEvent.click(
+      screen.getByRole("menuitem", { name: "Rename" }),
+    );
+
+    const input = screen.getByRole("textbox", { name: "Edit account label" });
+    expect(input).toBeInTheDocument();
+    expect(input).toHaveValue("Account 2");
+    expect(
+      screen.getByRole("button", { name: "Save label" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Cancel edit" }),
+    ).toBeInTheDocument();
+  });
+
+  it("should call setLabel on save", async () => {
+    const setLabel = jest.fn<any>(() => Promise.resolve());
+    renderComponent(storeWithLabel({ setLabel }));
+
+    await openMenu();
+    await userEvent.click(
+      screen.getByRole("menuitem", { name: "Rename" }),
+    );
+
+    const input = screen.getByRole("textbox", { name: "Edit account label" });
+    await userEvent.clear(input);
+    await userEvent.type(input, "Savings");
+
+    await userEvent.click(
+      screen.getByRole("button", { name: "Save label" }),
+    );
+
+    expect(setLabel).toHaveBeenCalledWith(
+      "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+      "Savings",
+    );
+  });
+
+  it("should hide edit input on cancel", async () => {
+    renderComponent(storeWithLabel());
+
+    await openMenu();
+    await userEvent.click(
+      screen.getByRole("menuitem", { name: "Rename" }),
+    );
+    expect(
+      screen.getByRole("textbox", { name: "Edit account label" }),
+    ).toBeInTheDocument();
+
+    await userEvent.click(
+      screen.getByRole("button", { name: "Cancel edit" }),
+    );
+
+    expect(
+      screen.queryByRole("textbox", { name: "Edit account label" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("should save on Enter key", async () => {
+    const setLabel = jest.fn<any>(() => Promise.resolve());
+    renderComponent(storeWithLabel({ setLabel }));
+
+    await openMenu();
+    await userEvent.click(
+      screen.getByRole("menuitem", { name: "Rename" }),
+    );
+
+    const input = screen.getByRole("textbox", { name: "Edit account label" });
+    await userEvent.clear(input);
+    await userEvent.type(input, "New Label{Enter}");
+
+    await waitFor(() => {
+      expect(setLabel).toHaveBeenCalledWith(
+        "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+        "New Label",
+      );
+    });
+  });
+
+  it("should cancel on Escape key", async () => {
+    renderComponent(storeWithLabel());
+
+    await openMenu();
+    await userEvent.click(
+      screen.getByRole("menuitem", { name: "Rename" }),
+    );
+
+    const input = screen.getByRole("textbox", { name: "Edit account label" });
+    await userEvent.type(input, "{Escape}");
+
+    expect(
+      screen.queryByRole("textbox", { name: "Edit account label" }),
+    ).not.toBeInTheDocument();
   });
 });

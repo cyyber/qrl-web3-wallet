@@ -32,9 +32,8 @@ describe("AccountId", () => {
       }),
     );
 
-    const addressSplit = [
-      "Q",
-      "20fB0",
+    const addressParts = [
+      "Q20fB0",
       "8fF1f",
       "1376A",
       "14C05",
@@ -44,7 +43,7 @@ describe("AccountId", () => {
       "6722b",
       "10.0 QRL",
     ];
-    for (const word of addressSplit) {
+    for (const word of addressParts) {
       expect(screen.getByText(word)).toBeInTheDocument();
     }
   });

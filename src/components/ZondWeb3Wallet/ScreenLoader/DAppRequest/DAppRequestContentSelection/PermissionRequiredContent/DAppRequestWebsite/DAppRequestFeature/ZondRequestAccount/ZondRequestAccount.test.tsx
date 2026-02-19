@@ -49,8 +49,7 @@ describe("ZondRequestAccount", () => {
     ).toBeInTheDocument();
     expect(checkBox).toBeInTheDocument();
     expect(checkBox).toBeEnabled();
-    expect(screen.getByText("Q")).toBeInTheDocument();
-    expect(screen.getByText("20915")).toBeInTheDocument();
+    expect(screen.getByText("Q20915")).toBeInTheDocument();
     expect(screen.getByText("094FE")).toBeInTheDocument();
     expect(screen.getByText("DE91E")).toBeInTheDocument();
     expect(screen.getByText("FAC68")).toBeInTheDocument();

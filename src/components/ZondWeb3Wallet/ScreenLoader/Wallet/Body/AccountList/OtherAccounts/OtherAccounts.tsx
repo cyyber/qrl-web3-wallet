@@ -1,18 +1,143 @@
 import { Button } from "@/components/UI/Button";
 import { Card } from "@/components/UI/Card";
-import { Label } from "@/components/UI/Label";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/UI/Tooltip";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/UI/DropdownMenu";
+import { Input } from "@/components/UI/Input";
+import { Label } from "@/components/UI/Label";
 import { ROUTES } from "@/router/router";
 import { useStore } from "@/stores/store";
 import StorageUtil from "@/utilities/storageUtil";
-import { ArrowRight, Copy } from "lucide-react";
+import {
+  ArrowRight,
+  Check,
+  Copy,
+  EllipsisVertical,
+  Pencil,
+  X,
+} from "lucide-react";
 import { observer } from "mobx-react-lite";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AccountId from "../AccountId/AccountId";
+
+type OtherAccountCardProps = {
+  accountAddress: string;
+  onSwitch: (address: string) => void;
+  onCopy: (address: string) => void;
+};
+
+const OtherAccountCard = observer(
+  ({ accountAddress, onSwitch, onCopy }: OtherAccountCardProps) => {
+    const { accountLabelsStore } = useStore();
+    const label = accountLabelsStore.getLabel(accountAddress);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editValue, setEditValue] = useState("");
+
+    const startEdit = () => {
+      setEditValue(label);
+      setIsEditing(true);
+    };
+
+    const cancelEdit = () => {
+      setIsEditing(false);
+    };
+
+    const saveEdit = async () => {
+      const trimmed = editValue.trim();
+      if (trimmed) {
+        await accountLabelsStore.setLabel(accountAddress, trimmed);
+      }
+      setIsEditing(false);
+    };
+
+    return (
+      <Card className="flex flex-col gap-2 p-3 font-bold text-foreground">
+        {isEditing && (
+          <div className="flex items-center gap-1">
+            <Input
+              value={editValue}
+              onChange={(e) => setEditValue(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") saveEdit();
+                if (e.key === "Escape") cancelEdit();
+              }}
+              className="h-6 w-32 text-xs"
+              autoFocus
+              maxLength={50}
+              aria-label="Edit account label"
+            />
+            <Button
+              variant="ghost"
+              size="icon"
+              className="size-5"
+              onClick={saveEdit}
+              aria-label="Save label"
+            >
+              <Check className="h-3 w-3" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="size-5"
+              onClick={cancelEdit}
+              aria-label="Cancel edit"
+            >
+              <X className="h-3 w-3" />
+            </Button>
+          </div>
+        )}
+        <div className="flex items-center gap-3">
+          <AccountId account={accountAddress} hideLabel={isEditing} />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <EllipsisVertical
+                size="16"
+                className="shrink-0 cursor-pointer"
+                data-testid="account-menu"
+              />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuGroup>
+                <DropdownMenuItem
+                  className="cursor-pointer data-[highlighted]:text-secondary"
+                  onClick={() => onSwitch(accountAddress)}
+                >
+                  <div className="flex gap-2">
+                    <ArrowRight size="16" />
+                    <span>Switch</span>
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="cursor-pointer data-[highlighted]:text-secondary"
+                  onClick={() => onCopy(accountAddress)}
+                >
+                  <div className="flex gap-2">
+                    <Copy size="16" />
+                    <span>Copy Address</span>
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="cursor-pointer data-[highlighted]:text-secondary"
+                  onClick={startEdit}
+                >
+                  <div className="flex gap-2">
+                    <Pencil size="16" />
+                    <span>Rename</span>
+                  </div>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </Card>
+    );
+  },
+);
 
 const OtherAccounts = observer(() => {
   const navigate = useNavigate();
@@ -41,51 +166,12 @@ const OtherAccounts = observer(() => {
       <div className="flex flex-col gap-2">
         <Label className="text-lg">{otherAccountsLabel}</Label>
         {otherAccounts.map(({ accountAddress }) => (
-          <Card
+          <OtherAccountCard
             key={accountAddress}
-            id={accountAddress}
-            className="flex gap-3 p-3 font-bold text-foreground"
-          >
-            <AccountId account={accountAddress} />
-            <div className="flex flex-col gap-2">
-              <Tooltip delayDuration={0}>
-                <TooltipTrigger asChild>
-                  <Button
-                    className="size-7 hover:bg-accent hover:text-secondary"
-                    variant="outline"
-                    size="icon"
-                    aria-label="Switch to this account"
-                    onClick={() => {
-                      onAccountSwitch(accountAddress);
-                    }}
-                  >
-                    <ArrowRight size="18" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="left">
-                  <Label>Switch to this account</Label>
-                </TooltipContent>
-              </Tooltip>
-              <Tooltip delayDuration={0}>
-                <TooltipTrigger asChild>
-                  <Button
-                    className="size-7 hover:bg-accent hover:text-secondary"
-                    variant="outline"
-                    size="icon"
-                    aria-label="Copy Address"
-                    onClick={() => {
-                      copyAccount(accountAddress);
-                    }}
-                  >
-                    <Copy size="16" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="left">
-                  <Label>Copy Address</Label>
-                </TooltipContent>
-              </Tooltip>
-            </div>
-          </Card>
+            accountAddress={accountAddress}
+            onSwitch={onAccountSwitch}
+            onCopy={copyAccount}
+          />
         ))}
       </div>
     )

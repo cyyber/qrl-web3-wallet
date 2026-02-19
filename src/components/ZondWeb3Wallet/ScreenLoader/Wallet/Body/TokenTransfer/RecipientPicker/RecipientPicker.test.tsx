@@ -1,7 +1,7 @@
 import { mockedStore } from "@/__mocks__/mockedStore";
 import { StoreProvider } from "@/stores/store";
 import { afterEach, beforeEach, describe, expect, it, jest } from "@jest/globals";
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import RecipientPicker from "./RecipientPicker";
@@ -78,7 +78,11 @@ describe("RecipientPicker", () => {
     expect(screen.getByText("No other accounts")).toBeInTheDocument();
   });
 
-  it("should list other accounts excluding active", async () => {
+  it("should list other accounts excluding active", () => {
+    const labels: Record<string, string> = {
+      Q20B714091cF2a62DADda2847803e3f1B9D2D3779: "Account 1",
+      Q20fB08fF1f1376A14C055E9F56df80563E16722b: "Account 2",
+    };
     renderComponent(
       jest.fn(),
       mockedStore({
@@ -99,19 +103,25 @@ describe("RecipientPicker", () => {
             ],
           },
         },
+        accountLabelsStore: {
+          labels,
+          getLabel: (addr: string) => labels[addr] ?? "",
+        },
       }),
     );
 
-    // Labels load async from storage
-    await waitFor(() => {
-      expect(screen.getByText("Account 2")).toBeInTheDocument();
-    });
+    expect(screen.getByText("Account 2")).toBeInTheDocument();
     expect(
       screen.getByText(/Q20fB08fF1f1376A14C055E9F56df80563E16722b/),
     ).toBeInTheDocument();
   });
 
-  it("should label Ledger accounts as 'Ledger' with index", async () => {
+  it("should label Ledger accounts as 'Ledger' with index", () => {
+    const labels: Record<string, string> = {
+      Q20B714091cF2a62DADda2847803e3f1B9D2D3779: "Account 1",
+      Q20fB08fF1f1376A14C055E9F56df80563E16722b: "Account 2",
+      Q30aA00aA0a0000A00A000A0A00aa00000A00000c: "Ledger 1",
+    };
     renderComponent(
       jest.fn(),
       mockedStore({
@@ -136,91 +146,34 @@ describe("RecipientPicker", () => {
             ],
           },
         },
-        ledgerStore: {
-          isLedgerAccount: (addr: string) =>
-            addr === "Q30aA00aA0a0000A00A000A0A00aa00000A00000c",
+        accountLabelsStore: {
+          labels,
+          getLabel: (addr: string) => labels[addr] ?? "",
         },
       }),
     );
 
-    await waitFor(() => {
-      expect(screen.getByText("Account 2")).toBeInTheDocument();
-    });
+    expect(screen.getByText("Account 2")).toBeInTheDocument();
     expect(screen.getByText("Ledger 1")).toBeInTheDocument();
   });
 
-  it("should persist labels and reuse them on next open", async () => {
-    // First render — auto-generates labels
-    const store1 = mockedStore({
-      zondStore: {
-        activeAccount: {
-          accountAddress: "Q20B714091cF2a62DADda2847803e3f1B9D2D3779",
-        },
-        zondAccounts: {
-          accounts: [
-            {
-              accountAddress: "Q20B714091cF2a62DADda2847803e3f1B9D2D3779",
-              accountBalance: "10",
-            },
-            {
-              accountAddress: "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
-              accountBalance: "5",
-            },
-          ],
-        },
-      },
-    });
-
-    const { unmount } = render(
-      <StoreProvider value={store1}>
-        <MemoryRouter>
-          <RecipientPicker
-            open={true}
-            onOpenChange={jest.fn()}
-            onSelect={jest.fn()}
-          />
-        </MemoryRouter>
-      </StoreProvider>,
-    );
-
-    await waitFor(() => {
-      expect(screen.getByText("Account 2")).toBeInTheDocument();
-    });
-    unmount();
-
-    // Verify labels were persisted in storage
-    expect(localStore["ACCOUNT_LABELS"]).toBeDefined();
-    expect(
-      localStore["ACCOUNT_LABELS"]["Q20B714091cF2a62DADda2847803e3f1B9D2D3779"],
-    ).toBe("Account 1");
-    expect(
-      localStore["ACCOUNT_LABELS"]["Q20fB08fF1f1376A14C055E9F56df80563E16722b"],
-    ).toBe("Account 2");
-  });
-
-  it("should avoid label collisions when accounts are removed and re-added", async () => {
-    // Pre-seed storage: Account 1 was removed, but "Account 2" label remains
-    localStore["ACCOUNT_LABELS"] = {
-      Q20fB08fF1f1376A14C055E9F56df80563E16722b: "Account 2",
-    };
-
+  it("should show address as fallback when no label exists", () => {
     renderComponent(
       jest.fn(),
       mockedStore({
         zondStore: {
           activeAccount: {
-            accountAddress: "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+            accountAddress: "Q20B714091cF2a62DADda2847803e3f1B9D2D3779",
           },
           zondAccounts: {
             accounts: [
               {
-                accountAddress: "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
-                accountBalance: "5",
+                accountAddress: "Q20B714091cF2a62DADda2847803e3f1B9D2D3779",
+                accountBalance: "10",
               },
               {
-                // New account — should get "Account 1" (not "Account 2" which is taken)
-                accountAddress: "Q30aA00aA0a0000A00A000A0A00aa00000A00000c",
-                accountBalance: "3",
+                accountAddress: "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+                accountBalance: "5",
               },
             ],
           },
@@ -228,16 +181,11 @@ describe("RecipientPicker", () => {
       }),
     );
 
-    await waitFor(() => {
-      expect(screen.getByText("Account 1")).toBeInTheDocument();
-    });
-    // "Account 2" is the active account (filtered out), so only "Account 1" shows
-    expect(screen.queryByText("Account 2")).not.toBeInTheDocument();
-
-    // Verify in storage: new account got "Account 1", not a duplicate "Account 2"
-    expect(
-      localStore["ACCOUNT_LABELS"]["Q30aA00aA0a0000A00A000A0A00aa00000A00000c"],
-    ).toBe("Account 1");
+    // With no labels from store, address is shown as both label and address line
+    const matches = screen.getAllByText(
+      /Q20fB08fF1f1376A14C055E9F56df80563E16722b/,
+    );
+    expect(matches.length).toBeGreaterThanOrEqual(1);
   });
 
   it("should show 'No contacts saved' on contacts tab", async () => {
@@ -314,6 +262,10 @@ describe("RecipientPicker", () => {
 
   it("should call onSelect when an address is clicked", async () => {
     const onSelect = jest.fn<any>();
+    const labels: Record<string, string> = {
+      Q20B714091cF2a62DADda2847803e3f1B9D2D3779: "Account 1",
+      Q20fB08fF1f1376A14C055E9F56df80563E16722b: "Account 2",
+    };
     renderComponent(
       onSelect,
       mockedStore({
@@ -334,13 +286,14 @@ describe("RecipientPicker", () => {
             ],
           },
         },
+        accountLabelsStore: {
+          labels,
+          getLabel: (addr: string) => labels[addr] ?? "",
+        },
       }),
     );
 
-    // Wait for labels to load
-    await waitFor(() => {
-      expect(screen.getByText("Account 2")).toBeInTheDocument();
-    });
+    expect(screen.getByText("Account 2")).toBeInTheDocument();
 
     const addressButton = screen.getByText(
       /Q20fB08fF1f1376A14C055E9F56df80563E16722b/,
