@@ -41,6 +41,7 @@ import BackButton from "../../../Shared/BackButton/BackButton";
 import CircuitBackground from "../../../Shared/CircuitBackground/CircuitBackground";
 import AccountAddressSection from "./AccountAddressSection/AccountAddressSection";
 import { GasFeeNotice } from "./GasFeeNotice/GasFeeNotice";
+import RecipientPicker from "./RecipientPicker/RecipientPicker";
 import TokenDisplaySection from "./TokenDisplaySection/TokenDisplaySection";
 import { TransactionSuccessful } from "./TransactionSuccessful/TransactionSuccessful";
 import { NATIVE_TOKEN_UNITS_OF_GAS } from "@/constants/nativeToken";
@@ -85,6 +86,7 @@ const TokenTransfer = observer(() => {
   const [tokenSymbol, setTokenSymbol] = useState(NATIVE_TOKEN.symbol);
   const [estimatedGasFee, setEstimatedGasFee] = useState("");
   const [balanceError, setBalanceError] = useState("");
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   const sendNativeToken = async (formData: z.infer<typeof FormSchema>) => {
     const isLedgerAccount = ledgerStore.isLedgerAccount(accountAddress);
@@ -385,15 +387,26 @@ const TokenTransfer = observer(() => {
                     render={({ field }) => (
                       <FormItem>
                         <Label>Send to</Label>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            aria-label={field.name}
-                            autoComplete="off"
-                            disabled={isSubmitting}
-                            placeholder="Receiver address"
+                        <div className="flex items-center gap-1">
+                          <FormControl>
+                            <Input
+                              {...field}
+                              aria-label={field.name}
+                              autoComplete="off"
+                              disabled={isSubmitting}
+                              placeholder="Receiver address"
+                            />
+                          </FormControl>
+                          <RecipientPicker
+                            open={pickerOpen}
+                            onOpenChange={setPickerOpen}
+                            onSelect={(address) => {
+                              form.setValue("receiverAddress", address, {
+                                shouldValidate: true,
+                              });
+                            }}
                           />
-                        </FormControl>
+                        </div>
                         <FormDescription>
                           Receiver&apos;s public address
                         </FormDescription>

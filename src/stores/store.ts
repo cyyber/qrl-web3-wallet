@@ -1,4 +1,5 @@
 import { createContext, useContext } from "react";
+import ContactsStore from "./contactsStore";
 import DAppRequestStore from "./dAppRequestStore";
 import LedgerStore from "./ledgerStore";
 import LockStore from "./lockStore";
@@ -13,6 +14,7 @@ class Store {
   zondStore;
   ledgerStore;
   transactionHistoryStore;
+  contactsStore;
 
   constructor() {
     this.lockStore = new LockStore();
@@ -21,6 +23,7 @@ class Store {
     this.zondStore = new ZondStore();
     this.ledgerStore = new LedgerStore();
     this.transactionHistoryStore = new TransactionHistoryStore();
+    this.contactsStore = new ContactsStore();
   }
 }
 

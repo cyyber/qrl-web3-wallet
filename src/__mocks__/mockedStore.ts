@@ -2,6 +2,7 @@ import {
   BlockchainDataType,
   DEFAULT_BLOCKCHAIN,
 } from "@/configuration/zondBlockchainConfig";
+import LockStore from "@/stores/lockStore";
 import { StoreType } from "@/stores/store";
 import { Web3BaseWalletAccount } from "@theqrl/web3";
 import deepmerge from "deepmerge";
@@ -171,7 +172,6 @@ const mockedStoreValues: StoreType = {
       account;
       password;
     },
-    keepServiceWorkerActive: () => {},
     initializePort: () => {},
     lock: async () => {},
     initializeStorageListener: () => {},
@@ -181,7 +181,7 @@ const mockedStoreValues: StoreType = {
     getMnemonicPhrases: async (accountAddress: string) => {
       return accountAddress;
     },
-  },
+  } as unknown as LockStore,
   ledgerStore: {
     connectionState: "disconnected",
     deviceInfo: null,
@@ -235,6 +235,15 @@ const mockedStoreValues: StoreType = {
     clearHistory: async (accountAddress: string) => {
       accountAddress;
     },
+  },
+  contactsStore: {
+    contacts: [],
+    isLoading: false,
+    loadContacts: async () => {},
+    addContact: async () => {},
+    removeContact: async () => {},
+    updateContact: async () => {},
+    getContactByAddress: () => undefined,
   },
 };
 

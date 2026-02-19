@@ -123,6 +123,14 @@ const TransactionDetail = withSuspense(
       ),
   ),
 );
+const ContactsPage = withSuspense(
+  lazy(
+    () =>
+      import(
+        "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/Contacts/ContactsPage"
+      ),
+  ),
+);
 
 export const ROUTES = {
   HOME: "/",
@@ -140,6 +148,7 @@ export const ROUTES = {
   ADD_EDIT_CHAIN: "/add-edit-chain",
   TRANSACTION_HISTORY: "/transaction-history",
   TRANSACTION_DETAIL: "/transaction-detail",
+  CONTACTS: "/contacts",
   DEFAULT: "*",
 };
 
@@ -207,6 +216,10 @@ const router = createMemoryRouter([
       {
         path: ROUTES.TRANSACTION_DETAIL,
         element: <TransactionDetail />,
+      },
+      {
+        path: ROUTES.CONTACTS,
+        element: <ContactsPage />,
       },
     ],
   },

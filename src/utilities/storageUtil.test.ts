@@ -700,7 +700,44 @@ describe("StorageUtil", () => {
     });
   });
 
-  // ── clearAllData ───────────────────────────────────────────
+  describe("Contacts", () => {
+    it("should clear contacts", async () => {
+      await StorageUtil.setContacts([
+        { name: "Alice", address: ACCOUNT },
+      ]);
+      await StorageUtil.clearContacts();
+      const result = await StorageUtil.getContacts();
+      expect(result).toEqual([]);
+    });
+  });
+
+  describe("Account labels", () => {
+    it("should set a single account label", async () => {
+      await StorageUtil.setAccountLabel(ACCOUNT, "My Main Account");
+      const labels = await StorageUtil.getAccountLabels();
+      expect(labels[ACCOUNT]).toBe("My Main Account");
+    });
+
+    it("should preserve existing labels when setting a single label", async () => {
+      await StorageUtil.setAccountLabels({
+        [ACCOUNT]: "Account 1",
+      });
+      await StorageUtil.setAccountLabel(ACCOUNT_2, "Account 2");
+      const labels = await StorageUtil.getAccountLabels();
+      expect(labels[ACCOUNT]).toBe("Account 1");
+      expect(labels[ACCOUNT_2]).toBe("Account 2");
+    });
+
+    it("should clear all account labels", async () => {
+      await StorageUtil.setAccountLabels({
+        [ACCOUNT]: "Account 1",
+        [ACCOUNT_2]: "Account 2",
+      });
+      await StorageUtil.clearAccountLabels();
+      const labels = await StorageUtil.getAccountLabels();
+      expect(labels).toEqual({});
+    });
+  });
 
   describe("clearAllData", () => {
     it("should clear all data from local storage", async () => {

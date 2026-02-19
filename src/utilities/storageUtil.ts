@@ -9,6 +9,7 @@ import {
   TokenContractType,
 } from "@/scripts/middlewares/middlewareTypes";
 import type { LedgerAccount } from "@/services/ledger/ledgerTypes";
+import type { Contact } from "@/types/contact";
 import type { TransactionHistoryEntry } from "@/types/transactionHistory";
 import { KeyStore } from "@theqrl/web3";
 import browser from "webextension-polyfill";
@@ -39,6 +40,11 @@ const TRANSACTION_VALUES_IDENTIFIER = "TRANSACTION_VALUES";
 
 const TX_HISTORY_IDENTIFIER = "TX_HISTORY";
 const ALL_TX_HISTORY_IDENTIFIER = "ALL_TX_HISTORY";
+
+const CONTACTS_IDENTIFIER = "CONTACTS";
+const ALL_CONTACTS_IDENTIFIER = "ALL_CONTACTS";
+
+const ACCOUNT_LABELS_IDENTIFIER = "ACCOUNT_LABELS";
 
 type TransactionValuesType = {
   receiverAddress?: string;
@@ -421,6 +427,54 @@ class StorageUtil {
     const storageData = await browser.storage.local.get(DAPPS_IDENTIFIER);
     delete storageData[DAPPS_IDENTIFIER]?.[ALL_DAPPS_IDENTIFIER]?.[urlOrigin];
     await browser.storage.local.set(storageData);
+  }
+
+  static async setContacts(contacts: Contact[]) {
+    await browser.storage.local.set({
+      [CONTACTS_IDENTIFIER]: {
+        [ALL_CONTACTS_IDENTIFIER]: contacts,
+      },
+    });
+  }
+
+  static async getContacts(): Promise<Contact[]> {
+    const storageData = await browser.storage.local.get(CONTACTS_IDENTIFIER);
+    const contacts =
+      storageData?.[CONTACTS_IDENTIFIER]?.[ALL_CONTACTS_IDENTIFIER] ?? [];
+    return contacts as Contact[];
+  }
+
+  static async clearContacts() {
+    await browser.storage.local.remove(CONTACTS_IDENTIFIER);
+  }
+
+  /**
+   * Account labels — a map from account address to a user-defined label.
+   */
+  static async setAccountLabels(labels: Record<string, string>) {
+    await browser.storage.local.set({
+      [ACCOUNT_LABELS_IDENTIFIER]: labels,
+    });
+  }
+
+  static async getAccountLabels(): Promise<Record<string, string>> {
+    const storageData = await browser.storage.local.get(
+      ACCOUNT_LABELS_IDENTIFIER,
+    );
+    return (storageData?.[ACCOUNT_LABELS_IDENTIFIER] ?? {}) as Record<
+      string,
+      string
+    >;
+  }
+
+  static async setAccountLabel(address: string, label: string) {
+    const labels = await this.getAccountLabels();
+    labels[address] = label;
+    await this.setAccountLabels(labels);
+  }
+
+  static async clearAccountLabels() {
+    await browser.storage.local.remove(ACCOUNT_LABELS_IDENTIFIER);
   }
 
   static async clearAllData() {

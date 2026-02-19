@@ -96,6 +96,21 @@ describe("ZondWeb3WalletMoreOptions", () => {
     expect(browser.tabs.create).toHaveBeenCalledTimes(1);
   });
 
+  it("should render the Contacts menu item", async () => {
+    renderComponent(
+      mockedStore({
+        lockStore: { lock: async () => {} },
+        settingsStore: { isPopupWindow: true },
+      }),
+    );
+
+    const moreButton = screen.getByTestId("ellipsis-icon");
+    await userEvent.click(moreButton);
+    const contactsButton = screen.getByRole("button", { name: "Contacts" });
+    expect(contactsButton).toBeInTheDocument();
+    expect(contactsButton).toBeEnabled();
+  });
+
   it("should call the lock function on clicking the lock button", async () => {
     const mockedLock = jest.fn(async () => {});
     renderComponent(

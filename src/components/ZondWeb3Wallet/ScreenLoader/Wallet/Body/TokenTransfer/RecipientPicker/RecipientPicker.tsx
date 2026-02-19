@@ -1,0 +1,235 @@
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/UI/Dialog";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/UI/tabs";
+import { useStore } from "@/stores/store";
+import StorageUtil from "@/utilities/storageUtil";
+import StringUtil from "@/utilities/stringUtil";
+import { BookUser, Users, Wallet, History } from "lucide-react";
+import { observer } from "mobx-react-lite";
+import { useEffect, useMemo, useState } from "react";
+
+type RecipientPickerProps = {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSelect: (address: string) => void;
+};
+
+type AddressRowProps = {
+  address: string;
+  label?: string;
+  onClick: () => void;
+};
+
+const AddressRow = ({ address, label, onClick }: AddressRowProps) => {
+  const { prefix, addressSplit } = StringUtil.getSplitAddress(address);
+
+  return (
+    <button
+      className="flex w-full flex-col gap-0.5 rounded-md border p-2 text-left transition-colors hover:bg-accent"
+      onClick={onClick}
+    >
+      {label && <span className="text-sm font-medium">{label}</span>}
+      <span className="truncate text-xs text-muted-foreground">
+        {prefix}
+        {addressSplit.join("")}
+      </span>
+    </button>
+  );
+};
+
+const RecipientPicker = observer(
+  ({ open, onOpenChange, onSelect }: RecipientPickerProps) => {
+    const { zondStore, contactsStore, transactionHistoryStore, ledgerStore } =
+      useStore();
+    const { activeAccount, zondAccounts } = zondStore;
+    const { accountAddress } = activeAccount;
+    const { contacts } = contactsStore;
+    const { transactions } = transactionHistoryStore;
+
+    const [accountLabels, setAccountLabels] = useState<Record<string, string>>(
+      {},
+    );
+
+    useEffect(() => {
+      if (open) {
+        contactsStore.loadContacts();
+        syncAccountLabels();
+      }
+    }, [open]);
+
+    const syncAccountLabels = async () => {
+      const allAccounts = zondAccounts.accounts ?? [];
+      const stored = await StorageUtil.getAccountLabels();
+      let changed = false;
+
+      // Collect already-used numbers to avoid collisions
+      const usedAccountNums = new Set<number>();
+      const usedLedgerNums = new Set<number>();
+      for (const label of Object.values(stored)) {
+        const accountMatch = label.match(/^Account (\d+)$/);
+        if (accountMatch) usedAccountNums.add(Number(accountMatch[1]));
+        const ledgerMatch = label.match(/^Ledger (\d+)$/);
+        if (ledgerMatch) usedLedgerNums.add(Number(ledgerMatch[1]));
+      }
+
+      const nextAvailable = (used: Set<number>) => {
+        let n = 1;
+        while (used.has(n)) n++;
+        used.add(n);
+        return n;
+      };
+
+      for (const a of allAccounts) {
+        if (!stored[a.accountAddress]) {
+          const isLedger = ledgerStore.isLedgerAccount(a.accountAddress);
+          const num = nextAvailable(
+            isLedger ? usedLedgerNums : usedAccountNums,
+          );
+          stored[a.accountAddress] = isLedger
+            ? `Ledger ${num}`
+            : `Account ${num}`;
+          changed = true;
+        }
+      }
+
+      if (changed) {
+        await StorageUtil.setAccountLabels(stored);
+      }
+      setAccountLabels(stored);
+    };
+
+    const otherAccounts = useMemo(
+      () =>
+        (zondAccounts.accounts ?? [])
+          .map((a) => ({
+            address: a.accountAddress,
+            label: accountLabels[a.accountAddress] ?? a.accountAddress,
+          }))
+          .filter(
+            (a) => a.address.toLowerCase() !== accountAddress.toLowerCase(),
+          ),
+      [zondAccounts.accounts, accountAddress, accountLabels],
+    );
+
+    const recentAddresses = useMemo(() => {
+      const seen = new Set<string>();
+      const result: string[] = [];
+      for (const tx of transactions) {
+        const lower = tx.to.toLowerCase();
+        if (!seen.has(lower)) {
+          seen.add(lower);
+          result.push(tx.to);
+        }
+      }
+      return result;
+    }, [transactions]);
+
+    const handleSelect = (address: string) => {
+      onSelect(address);
+      onOpenChange(false);
+    };
+
+    return (
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogTrigger asChild>
+          <button
+            type="button"
+            aria-label="Open address book"
+            className="shrink-0 rounded p-2 text-muted-foreground transition-colors hover:text-secondary"
+          >
+            <BookUser size={18} />
+          </button>
+        </DialogTrigger>
+        <DialogContent className="max-h-[80vh] overflow-y-auto sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Select Recipient</DialogTitle>
+          </DialogHeader>
+          <Tabs defaultValue="accounts">
+            <TabsList className="w-full">
+              <TabsTrigger value="accounts" className="flex-1">
+                My Accounts
+              </TabsTrigger>
+              <TabsTrigger value="contacts" className="flex-1">
+                Contacts
+              </TabsTrigger>
+              <TabsTrigger value="recent" className="flex-1">
+                Recent
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="accounts">
+              {otherAccounts.length === 0 ? (
+                <div className="flex flex-col items-center gap-2 py-6 text-muted-foreground">
+                  <Wallet className="h-8 w-8" />
+                  <p className="text-sm">No other accounts</p>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  {otherAccounts.map((a) => (
+                    <AddressRow
+                      key={a.address}
+                      address={a.address}
+                      label={a.label}
+                      onClick={() => handleSelect(a.address)}
+                    />
+                  ))}
+                </div>
+              )}
+            </TabsContent>
+
+            <TabsContent value="contacts">
+              {contacts.length === 0 ? (
+                <div className="flex flex-col items-center gap-2 py-6 text-muted-foreground">
+                  <Users className="h-8 w-8" />
+                  <p className="text-sm">No contacts saved</p>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  {contacts.map((c) => (
+                    <AddressRow
+                      key={c.address}
+                      address={c.address}
+                      label={c.name}
+                      onClick={() => handleSelect(c.address)}
+                    />
+                  ))}
+                </div>
+              )}
+            </TabsContent>
+
+            <TabsContent value="recent">
+              {recentAddresses.length === 0 ? (
+                <div className="flex flex-col items-center gap-2 py-6 text-muted-foreground">
+                  <History className="h-8 w-8" />
+                  <p className="text-sm">No recent transactions</p>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  {recentAddresses.map((addr) => (
+                    <AddressRow
+                      key={addr}
+                      address={addr}
+                      onClick={() => handleSelect(addr)}
+                    />
+                  ))}
+                </div>
+              )}
+            </TabsContent>
+          </Tabs>
+        </DialogContent>
+      </Dialog>
+    );
+  },
+);
+
+export default RecipientPicker;

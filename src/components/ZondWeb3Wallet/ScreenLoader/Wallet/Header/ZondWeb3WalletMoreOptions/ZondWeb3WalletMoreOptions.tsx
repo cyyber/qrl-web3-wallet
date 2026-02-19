@@ -6,12 +6,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/UI/DropdownMenu";
 import { APP_INDEX_FILE } from "@/constants/zondWeb3Wallet";
+import { ROUTES } from "@/router/router";
 import { useStore } from "@/stores/store";
-import { EllipsisVertical, Expand, LockKeyhole } from "lucide-react";
+import { BookUser, EllipsisVertical, Expand, LockKeyhole } from "lucide-react";
 import { observer } from "mobx-react-lite";
+import { useNavigate } from "react-router-dom";
 import browser from "webextension-polyfill";
 
 const ZondWeb3WalletMoreOptions = observer(() => {
+  const navigate = useNavigate();
   const { lockStore, settingsStore } = useStore();
   const { isPopupWindow } = settingsStore;
   const { lock } = lockStore;
@@ -44,6 +47,15 @@ const ZondWeb3WalletMoreOptions = observer(() => {
               </div>
             </DropdownMenuItem>
           )}
+          <DropdownMenuItem
+            className="cursor-pointer data-[highlighted]:text-secondary"
+            onClick={() => navigate(ROUTES.CONTACTS)}
+          >
+            <div className="flex gap-2">
+              <BookUser size="16" />
+              <button aria-label="Contacts">Contacts</button>
+            </div>
+          </DropdownMenuItem>
           <DropdownMenuItem
             className="cursor-pointer data-[highlighted]:text-secondary"
             onClick={lock}
