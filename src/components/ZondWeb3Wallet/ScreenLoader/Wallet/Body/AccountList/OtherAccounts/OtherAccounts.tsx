@@ -16,6 +16,7 @@ import {
   ArrowRight,
   Check,
   Copy,
+  Download,
   EllipsisVertical,
   Pencil,
   X,
@@ -29,10 +30,11 @@ type OtherAccountCardProps = {
   accountAddress: string;
   onSwitch: (address: string) => void;
   onCopy: (address: string) => void;
+  onReceive: (address: string) => void;
 };
 
 const OtherAccountCard = observer(
-  ({ accountAddress, onSwitch, onCopy }: OtherAccountCardProps) => {
+  ({ accountAddress, onSwitch, onCopy, onReceive }: OtherAccountCardProps) => {
     const { accountLabelsStore } = useStore();
     const label = accountLabelsStore.getLabel(accountAddress);
     const [isEditing, setIsEditing] = useState(false);
@@ -114,6 +116,15 @@ const OtherAccountCard = observer(
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className="cursor-pointer data-[highlighted]:text-secondary"
+                  onClick={() => onReceive(accountAddress)}
+                >
+                  <div className="flex gap-2">
+                    <Download size="16" />
+                    <span>Receive</span>
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="cursor-pointer data-[highlighted]:text-secondary"
                   onClick={() => onCopy(accountAddress)}
                 >
                   <div className="flex gap-2">
@@ -155,6 +166,10 @@ const OtherAccounts = observer(() => {
     navigator.clipboard.writeText(accountAddress);
   };
 
+  const receiveAccount = (accountAddress: string) => {
+    navigate(ROUTES.RECEIVE, { state: { accountAddress } });
+  };
+
   const onAccountSwitch = async (accountAddress: string) => {
     await StorageUtil.clearTransactionValues();
     navigate(ROUTES.HOME);
@@ -171,6 +186,7 @@ const OtherAccounts = observer(() => {
             accountAddress={accountAddress}
             onSwitch={onAccountSwitch}
             onCopy={copyAccount}
+            onReceive={receiveAccount}
           />
         ))}
       </div>

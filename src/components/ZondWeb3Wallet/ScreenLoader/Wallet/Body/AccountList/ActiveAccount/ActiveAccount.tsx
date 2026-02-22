@@ -14,6 +14,7 @@ import { useStore } from "@/stores/store";
 import {
   Check,
   Copy,
+  Download,
   EllipsisVertical,
   Pencil,
   Send,
@@ -117,6 +118,15 @@ const ActiveAccount = observer(() => {
                     <div className="flex gap-2">
                       <Send size="16" />
                       <span>Send Quanta</span>
+                    </div>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="cursor-pointer data-[highlighted]:text-secondary"
+                    onClick={() => navigate(ROUTES.RECEIVE)}
+                  >
+                    <div className="flex gap-2">
+                      <Download size="16" />
+                      <span>Receive</span>
                     </div>
                   </DropdownMenuItem>
                   <DropdownMenuItem

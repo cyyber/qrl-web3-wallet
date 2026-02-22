@@ -131,6 +131,14 @@ const ContactsPage = withSuspense(
       ),
   ),
 );
+const Receive = withSuspense(
+  lazy(
+    () =>
+      import(
+        "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/Receive/Receive"
+      ),
+  ),
+);
 
 export const ROUTES = {
   HOME: "/",
@@ -149,6 +157,7 @@ export const ROUTES = {
   TRANSACTION_HISTORY: "/transaction-history",
   TRANSACTION_DETAIL: "/transaction-detail",
   CONTACTS: "/contacts",
+  RECEIVE: "/receive",
   DEFAULT: "*",
 };
 
@@ -220,6 +229,10 @@ const router = createMemoryRouter([
       {
         path: ROUTES.CONTACTS,
         element: <ContactsPage />,
+      },
+      {
+        path: ROUTES.RECEIVE,
+        element: <Receive />,
       },
     ],
   },
