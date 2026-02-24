@@ -58,4 +58,26 @@ describe("SettingsPreferences", () => {
 
     expect(setCurrency).toHaveBeenCalledWith("EUR");
   });
+
+  it("should render the default gas fee select trigger", () => {
+    renderComponent();
+
+    expect(
+      screen.getByRole("combobox", { name: "Default gas fee" }),
+    ).toBeInTheDocument();
+  });
+
+  it("should call setDefaultGasTier when selecting a gas tier", async () => {
+    const setDefaultGasTier = jest.fn<any>(() => Promise.resolve());
+    renderComponent(
+      mockedStore({ settingsStore: { setDefaultGasTier } }),
+    );
+
+    await userEvent.click(
+      screen.getByRole("combobox", { name: "Default gas fee" }),
+    );
+    await userEvent.click(screen.getByRole("option", { name: "Aggressive" }));
+
+    expect(setDefaultGasTier).toHaveBeenCalledWith("aggressive");
+  });
 });

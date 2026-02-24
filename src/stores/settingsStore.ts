@@ -1,4 +1,5 @@
 import { LOCK_MANAGER_MESSAGES } from "@/scripts/lockManager/lockManager";
+import type { GasTier } from "@/types/gasFee";
 import StorageUtil from "@/utilities/storageUtil";
 import { action, makeAutoObservable, observable, runInAction } from "mobx";
 import browser from "webextension-polyfill";
@@ -19,6 +20,7 @@ class SettingsStore {
   autoLockMinutes = 15;
   currency = "USD";
   language = "en";
+  defaultGasTier: GasTier = "market";
 
   constructor() {
     makeAutoObservable(this, {
@@ -28,10 +30,12 @@ class SettingsStore {
       autoLockMinutes: observable,
       currency: observable,
       language: observable,
+      defaultGasTier: observable,
       setThemePreference: action.bound,
       setAutoLockMinutes: action.bound,
       setCurrency: action.bound,
       setLanguage: action.bound,
+      setDefaultGasTier: action.bound,
     });
 
     this.isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -72,6 +76,9 @@ class SettingsStore {
       if (settings.language) {
         this.language = settings.language;
       }
+      if (settings.defaultGasTier) {
+        this.defaultGasTier = settings.defaultGasTier;
+      }
     });
   }
 
@@ -101,6 +108,7 @@ class SettingsStore {
       autoLockMinutes: this.autoLockMinutes,
       currency: this.currency,
       language: this.language,
+      defaultGasTier: this.defaultGasTier,
     });
   }
 
@@ -125,6 +133,11 @@ class SettingsStore {
 
   async setLanguage(language: string) {
     this.language = language;
+    await this.#persistSettings();
+  }
+
+  async setDefaultGasTier(tier: GasTier) {
+    this.defaultGasTier = tier;
     await this.#persistSettings();
   }
 }

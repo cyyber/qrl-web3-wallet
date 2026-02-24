@@ -10,6 +10,7 @@ import {
 } from "@/scripts/middlewares/middlewareTypes";
 import type { LedgerAccount } from "@/services/ledger/ledgerTypes";
 import type { Contact } from "@/types/contact";
+import type { GasTier } from "@/types/gasFee";
 import type { TransactionHistoryEntry } from "@/types/transactionHistory";
 import { KeyStore } from "@theqrl/web3";
 import browser from "webextension-polyfill";
@@ -53,6 +54,7 @@ export type WalletSettings = {
   autoLockMinutes?: number;
   currency?: string;
   language?: string;
+  defaultGasTier?: GasTier;
 };
 
 type TransactionValuesType = {

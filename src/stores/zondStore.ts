@@ -9,6 +9,7 @@ import {
 } from "@/constants/zrc20Token";
 import { getHexSeedFromMnemonic } from "@/functions/getHexSeedFromMnemonic";
 import { getOptimalTokenBalance } from "@/functions/getOptimalTokenBalance";
+import type { GasFeeOverrides } from "@/types/gasFee";
 import StorageUtil from "@/utilities/storageUtil";
 import Web3, {
   TransactionReceipt,
@@ -220,16 +221,51 @@ class ZondStore {
     });
   }
 
-  async getGasFeeData() {
+  private async getBaseTip(): Promise<bigint> {
+    try {
+      const tip = await (this.qrlInstance as any)?.requestManager?.send({
+        method: "qrl_maxPriorityFeePerGas",
+        params: [],
+      });
+      const parsed = BigInt(tip);
+      if (parsed > BigInt(0)) return parsed;
+    } catch {
+      // RPC method not supported — fall back to default
+    }
+    return BigInt(utils.toPlanck("2", "shor"));
+  }
+
+  async getGasFeeData(overrides?: GasFeeOverrides) {
     const latestBlock = await this.qrlInstance?.getBlock("latest");
     const baseFeePerGas = latestBlock?.baseFeePerGas ?? BigInt(0);
-    const maxPriorityFeePerGas = utils.toPlanck("2", "shor");
-    const maxFeePerGas = baseFeePerGas + BigInt(maxPriorityFeePerGas);
-    return {
-      baseFeePerGas,
-      maxPriorityFeePerGas,
-      maxFeePerGas,
-    };
+
+    if (overrides?.tier === "advanced") {
+      const maxPriorityFeePerGas =
+        overrides.maxPriorityFeePerGas ?? BigInt(0);
+      const maxFeePerGas =
+        overrides.maxFeePerGas ?? baseFeePerGas + maxPriorityFeePerGas;
+      return { baseFeePerGas, maxPriorityFeePerGas, maxFeePerGas };
+    }
+
+    const baseTip = await this.getBaseTip();
+    let maxPriorityFeePerGas: bigint;
+
+    switch (overrides?.tier) {
+      case "low":
+        maxPriorityFeePerGas = baseTip;
+        break;
+      case "aggressive":
+        maxPriorityFeePerGas = baseTip * BigInt(2);
+        break;
+      case "market":
+      default:
+        // 1.5x — multiply by 3 then divide by 2, rounded up
+        maxPriorityFeePerGas = (baseTip * BigInt(3) + BigInt(1)) / BigInt(2);
+        break;
+    }
+
+    const maxFeePerGas = baseFeePerGas + maxPriorityFeePerGas;
+    return { baseFeePerGas, maxPriorityFeePerGas, maxFeePerGas };
   }
 
   getAccountBalance(accountAddress: string) {
@@ -240,13 +276,17 @@ class ZondStore {
     );
   }
 
-  async getNativeTokenGas() {
-    const gasLimit = NATIVE_TOKEN_UNITS_OF_GAS;
-    const baseFee = Number((await this.getGasFeeData()).baseFeePerGas);
-    const priorityFee = Number(
-      (await this.getGasFeeData()).maxPriorityFeePerGas,
+  async getNativeTokenGas(overrides?: GasFeeOverrides) {
+    const gasLimit =
+      overrides?.tier === "advanced" && overrides.gasLimit
+        ? overrides.gasLimit
+        : NATIVE_TOKEN_UNITS_OF_GAS;
+    const { baseFeePerGas, maxPriorityFeePerGas } =
+      await this.getGasFeeData(overrides);
+    return utils.fromPlanck(
+      BigInt(gasLimit) * (baseFeePerGas + maxPriorityFeePerGas),
+      "quanta",
     );
-    return utils.fromPlanck(gasLimit * (baseFee + priorityFee), "quanta");
   }
 
   async signAndSendNativeToken(
@@ -254,6 +294,7 @@ class ZondStore {
     to: string,
     value: number,
     mnemonicPhrases: string,
+    overrides?: GasFeeOverrides,
   ) {
     let transaction: {
       transactionReceipt?: TransactionReceipt;
@@ -261,16 +302,20 @@ class ZondStore {
     } = { transactionReceipt: undefined, error: "" };
 
     try {
+      const { maxFeePerGas, maxPriorityFeePerGas } =
+        await this.getGasFeeData(overrides);
+      const gasLimit =
+        overrides?.tier === "advanced" && overrides.gasLimit
+          ? overrides.gasLimit
+          : NATIVE_TOKEN_UNITS_OF_GAS;
       const transactionObject = {
         from,
         to,
         value: utils.toPlanck(value, "quanta"),
         nonce: await this.qrlInstance?.getTransactionCount(from),
-        gasLimit: NATIVE_TOKEN_UNITS_OF_GAS,
-        maxFeePerGas: Number((await this.getGasFeeData()).maxFeePerGas),
-        maxPriorityFeePerGas: Number(
-          (await this.getGasFeeData()).maxPriorityFeePerGas,
-        ),
+        gasLimit,
+        maxFeePerGas: Number(maxFeePerGas),
+        maxPriorityFeePerGas: Number(maxPriorityFeePerGas),
         type: 2,
       };
       const signedTransaction =
@@ -346,6 +391,7 @@ class ZondStore {
     value: number,
     contractAddress: string,
     decimals: number,
+    overrides?: GasFeeOverrides,
   ) {
     if (this.qrlInstance && this.qrlInstance.Contract) {
       const contract = new this.qrlInstance.Contract(
@@ -356,16 +402,19 @@ class ZondStore {
         to,
         BigInt(value * 10 ** decimals),
       );
-      const gasLimit = Number(
-        await contractTransfer.estimateGas({
-          from,
-        }),
+      const estimatedGasLimit = Number(
+        await contractTransfer.estimateGas({ from }),
       );
-      const baseFee = Number((await this.getGasFeeData()).baseFeePerGas);
-      const priorityFee = Number(
-        (await this.getGasFeeData()).maxPriorityFeePerGas,
+      const gasLimit =
+        overrides?.tier === "advanced" && overrides.gasLimit
+          ? overrides.gasLimit
+          : estimatedGasLimit;
+      const { baseFeePerGas, maxPriorityFeePerGas } =
+        await this.getGasFeeData(overrides);
+      return utils.fromPlanck(
+        BigInt(gasLimit) * (baseFeePerGas + maxPriorityFeePerGas),
+        "quanta",
       );
-      return utils.fromPlanck(gasLimit * (baseFee + priorityFee), "quanta");
     }
     return "";
   }
@@ -377,6 +426,7 @@ class ZondStore {
     mnemonicPhrases: string,
     contractAddress: string,
     decimals: number,
+    overrides?: GasFeeOverrides,
   ) {
     let transaction: {
       transactionReceipt?: TransactionReceipt;
@@ -397,16 +447,20 @@ class ZondStore {
           to,
           BigInt(value * 10 ** decimals),
         );
+        const { maxFeePerGas, maxPriorityFeePerGas } =
+          await this.getGasFeeData(overrides);
+        const gasLimit =
+          overrides?.tier === "advanced" && overrides.gasLimit
+            ? overrides.gasLimit
+            : ZRC_20_TOKEN_UNITS_OF_GAS;
         const transactionObject = {
           from,
           to: contractAddress,
           data: contractTransfer.encodeABI(),
           nonce: await this.qrlInstance?.getTransactionCount(from),
-          gasLimit: ZRC_20_TOKEN_UNITS_OF_GAS,
-          maxFeePerGas: Number((await this.getGasFeeData()).maxFeePerGas),
-          maxPriorityFeePerGas: Number(
-            (await this.getGasFeeData()).maxPriorityFeePerGas,
-          ),
+          gasLimit,
+          maxFeePerGas: Number(maxFeePerGas),
+          maxPriorityFeePerGas: Number(maxPriorityFeePerGas),
           type: 2,
         };
 

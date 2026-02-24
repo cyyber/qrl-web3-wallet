@@ -1,5 +1,6 @@
 import { getOptimalGasFee } from "@/functions/getOptimalGasFee";
 import { useStore } from "@/stores/store";
+import type { GasFeeOverrides } from "@/types/gasFee";
 import { cva } from "class-variance-authority";
 import { Loader } from "lucide-react";
 import { observer } from "mobx-react-lite";
@@ -14,6 +15,7 @@ type GasFeeNoticeProps = {
   value: number;
   isSubmitting: boolean;
   onGasFeeCalculated?: (gasFee: string) => void;
+  overrides?: GasFeeOverrides;
 };
 
 const gasFeeNoticeClasses = cva(
@@ -41,6 +43,7 @@ export const GasFeeNotice = observer(
     value,
     isSubmitting,
     onGasFeeCalculated,
+    overrides,
   }: GasFeeNoticeProps) => {
     const { zondStore } = useStore();
     const { getNativeTokenGas, getZrc20TokenGas } = zondStore;
@@ -54,7 +57,7 @@ export const GasFeeNotice = observer(
     });
 
     const calculateNativeTokenGas = async () => {
-      return await getNativeTokenGas();
+      return await getNativeTokenGas(overrides);
     };
 
     const calculateZrc20TokenGas = async () => {
@@ -64,6 +67,7 @@ export const GasFeeNotice = observer(
         value,
         tokenContractAddress,
         tokenDecimals,
+        overrides,
       );
     };
 
@@ -88,7 +92,7 @@ export const GasFeeNotice = observer(
 
     useEffect(() => {
       calculateGasFee();
-    }, [from, to, value]);
+    }, [from, to, value, overrides]);
 
     return (
       hasValuesForGasCalculation && (

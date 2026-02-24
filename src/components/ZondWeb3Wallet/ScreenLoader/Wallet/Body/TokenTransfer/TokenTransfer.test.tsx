@@ -442,9 +442,10 @@ describe("TokenTransfer", () => {
     );
 
     await waitFor(() => {
-      expect(
-        screen.getByText(/Estimated gas fee is/),
-      ).toBeInTheDocument();
+      expect(screen.getByText("Gas fee")).toBeInTheDocument();
+      expect(screen.getByText("Low")).toBeInTheDocument();
+      expect(screen.getByText("Market")).toBeInTheDocument();
+      expect(screen.getByText("Aggressive")).toBeInTheDocument();
     });
 
     expect(

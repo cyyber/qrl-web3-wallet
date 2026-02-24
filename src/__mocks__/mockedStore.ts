@@ -5,6 +5,7 @@ import {
 import LockStore from "@/stores/lockStore";
 import SettingsStore from "@/stores/settingsStore";
 import { StoreType } from "@/stores/store";
+import ZondStore from "@/stores/zondStore";
 import { Web3BaseWalletAccount } from "@theqrl/web3";
 import deepmerge from "deepmerge";
 import { createContext, useContext } from "react";
@@ -19,10 +20,12 @@ const mockedStoreValues: StoreType = {
     autoLockMinutes: 15,
     currency: "USD",
     language: "en",
+    defaultGasTier: "market" as const,
     setThemePreference: async () => {},
     setAutoLockMinutes: async () => {},
     setCurrency: async () => {},
     setLanguage: async () => {},
+    setDefaultGasTier: async () => {},
   } as unknown as SettingsStore,
   zondStore: {
     activeAccount: {
@@ -69,7 +72,7 @@ const mockedStoreValues: StoreType = {
       return {
         baseFeePerGas: BigInt(0),
         maxFeePerGas: BigInt(0),
-        maxPriorityFeePerGas: "0",
+        maxPriorityFeePerGas: BigInt(0),
       };
     },
     getZrc20TokenDetails: async () => ({
@@ -115,7 +118,7 @@ const mockedStoreValues: StoreType = {
       chainData;
       return { updatedChainList: [] };
     },
-  },
+  } as unknown as ZondStore,
   dAppRequestStore: {
     dAppRequestData: {
       method: "qrl_requestAccounts",

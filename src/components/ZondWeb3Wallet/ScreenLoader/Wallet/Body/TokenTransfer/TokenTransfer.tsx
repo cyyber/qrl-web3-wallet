@@ -37,10 +37,11 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import { z } from "zod";
+import type { GasFeeOverrides } from "@/types/gasFee";
 import BackButton from "../../../Shared/BackButton/BackButton";
 import CircuitBackground from "../../../Shared/CircuitBackground/CircuitBackground";
 import AccountAddressSection from "./AccountAddressSection/AccountAddressSection";
-import { GasFeeNotice } from "./GasFeeNotice/GasFeeNotice";
+import { GasFeeSelector } from "./GasFeeNotice/GasFeeSelector";
 import RecipientPicker from "./RecipientPicker/RecipientPicker";
 import TokenDisplaySection from "./TokenDisplaySection/TokenDisplaySection";
 import { TransactionSuccessful } from "./TransactionSuccessful/TransactionSuccessful";
@@ -87,6 +88,9 @@ const TokenTransfer = observer(() => {
   const [estimatedGasFee, setEstimatedGasFee] = useState("");
   const [balanceError, setBalanceError] = useState("");
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [gasFeeOverrides, setGasFeeOverrides] = useState<
+    GasFeeOverrides | undefined
+  >();
 
   const sendNativeToken = async (formData: z.infer<typeof FormSchema>) => {
     const isLedgerAccount = ledgerStore.isLedgerAccount(accountAddress);
@@ -101,6 +105,7 @@ const TokenTransfer = observer(() => {
         formData.receiverAddress,
         formData.amount,
         mnemonicPhrases,
+        gasFeeOverrides,
       );
     }
   };
@@ -112,7 +117,12 @@ const TokenTransfer = observer(() => {
     } = { transactionReceipt: undefined, error: "" };
 
     try {
-      const { maxFeePerGas, maxPriorityFeePerGas } = await getGasFeeData();
+      const { maxFeePerGas, maxPriorityFeePerGas } =
+        await getGasFeeData(gasFeeOverrides);
+      const gasLimit =
+        gasFeeOverrides?.tier === "advanced" && gasFeeOverrides.gasLimit
+          ? gasFeeOverrides.gasLimit
+          : NATIVE_TOKEN_UNITS_OF_GAS;
       const nonce = await qrlInstance?.getTransactionCount(accountAddress);
       const chainId = await qrlInstance?.getChainId();
 
@@ -121,7 +131,7 @@ const TokenTransfer = observer(() => {
         nonce: `0x${(nonce ?? 0).toString(16)}`,
         maxPriorityFeePerGas: `0x${Number(maxPriorityFeePerGas).toString(16)}`,
         maxFeePerGas: `0x${Number(maxFeePerGas).toString(16)}`,
-        gasLimit: `0x${BigInt(NATIVE_TOKEN_UNITS_OF_GAS).toString(16)}`,
+        gasLimit: `0x${BigInt(gasLimit).toString(16)}`,
         to: formData.receiverAddress,
         value: `0x${BigInt(utils.toPlanck(formData.amount, "quanta")).toString(16)}`,
         data: "0x",
@@ -147,6 +157,7 @@ const TokenTransfer = observer(() => {
       mnemonicPhrases,
       tokenContractAddress,
       tokenDecimals,
+      gasFeeOverrides,
     );
   };
 
@@ -444,14 +455,15 @@ const TokenTransfer = observer(() => {
                     />
                     <div className="w-8 pt-8 text-lg">{tokenSymbol}</div>
                   </div>
-                  <GasFeeNotice
+                  <GasFeeSelector
                     isZrc20Token={isZrc20Token}
                     tokenContractAddress={tokenContractAddress}
                     tokenDecimals={tokenDecimals}
                     from={accountAddress}
                     to={watch().receiverAddress}
                     value={watch().amount}
-                    isSubmitting={isSubmitting}
+                    disabled={isSubmitting}
+                    onOverridesChange={setGasFeeOverrides}
                     onGasFeeCalculated={setEstimatedGasFee}
                   />
                 </div>

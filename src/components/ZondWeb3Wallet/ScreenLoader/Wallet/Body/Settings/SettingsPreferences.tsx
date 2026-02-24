@@ -15,6 +15,7 @@ import {
 import { Separator } from "@/components/UI/Separator";
 import { ROUTES } from "@/router/router";
 import { useStore } from "@/stores/store";
+import type { GasTier } from "@/types/gasFee";
 import { MoveLeft } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useNavigate } from "react-router-dom";
@@ -22,11 +23,23 @@ import CircuitBackground from "../../../Shared/CircuitBackground/CircuitBackgrou
 
 const CURRENCY_OPTIONS = ["USD", "EUR", "PLN", "GBP", "CHF", "JPY"];
 const LANGUAGE_OPTIONS = [{ value: "en", label: "English" }];
+const GAS_TIER_OPTIONS: { value: GasTier; label: string }[] = [
+  { value: "low", label: "Low" },
+  { value: "market", label: "Market" },
+  { value: "aggressive", label: "Aggressive" },
+];
 
 const SettingsPreferences = observer(() => {
   const navigate = useNavigate();
   const { settingsStore } = useStore();
-  const { currency, setCurrency, language, setLanguage } = settingsStore;
+  const {
+    currency,
+    setCurrency,
+    language,
+    setLanguage,
+    defaultGasTier,
+    setDefaultGasTier,
+  } = settingsStore;
 
   return (
     <div className="w-full">
@@ -72,6 +85,27 @@ const SettingsPreferences = observer(() => {
                 </SelectTrigger>
                 <SelectContent>
                   {LANGUAGE_OPTIONS.map((opt) => (
+                    <SelectItem key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <Separator />
+            <div>
+              <Label className="mb-2 block text-xs text-muted-foreground">
+                Default gas fee
+              </Label>
+              <Select
+                value={defaultGasTier}
+                onValueChange={(v) => setDefaultGasTier(v as GasTier)}
+              >
+                <SelectTrigger aria-label="Default gas fee">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {GAS_TIER_OPTIONS.map((opt) => (
                     <SelectItem key={opt.value} value={opt.value}>
                       {opt.label}
                     </SelectItem>
