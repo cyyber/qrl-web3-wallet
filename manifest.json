@@ -29,6 +29,7 @@
     }
   ],
   "permissions": [
+    "alarms",
     "scripting",
     "tabs",
     "activeTab",

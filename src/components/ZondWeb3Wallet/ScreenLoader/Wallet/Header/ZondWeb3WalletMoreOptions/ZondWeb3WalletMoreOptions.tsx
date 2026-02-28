@@ -8,7 +8,13 @@ import {
 import { APP_INDEX_FILE } from "@/constants/zondWeb3Wallet";
 import { ROUTES } from "@/router/router";
 import { useStore } from "@/stores/store";
-import { BookUser, EllipsisVertical, Expand, LockKeyhole } from "lucide-react";
+import {
+  BookUser,
+  EllipsisVertical,
+  Expand,
+  LockKeyhole,
+  Settings,
+} from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useNavigate } from "react-router-dom";
 import browser from "webextension-polyfill";
@@ -54,6 +60,15 @@ const ZondWeb3WalletMoreOptions = observer(() => {
             <div className="flex gap-2">
               <BookUser size="16" />
               <button aria-label="Contacts">Contacts</button>
+            </div>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className="cursor-pointer data-[highlighted]:text-secondary"
+            onClick={() => navigate(ROUTES.SETTINGS)}
+          >
+            <div className="flex gap-2">
+              <Settings size="16" />
+              <button aria-label="Settings">Settings</button>
             </div>
           </DropdownMenuItem>
           <DropdownMenuItem
