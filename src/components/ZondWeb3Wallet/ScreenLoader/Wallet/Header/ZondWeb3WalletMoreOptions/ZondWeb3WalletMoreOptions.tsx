@@ -16,10 +16,12 @@ import {
   Settings,
 } from "lucide-react";
 import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import browser from "webextension-polyfill";
 
 const ZondWeb3WalletMoreOptions = observer(() => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { lockStore, settingsStore } = useStore();
   const { isPopupWindow } = settingsStore;
@@ -49,7 +51,7 @@ const ZondWeb3WalletMoreOptions = observer(() => {
             >
               <div className="flex gap-2">
                 <Expand size="16" />
-                <button aria-label="Open in tab">Open In Tab</button>
+                <button aria-label="Open in tab">{t('header.openInTab')}</button>
               </div>
             </DropdownMenuItem>
           )}
@@ -59,7 +61,7 @@ const ZondWeb3WalletMoreOptions = observer(() => {
           >
             <div className="flex gap-2">
               <BookUser size="16" />
-              <button aria-label="Contacts">Contacts</button>
+              <button aria-label="Contacts">{t('header.contacts')}</button>
             </div>
           </DropdownMenuItem>
           <DropdownMenuItem
@@ -68,7 +70,7 @@ const ZondWeb3WalletMoreOptions = observer(() => {
           >
             <div className="flex gap-2">
               <Settings size="16" />
-              <button aria-label="Settings">Settings</button>
+              <button aria-label="Settings">{t('header.settings')}</button>
             </div>
           </DropdownMenuItem>
           <DropdownMenuItem
@@ -77,7 +79,7 @@ const ZondWeb3WalletMoreOptions = observer(() => {
           >
             <div className="flex gap-2">
               <LockKeyhole size="16" />
-              <button aria-label="Lock Wallet">Lock Wallet</button>
+              <button aria-label="Lock Wallet">{t('header.lockWallet')}</button>
             </div>
           </DropdownMenuItem>
         </DropdownMenuGroup>

@@ -13,6 +13,7 @@ import type {
 import { History, Loader } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useEffect, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import BackButton from "../../../Shared/BackButton/BackButton";
 import CircuitBackground from "../../../Shared/CircuitBackground/CircuitBackground";
 import TransactionHistoryItem from "./TransactionHistoryItem/TransactionHistoryItem";
@@ -43,6 +44,7 @@ const groupByDate = (
 };
 
 const TransactionHistory = observer(() => {
+  const { t } = useTranslation();
   const { zondStore, transactionHistoryStore } = useStore();
   const { activeAccount } = zondStore;
   const { accountAddress } = activeAccount;
@@ -72,7 +74,7 @@ const TransactionHistory = observer(() => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <History className="h-5 w-5" />
-              Transaction History
+              {t('txHistory.title')}
             </CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
@@ -84,13 +86,13 @@ const TransactionHistory = observer(() => {
             >
               <TabsList className="w-full">
                 <TabsTrigger value="all" className="flex-1">
-                  All
+                  {t('txHistory.filterAll')}
                 </TabsTrigger>
                 <TabsTrigger value="native" className="flex-1">
-                  Native
+                  {t('txHistory.filterNative')}
                 </TabsTrigger>
                 <TabsTrigger value="zrc20" className="flex-1">
-                  ZRC-20
+                  {t('txHistory.filterZrc20')}
                 </TabsTrigger>
               </TabsList>
             </Tabs>
@@ -104,7 +106,7 @@ const TransactionHistory = observer(() => {
             {!isLoading && filteredTransactions.length === 0 && (
               <div className="flex flex-col items-center gap-2 py-8 text-muted-foreground">
                 <History className="h-12 w-12" />
-                <p className="text-sm">No transactions yet</p>
+                <p className="text-sm">{t('txHistory.empty')}</p>
               </div>
             )}
 

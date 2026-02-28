@@ -24,6 +24,7 @@ import StorageUtil from "@/utilities/storageUtil";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader, Pencil, Plus, X } from "lucide-react";
 import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -44,6 +45,7 @@ const FormSchema = z.object({
 });
 
 const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { zondStore } = useStore();
   const { initializeBlockchain, addChain, editChain } = zondStore;
@@ -57,8 +59,8 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
   const [error, setError] = useState("");
 
   const isChainEdit = !!chainToEdit;
-  const labelText = isChainEdit ? "Edit chain" : "Add chain";
-  const buttonSubmittingText = isChainEdit ? "Editing chain" : "Adding chain";
+  const labelText = isChainEdit ? t('chain.editTitle') : t('chain.addTitle');
+  const buttonSubmittingText = isChainEdit ? t('chain.editingButton') : t('chain.addingButton');
   const isCustomChain = chainToEdit?.isCustomChain ?? true;
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -146,7 +148,7 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
     const { chainFound, updatedChainList } = await addChain(blockchainData);
     if (chainFound) {
       setError(
-        `A blockchain with the chain ID ${blockchainData.chainId} already exist.`,
+        t('chain.errorChainIdExists', { chainId: blockchainData.chainId }),
       );
       return;
     }
@@ -196,18 +198,18 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
               name="chainName"
               render={({ field }) => (
                 <FormItem>
-                  <Label>Chain name</Label>
+                  <Label>{t('chain.chainName')}</Label>
                   <FormControl>
                     <Input
                       {...field}
                       aria-label={field.name}
                       autoComplete="off"
                       disabled={isSubmitting}
-                      placeholder="Zond customnet"
+                      placeholder={t('chain.chainNamePlaceholder')}
                       type="text"
                     />
                   </FormControl>
-                  <FormDescription>Blockchain name</FormDescription>
+                  <FormDescription>{t('chain.chainNameDescription')}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -217,24 +219,24 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
               name="chainId"
               render={({ field }) => (
                 <FormItem>
-                  <Label>Chain ID</Label>
+                  <Label>{t('chain.chainIdLabel')}</Label>
                   <FormControl>
                     <Input
                       {...field}
                       aria-label={field.name}
                       autoComplete="off"
                       disabled={isSubmitting || isChainEdit}
-                      placeholder="111"
+                      placeholder={t('chain.chainIdPlaceholder')}
                       type="number"
                     />
                   </FormControl>
-                  <FormDescription>Unique chain ID</FormDescription>
+                  <FormDescription>{t('chain.chainIdDescription')}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <UrlSelections
-              title="RPC URLs"
+              title={t('chain.rpcUrls')}
               canBeEmpty={false}
               urls={rpcUrls}
               setUrls={setRpcUrls}
@@ -242,7 +244,7 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
               setDefaultUrl={setDefaultRpcUrl}
             />
             <UrlSelections
-              title="Block Explorer URLs"
+              title={t('chain.blockExplorerUrls')}
               canBeEmpty={true}
               urls={blockExplorerUrls}
               setUrls={setBlockExplorerUrls}
@@ -250,7 +252,7 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
               setDefaultUrl={setDefaultBlockExplorerUrl}
             />
             <UrlSelections
-              title="Icon URLs"
+              title={t('chain.iconUrls')}
               canBeEmpty={true}
               urls={iconUrls}
               setUrls={setIconUrls}
@@ -262,18 +264,18 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
               name="currencyName"
               render={({ field }) => (
                 <FormItem>
-                  <Label>Currency name</Label>
+                  <Label>{t('chain.currencyName')}</Label>
                   <FormControl>
                     <Input
                       {...field}
                       aria-label={field.name}
                       autoComplete="off"
                       disabled={isSubmitting || !isCustomChain}
-                      placeholder="QRL"
+                      placeholder={t('chain.currencyNamePlaceholder')}
                       type="text"
                     />
                   </FormControl>
-                  <FormDescription>Currency of this blockchain</FormDescription>
+                  <FormDescription>{t('chain.currencyNameDescription')}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -284,18 +286,18 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
                 name="currencySymbol"
                 render={({ field }) => (
                   <FormItem>
-                    <Label>Symbol</Label>
+                    <Label>{t('chain.currencySymbol')}</Label>
                     <FormControl>
                       <Input
                         {...field}
                         aria-label={field.name}
                         autoComplete="off"
                         disabled={isSubmitting || !isCustomChain}
-                        placeholder="QRL"
+                        placeholder={t('chain.currencySymbolPlaceholder')}
                         type="text"
                       />
                     </FormControl>
-                    <FormDescription>Currency symbol</FormDescription>
+                    <FormDescription>{t('chain.currencySymbolDescription')}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -305,18 +307,18 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
                 name="currencyDecimals"
                 render={({ field }) => (
                   <FormItem>
-                    <Label>Decimals</Label>
+                    <Label>{t('chain.currencyDecimals')}</Label>
                     <FormControl>
                       <Input
                         {...field}
                         aria-label={field.name}
                         autoComplete="off"
                         disabled={isSubmitting || !isCustomChain}
-                        placeholder="18"
+                        placeholder={t('chain.currencyDecimalsPlaceholder')}
                         type="number"
                       />
                     </FormControl>
-                    <FormDescription>Currency decimals</FormDescription>
+                    <FormDescription>{t('chain.currencyDecimalsDescription')}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -336,7 +338,7 @@ const AddEditChainForm = observer(({ chainToEdit }: AddEditChainFormType) => {
               }}
             >
               <X className="mr-2 h-4 w-4" />
-              Cancel
+              {t('chain.cancelButton')}
             </Button>
             <Button
               disabled={isSubmitting || !isValid}

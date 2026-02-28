@@ -4,9 +4,11 @@ import { Card, CardContent, CardFooter } from "@/components/UI/Card";
 import { useStore } from "@/stores/store";
 import { Check, Info, X } from "lucide-react";
 import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 import WalletSendCallsInfo from "./WalletSendCallsInfo/WalletSendCallsInfo";
 
 const WalletSendCallsContent = observer(() => {
+  const { t } = useTranslation();
   const { dAppRequestStore } = useStore();
   const {
     dAppRequestData,
@@ -32,24 +34,22 @@ const WalletSendCallsContent = observer(() => {
   return (
     <Card className="w-full">
       <div className="p-6">
-        <div className="mb-1 text-xs font-bold">Add transactions</div>
+        <div className="mb-1 text-xs font-bold">{t('dapp.walletSendCalls.title')}</div>
         <div>
-          Here is a request to add the following transactions to the blockchain.
+          {t('dapp.walletSendCalls.description')}
         </div>
       </div>
       <CardContent className="space-y-6">
         <WalletSendCallsInfo />
         <Alert className="mt-2">
           <Info className="h-4 w-4" />
-          <AlertTitle>Using Smart Account</AlertTitle>
+          <AlertTitle>{t('dapp.walletSendCalls.alertTitle')}</AlertTitle>
           <AlertDescription className="text-xs">
-            This transaction will be delegated to a smart contract. You may
-            check the status of the transaction using the wallet_getCallsStatus
-            call.
+            {t('dapp.walletSendCalls.alertDescription')}
           </AlertDescription>
         </Alert>
         <div className="font-bold">
-          Do you want to add transactions to chain?
+          {t('dapp.walletSendCalls.question')}
         </div>
       </CardContent>
       <CardFooter className="grid grid-cols-2 gap-4">
@@ -62,7 +62,7 @@ const WalletSendCallsContent = observer(() => {
           onClick={() => onPermission(false)}
         >
           <X className="mr-2 h-4 w-4" />
-          No
+          {t('dapp.no')}
         </Button>
         <Button
           className="w-full"
@@ -72,7 +72,7 @@ const WalletSendCallsContent = observer(() => {
           onClick={() => addBlockchain()}
         >
           <Check className="mr-2 h-4 w-4" />
-          Yes
+          {t('dapp.yes')}
         </Button>
       </CardFooter>
     </Card>

@@ -12,6 +12,7 @@ import { cva } from "class-variance-authority";
 import { Wallet } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 
 const badgeButtonClasses = cva(
@@ -29,6 +30,7 @@ const badgeButtonClasses = cva(
 );
 
 const AccountBadge = observer(() => {
+  const { t } = useTranslation();
   const location = useLocation();
   const pathName = location.pathname;
   const { zondStore, accountLabelsStore } = useStore();
@@ -63,7 +65,7 @@ const AccountBadge = observer(() => {
             </Button>
           </TooltipTrigger>
           <TooltipContent side="bottom">
-            <Label>Accounts</Label>
+            <Label>{t('nav.accounts')}</Label>
           </TooltipContent>
         </Tooltip>
       </Link>

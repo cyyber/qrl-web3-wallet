@@ -10,6 +10,7 @@ import StorageUtil from "@/utilities/storageUtil";
 import { Download, MoveLeft } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import CircuitBackground from "../../../Shared/CircuitBackground/CircuitBackground";
 
@@ -17,6 +18,7 @@ const WALLET_VERSION = "0.1.1";
 
 const SettingsData = observer(() => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [exporting, setExporting] = useState(false);
 
   const exportBackup = async () => {
@@ -63,13 +65,12 @@ const SettingsData = observer(() => {
                 onClick={() => navigate(ROUTES.SETTINGS)}
                 data-testid="back-arrow"
               />
-              Data
+              {t("settings.data.title")}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <p className="mb-3 text-xs text-muted-foreground">
-              Export encrypted keystores as a JSON backup file. No
-              decrypted keys or passwords are included.
+              {t("settings.data.exportDescription")}
             </p>
             <Button
               variant="outline"
@@ -78,7 +79,7 @@ const SettingsData = observer(() => {
               disabled={exporting}
             >
               <Download className="mr-1 h-3.5 w-3.5" />
-              {exporting ? "Exporting..." : "Export Backup"}
+              {exporting ? t("settings.data.exportingButton") : t("settings.data.exportButton")}
             </Button>
           </CardContent>
         </Card>

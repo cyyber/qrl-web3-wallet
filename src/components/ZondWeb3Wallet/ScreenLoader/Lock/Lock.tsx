@@ -1,11 +1,13 @@
 import { useStore } from "@/stores/store";
 import { Loader } from "lucide-react";
 import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 import LockPassword from "./LockPassword/LockPassword";
 
 const Lock = observer(() => {
   const { lockStore } = useStore();
   const { isLoading } = lockStore;
+  const { t } = useTranslation();
 
   return (
     <>
@@ -20,7 +22,7 @@ const Lock = observer(() => {
             src="icons/qrl/default.png"
           />
           <div className="relative z-10 text-6xl font-bold">
-            Zond Web3 Wallet
+            {t("lock.title")}
           </div>
         </div>
         {isLoading ? (

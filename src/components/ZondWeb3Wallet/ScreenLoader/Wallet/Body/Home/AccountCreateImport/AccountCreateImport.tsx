@@ -13,6 +13,7 @@ import { cva } from "class-variance-authority";
 import { Download, History, Logs, Plus, Send, Usb } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { Link, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import ActiveAccountDisplay from "./ActiveAccountDisplay/ActiveAccountDisplay";
 import TokensCardContent from "./ActiveAccountDisplay/TokensCardContent/TokensCardContent";
 import { useEffect, useState } from "react";
@@ -44,6 +45,7 @@ const addAccountsClasses = cva("w-full", {
 });
 
 const AccountCreateImport = observer(() => {
+  const { t } = useTranslation();
   const { state } = useLocation();
   const { zondStore } = useStore();
   const { activeAccount } = zondStore;
@@ -69,7 +71,7 @@ const AccountCreateImport = observer(() => {
         <>
           <Card className="order-1 w-full">
             <CardHeader>
-              <CardTitle>Active account</CardTitle>
+              <CardTitle>{t('home.activeAccount')}</CardTitle>
             </CardHeader>
             <CardContent>
               <ActiveAccountDisplay />
@@ -82,20 +84,20 @@ const AccountCreateImport = observer(() => {
               >
                 <Button className="w-full" type="button">
                   <Send className="mr-2 h-4 w-4" />
-                  Send Quanta
+                  {t('home.sendQuanta')}
                 </Button>
               </Link>
               <Link className="w-full" to={ROUTES.TRANSACTION_HISTORY}>
                 <Button className="w-full" type="button" variant="outline">
                   <History className="mr-2 h-4 w-4" />
-                  Transaction History
+                  {t('home.transactionHistory')}
                 </Button>
               </Link>
             </CardFooter>
           </Card>
           <Card className={tokensClasses({ hasTokensPreference })}>
             <CardHeader>
-              <CardTitle>Tokens</CardTitle>
+              <CardTitle>{t('home.tokens')}</CardTitle>
             </CardHeader>
             <CardContent>
               <TokensCardContent />
@@ -104,14 +106,14 @@ const AccountCreateImport = observer(() => {
               <Link className="w-full" to={ROUTES.IMPORT_TOKEN}>
                 <Button className="w-full" type="button">
                   <Download className="mr-2 h-4 w-4" />
-                  Import token
+                  {t('home.importToken')}
                 </Button>
               </Link>
               {tokenContractsList.length > ZRC_20_ITEMS_DISPLAY_LIMIT && (
                 <Link className="w-full" to={ROUTES.ALL_ZRC_20_TOKENS}>
                   <Button className="w-full" type="button" variant="outline">
                     <Logs className="mr-2 h-4 w-4" />
-                    View all ZRC 20 tokens
+                    {t('home.viewAllTokens')}
                   </Button>
                 </Link>
               )}
@@ -121,28 +123,28 @@ const AccountCreateImport = observer(() => {
       )}
       <Card className={addAccountsClasses({ hasAccountCreationPreference })}>
         <CardHeader>
-          <CardTitle>Add accounts</CardTitle>
+          <CardTitle>{t('home.addAccounts')}</CardTitle>
           <CardDescription>
-            Create a new account or import an existing account.
+            {t('home.addAccountsDescription')}
           </CardDescription>
         </CardHeader>
         <CardFooter className="flex-col gap-4">
           <Link className="w-full" to={ROUTES.CREATE_ACCOUNT}>
             <Button className="w-full" type="button">
               <Plus className="mr-2 h-4 w-4" />
-              Create a new account
+              {t('home.createAccount')}
             </Button>
           </Link>
           <Link className="w-full" to={ROUTES.IMPORT_ACCOUNT}>
             <Button className="w-full" type="button" variant="outline">
               <Download className="mr-2 h-4 w-4" />
-              Import an existing account
+              {t('home.importAccount')}
             </Button>
           </Link>
           <Link className="w-full" to={ROUTES.IMPORT_LEDGER}>
             <Button className="w-full" type="button" variant="outline">
               <Usb className="mr-2 h-4 w-4" />
-              Connect Ledger
+              {t('home.connectLedger')}
             </Button>
           </Link>
         </CardFooter>

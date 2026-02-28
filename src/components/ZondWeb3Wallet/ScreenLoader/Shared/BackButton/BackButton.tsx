@@ -1,5 +1,6 @@
 import { Label } from "@/components/UI/Label";
 import { MoveLeft } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 type BackButtonProps = {
@@ -7,6 +8,7 @@ type BackButtonProps = {
 };
 
 const BackButton = ({ navigationRoute }: BackButtonProps) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   return (
@@ -18,7 +20,7 @@ const BackButton = ({ navigationRoute }: BackButtonProps) => {
       }
     >
       <MoveLeft />
-      <Label className="cursor-pointer text-lg">Back</Label>
+      <Label className="cursor-pointer text-lg">{t('common.back')}</Label>
     </div>
   );
 };

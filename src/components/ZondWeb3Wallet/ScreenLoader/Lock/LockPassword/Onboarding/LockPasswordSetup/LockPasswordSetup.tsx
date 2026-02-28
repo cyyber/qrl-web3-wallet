@@ -17,22 +17,27 @@ import {
 } from "@/components/UI/Form";
 import { Input } from "@/components/UI/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { TFunction } from "i18next";
 import { MoveRight } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { ONBOARDING_STEPS, OnboardingStepType } from "../Onboarding";
 
-const FormSchema = z
-  .object({
-    password: z.string().min(8, "Password must be atleast 8 characters"),
-    reEnteredPassword: z
-      .string()
-      .min(8, "Password must be atleast 8 characters"),
-  })
-  .refine((fields) => fields.password === fields.reEnteredPassword, {
-    message: "Passwords doesn't match",
-    path: ["reEnteredPassword"],
-  });
+const createFormSchema = (t: TFunction) =>
+  z
+    .object({
+      password: z
+        .string()
+        .min(8, t("onboarding.password.validationMinLength")),
+      reEnteredPassword: z
+        .string()
+        .min(8, t("onboarding.password.validationMinLength")),
+    })
+    .refine((fields) => fields.password === fields.reEnteredPassword, {
+      message: t("onboarding.password.validationMismatch"),
+      path: ["reEnteredPassword"],
+    });
 
 type LockPasswordSetupProps = {
   selectStep: (step: OnboardingStepType) => void;
@@ -43,6 +48,9 @@ const LockPasswordSetup = ({
   selectStep,
   setNewPassword,
 }: LockPasswordSetupProps) => {
+  const { t } = useTranslation();
+  const FormSchema = createFormSchema(t);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     mode: "onChange",
@@ -72,9 +80,9 @@ const LockPasswordSetup = ({
       >
         <Card className="animate-appear-in shadow-xl">
           <CardHeader>
-            <CardTitle>Set Wallet Password</CardTitle>
+            <CardTitle>{t("onboarding.password.title")}</CardTitle>
             <CardDescription className="break-words">
-              Set a password for this wallet
+              {t("onboarding.password.description")}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -88,11 +96,11 @@ const LockPasswordSetup = ({
                       {...field}
                       aria-label={field.name}
                       disabled={isSubmitting}
-                      placeholder="Password"
+                      placeholder={t("onboarding.password.placeholder")}
                       type="password"
                     />
                   </FormControl>
-                  <FormDescription>Enter a password</FormDescription>
+                  <FormDescription>{t("onboarding.password.inputDescription")}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -107,11 +115,11 @@ const LockPasswordSetup = ({
                       {...field}
                       aria-label={field.name}
                       disabled={isSubmitting}
-                      placeholder="Re-enter Password"
+                      placeholder={t("onboarding.password.confirmPlaceholder")}
                       type="password"
                     />
                   </FormControl>
-                  <FormDescription>Re-enter the password</FormDescription>
+                  <FormDescription>{t("onboarding.password.confirmDescription")}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -120,7 +128,7 @@ const LockPasswordSetup = ({
           <CardFooter>
             <Button disabled={!isValid} className="w-full">
               <MoveRight className="mr-2 h-4 w-4" />
-              Continue
+              {t("onboarding.password.button")}
             </Button>
           </CardFooter>
         </Card>

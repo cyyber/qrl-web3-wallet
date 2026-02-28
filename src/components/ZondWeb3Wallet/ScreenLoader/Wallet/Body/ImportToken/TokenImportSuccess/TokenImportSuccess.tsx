@@ -14,6 +14,7 @@ import StringUtil from "@/utilities/stringUtil";
 import { getRandomTailwindTextColor } from "@/utilities/stylingUtil";
 import { Download, FileBox, X } from "lucide-react";
 import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 type TokenImportSuccessProps = {
@@ -26,6 +27,7 @@ type TokenImportSuccessProps = {
 
 const TokenImportSuccess = observer(
   ({ token, onCancelImport, contractAddress }: TokenImportSuccessProps) => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const { zondStore } = useStore();
     const { activeAccount } = zondStore;
@@ -53,7 +55,7 @@ const TokenImportSuccess = observer(
     return (
       <Card className="w-full">
         <CardHeader>
-          <CardTitle>Import token</CardTitle>
+          <CardTitle>{t('importToken.title')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex flex-col gap-4">
@@ -62,7 +64,7 @@ const TokenImportSuccess = observer(
               size={64}
             />
             <div className="flex flex-col gap-1">
-              <div>Contract address</div>
+              <div>{t('importToken.contractAddressLabel')}</div>
               <div className="flex flex-wrap gap-1 font-bold text-secondary">
                 {`${prefix} ${addressSplit.join(" ")}`}
               </div>
@@ -70,25 +72,25 @@ const TokenImportSuccess = observer(
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1">
-              <div>Name</div>
+              <div>{t('importToken.nameLabel')}</div>
               <div className="font-bold text-secondary">{name}</div>
             </div>
             <div className="flex flex-col gap-1">
-              <div>Symbol</div>
+              <div>{t('importToken.symbolLabel')}</div>
               <div className="font-bold text-secondary">{symbol}</div>
             </div>
             <div className="flex flex-col gap-1">
-              <div>Total supply</div>
+              <div>{t('importToken.totalSupplyLabel')}</div>
               <div className="font-bold text-secondary">{totalSupply}</div>
             </div>
             <div className="flex flex-col gap-1">
-              <div>Balance</div>
+              <div>{t('importToken.balanceLabel')}</div>
               <div className="font-bold text-secondary">
                 {getOptimalTokenBalance(balance?.toString() ?? "0", symbol)}
               </div>
             </div>
             <div className="flex flex-col gap-1">
-              <div>Decimals</div>
+              <div>{t('importToken.decimalsLabel')}</div>
               <div className="font-bold text-secondary">
                 {decimals?.toString()}
               </div>
@@ -103,11 +105,11 @@ const TokenImportSuccess = observer(
             onClick={onCancelImport}
           >
             <X className="mr-2 h-4 w-4" />
-            Cancel
+            {t('importToken.cancelButton')}
           </Button>
           <Button className="w-full" type="button" onClick={onConfirmImport}>
             <Download className="mr-2 h-4 w-4" />
-            Import
+            {t('importToken.confirmButton')}
           </Button>
         </CardFooter>
       </Card>

@@ -22,6 +22,7 @@ import StorageUtil from "@/utilities/storageUtil";
 import { Check, CircleMinus, EllipsisVertical, Send, X } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import TokenListItemIcon from "./TokenListItemIcon/TokenListItemIcon";
 
@@ -47,6 +48,7 @@ const TokenListItem = observer(
     symbol,
     triggerReRender,
   }: TokenListItemProps) => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const { zondStore } = useStore();
     const { activeAccount } = zondStore;
@@ -94,7 +96,7 @@ const TokenListItem = observer(
               className="size-7 hover:bg-accent hover:text-secondary"
               variant="outline"
               size="icon"
-              aria-label="More"
+              aria-label={t('common.more')}
             >
               <EllipsisVertical size="16" />
             </Button>
@@ -107,7 +109,7 @@ const TokenListItem = observer(
               >
                 <div className="flex gap-2">
                   <Send size="16" />
-                  <button aria-label={`Send ${symbol}`}>Send {symbol}</button>
+                  <button aria-label={t('tokens.sendToken', { symbol })}>{t('tokens.sendToken', { symbol })}</button>
                 </div>
               </DropdownMenuItem>
               <DropdownMenuItem
@@ -117,8 +119,8 @@ const TokenListItem = observer(
               >
                 <div className="flex gap-2">
                   <CircleMinus size="16" />
-                  <button disabled={!isZrc20Token} aria-label="Hide Token">
-                    Hide Token
+                  <button disabled={!isZrc20Token} aria-label={t('tokens.hideToken')}>
+                    {t('tokens.hideToken')}
                   </button>
                 </div>
               </DropdownMenuItem>
@@ -128,9 +130,9 @@ const TokenListItem = observer(
         <Dialog open={hideDialogOpen} onOpenChange={setHideDialogOpen}>
           <DialogContent className="w-80 rounded-md">
             <DialogHeader className="text-left">
-              <DialogTitle>Hide</DialogTitle>
+              <DialogTitle>{t('tokens.hide')}</DialogTitle>
               <DialogDescription>
-                Do you want to hide '{symbol}' from wallet?
+                {t('tokens.hideConfirm', { symbol })}
               </DialogDescription>
             </DialogHeader>
             <DialogFooter className="flex flex-row gap-4">
@@ -139,20 +141,20 @@ const TokenListItem = observer(
                   className="w-full"
                   type="button"
                   variant="outline"
-                  aria-label="Cancel Hide"
+                  aria-label={t('tokens.cancelHide')}
                 >
                   <X className="mr-2 h-4 w-4" />
-                  No
+                  {t('common.no')}
                 </Button>
               </DialogClose>
               <Button
                 className="w-full"
                 type="button"
-                aria-label="Confirm Hide"
+                aria-label={t('tokens.confirmHide')}
                 onClick={onHide}
               >
                 <Check className="mr-2 h-4 w-4" />
-                Yes
+                {t('common.yes')}
               </Button>
             </DialogFooter>
           </DialogContent>

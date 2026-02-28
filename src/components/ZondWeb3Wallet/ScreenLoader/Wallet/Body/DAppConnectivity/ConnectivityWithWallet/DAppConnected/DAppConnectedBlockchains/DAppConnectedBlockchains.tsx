@@ -10,10 +10,12 @@ import { ROUTES } from "@/router/router";
 import { useStore } from "@/stores/store";
 import { Pencil } from "lucide-react";
 import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import ChainIcon from "../../../../ChainConnectivity/ChainIcon/ChainIcon";
 
 const DAppConnectedBlockchains = observer(() => {
+  const { t } = useTranslation();
   const { dAppRequestStore } = useStore();
   const { currentTabData } = dAppRequestStore;
 
@@ -21,7 +23,7 @@ const DAppConnectedBlockchains = observer(() => {
     <Card className="flex flex-col gap-4 p-4">
       <div className="flex gap-2">
         <div className="text-sm">
-          The following blockchains are allowed to be used by this website.
+          {t('dapp.connectedBlockchainsDescription')}
         </div>
         <div className="shrink-0">
           <Tooltip delayDuration={0}>
@@ -29,20 +31,20 @@ const DAppConnectedBlockchains = observer(() => {
               <Link
                 to={ROUTES.EDIT_DAPP_CONNECTED_BLOCKCHAINS}
                 state={{ hasState: true }}
-                aria-label="Edit chain"
+                aria-label={t('dapp.editConnectedBlockchains')}
               >
                 <Button
                   className="size-7 hover:bg-accent hover:text-secondary"
                   variant="outline"
                   size="icon"
-                  aria-label="Edit"
+                  aria-label={t('common.edit')}
                 >
                   <Pencil size="16" />
                 </Button>
               </Link>
             </TooltipTrigger>
             <TooltipContent side="left">
-              <Label>Edit connected blockchains</Label>
+              <Label>{t('dapp.editConnectedBlockchains')}</Label>
             </TooltipContent>
           </Tooltip>
         </div>
@@ -58,7 +60,7 @@ const DAppConnectedBlockchains = observer(() => {
                 <div className="flex flex-col break-all">
                   <span className="font-bold">{chainName}</span>
                   <span className="text-xm opacity-80">
-                    Chain ID {parseInt(chainId, 16)}
+                    {t('dapp.chainId', { id: parseInt(chainId, 16) })}
                   </span>
                   <span className="text-xm opacity-80">{defaultRpcUrl}</span>
                 </div>

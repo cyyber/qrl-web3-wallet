@@ -27,6 +27,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, X } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
 type AddUrlItemProps = {
@@ -38,6 +39,7 @@ const FormSchema = z.object({
 });
 
 const AddUrlItem = ({ addUrl }: AddUrlItemProps) => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -63,7 +65,7 @@ const AddUrlItem = ({ addUrl }: AddUrlItemProps) => {
 
   return (
     <div className="flex justify-between gap-2">
-      <div>You may add URLs, and select one as the default URL.</div>
+      <div>{t('chain.addUrlDescription')}</div>
       <Form {...form}>
         <form name="addUrlItemForm" aria-label="addUrlItemForm">
           <Dialog open={open} onOpenChange={setOpen}>
@@ -75,7 +77,7 @@ const AddUrlItem = ({ addUrl }: AddUrlItemProps) => {
                     variant="outline"
                     size="icon"
                     type="button"
-                    aria-label="Add URL"
+                    aria-label={t('chain.addUrl')}
                     onClick={() => {
                       setOpen(true);
                     }}
@@ -85,12 +87,12 @@ const AddUrlItem = ({ addUrl }: AddUrlItemProps) => {
                 </DialogTrigger>
               </TooltipTrigger>
               <TooltipContent side="left">
-                <Label>Add URL</Label>
+                <Label>{t('chain.addUrl')}</Label>
               </TooltipContent>
             </Tooltip>
             <DialogContent className="w-80 rounded-md">
               <DialogHeader className="text-left">
-                <DialogTitle>Add URL</DialogTitle>
+                <DialogTitle>{t('chain.addUrl')}</DialogTitle>
               </DialogHeader>
               <FormField
                 control={control}
@@ -108,7 +110,7 @@ const AddUrlItem = ({ addUrl }: AddUrlItemProps) => {
                         type="text"
                       />
                     </FormControl>
-                    <FormDescription>Enter the URL to be added</FormDescription>
+                    <FormDescription>{t('chain.enterUrl')}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -119,21 +121,21 @@ const AddUrlItem = ({ addUrl }: AddUrlItemProps) => {
                     className="w-full"
                     type="button"
                     variant="outline"
-                    aria-label="Cancel"
+                    aria-label={t('common.cancel')}
                   >
                     <X className="mr-2 h-4 w-4" />
-                    Cancel
+                    {t('common.cancel')}
                   </Button>
                 </DialogClose>
                 <Button
                   className="w-full"
                   type="button"
                   disabled={isSubmitting || !isValid}
-                  aria-label="Add"
+                  aria-label={t('common.add')}
                   onClick={handleSubmit(onSubmit)}
                 >
                   <Plus className="mr-2 h-4 w-4" />
-                  Add
+                  {t('common.add')}
                 </Button>
               </DialogFooter>
             </DialogContent>

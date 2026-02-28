@@ -18,20 +18,21 @@ import { useStore } from "@/stores/store";
 import type { GasTier } from "@/types/gasFee";
 import { MoveLeft } from "lucide-react";
 import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import CircuitBackground from "../../../Shared/CircuitBackground/CircuitBackground";
 
 const CURRENCY_OPTIONS = ["USD", "EUR", "PLN", "GBP", "CHF", "JPY"];
-const LANGUAGE_OPTIONS = [{ value: "en", label: "English" }];
-const GAS_TIER_OPTIONS: { value: GasTier; label: string }[] = [
-  { value: "low", label: "Low" },
-  { value: "market", label: "Market" },
-  { value: "aggressive", label: "Aggressive" },
+const LANGUAGE_OPTIONS = [
+  { value: "en", label: "English" },
+  { value: "es", label: "Español" },
+  { value: "de", label: "Deutsch" },
 ];
 
 const SettingsPreferences = observer(() => {
   const navigate = useNavigate();
   const { settingsStore } = useStore();
+  const { t } = useTranslation();
   const {
     currency,
     setCurrency,
@@ -40,6 +41,12 @@ const SettingsPreferences = observer(() => {
     defaultGasTier,
     setDefaultGasTier,
   } = settingsStore;
+
+  const GAS_TIER_OPTIONS: { value: GasTier; label: string }[] = [
+    { value: "low", label: t("settings.preferences.gasLow") },
+    { value: "market", label: t("settings.preferences.gasMarket") },
+    { value: "aggressive", label: t("settings.preferences.gasAggressive") },
+  ];
 
   return (
     <div className="w-full">
@@ -53,13 +60,13 @@ const SettingsPreferences = observer(() => {
                 onClick={() => navigate(ROUTES.SETTINGS)}
                 data-testid="back-arrow"
               />
-              Preferences
+              {t("settings.preferences.title")}
             </CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
             <div>
               <Label className="mb-2 block text-xs text-muted-foreground">
-                Display currency
+                {t("settings.preferences.currencyLabel")}
               </Label>
               <Select value={currency} onValueChange={setCurrency}>
                 <SelectTrigger aria-label="Display currency">
@@ -77,7 +84,7 @@ const SettingsPreferences = observer(() => {
             <Separator />
             <div>
               <Label className="mb-2 block text-xs text-muted-foreground">
-                Language
+                {t("settings.preferences.languageLabel")}
               </Label>
               <Select value={language} onValueChange={setLanguage}>
                 <SelectTrigger aria-label="Language">
@@ -95,7 +102,7 @@ const SettingsPreferences = observer(() => {
             <Separator />
             <div>
               <Label className="mb-2 block text-xs text-muted-foreground">
-                Default gas fee
+                {t("settings.preferences.gasLabel")}
               </Label>
               <Select
                 value={defaultGasTier}

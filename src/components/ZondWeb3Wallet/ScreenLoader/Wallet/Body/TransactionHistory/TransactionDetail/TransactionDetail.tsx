@@ -28,6 +28,7 @@ import {
 import { observer } from "mobx-react-lite";
 import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import browser from "webextension-polyfill";
 import BackButton from "../../../../Shared/BackButton/BackButton";
 import CircuitBackground from "../../../../Shared/CircuitBackground/CircuitBackground";
@@ -79,44 +80,19 @@ function getDisplayStatus(
   return status ? "confirmed" : "failed";
 }
 
-function getStatusBadge(displayStatus: PendingStatus) {
-  switch (displayStatus) {
-    case "pending":
-      return {
-        className: "bg-amber-500/10 text-amber-500",
-        label: "Pending",
-      };
-    case "confirmed":
-      return {
-        className: "bg-green-500/10 text-green-500",
-        label: "Confirmed",
-      };
-    case "failed":
-      return { className: "bg-red-500/10 text-red-500", label: "Failed" };
-    case "replaced":
-      return {
-        className: "bg-muted text-muted-foreground",
-        label: "Replaced",
-      };
-    case "cancelled":
-      return {
-        className: "bg-muted text-muted-foreground",
-        label: "Cancelled",
-      };
-    case "dropped":
-      return {
-        className: "bg-muted text-muted-foreground",
-        label: "Dropped",
-      };
-    default:
-      return {
-        className: "bg-muted text-muted-foreground",
-        label: "Unknown",
-      };
-  }
-}
+const STATUS_BADGE_CONFIG: Record<string, { className: string; labelKey: string }> = {
+  pending: { className: "bg-amber-500/10 text-amber-500", labelKey: "txDetail.statusPending" },
+  confirmed: { className: "bg-green-500/10 text-green-500", labelKey: "txDetail.statusConfirmed" },
+  failed: { className: "bg-red-500/10 text-red-500", labelKey: "txDetail.statusFailed" },
+  replaced: { className: "bg-muted text-muted-foreground", labelKey: "txDetail.statusReplaced" },
+  cancelled: { className: "bg-muted text-muted-foreground", labelKey: "txDetail.statusCancelled" },
+  dropped: { className: "bg-muted text-muted-foreground", labelKey: "txDetail.statusDropped" },
+};
+
+const DEFAULT_BADGE_CONFIG = { className: "bg-muted text-muted-foreground", labelKey: "txDetail.statusUnknown" };
 
 const TransactionDetail = observer(() => {
+  const { t } = useTranslation();
   const { zondStore, lockStore, transactionHistoryStore, priceStore, settingsStore } = useStore();
   const location = useLocation();
   const navigate = useNavigate();
@@ -312,7 +288,7 @@ const TransactionDetail = observer(() => {
           <Card className="w-full">
             <CardContent className="flex flex-col items-center gap-2 py-8 text-muted-foreground">
               <FileText className="h-12 w-12" />
-              <p className="text-sm">Transaction not found</p>
+              <p className="text-sm">{t('txDetail.notFound')}</p>
             </CardContent>
           </Card>
         </div>
@@ -337,7 +313,7 @@ const TransactionDetail = observer(() => {
   } = transaction;
 
   const displayStatus = getDisplayStatus(pendingStatus, status);
-  const badge = getStatusBadge(displayStatus);
+  const badgeConfig = STATUS_BADGE_CONFIG[displayStatus] ?? DEFAULT_BADGE_CONFIG;
   const isPending = displayStatus === "pending";
   const canReplace =
     isPending && transaction.nonce !== undefined;
@@ -381,18 +357,18 @@ const TransactionDetail = observer(() => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <FileText className="h-5 w-5" />
-              Transaction Details
+              {t('txDetail.title')}
             </CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
             <div className="flex items-center gap-2">
               <div
-                className={`inline-flex w-fit items-center rounded-full px-3 py-1 text-sm font-medium ${badge.className}`}
+                className={`inline-flex w-fit items-center rounded-full px-3 py-1 text-sm font-medium ${badgeConfig.className}`}
               >
                 {isPending && (
                   <Loader className="mr-1 h-3 w-3 animate-spin" />
                 )}
-                {badge.label}
+                {t(badgeConfig.labelKey)}
               </div>
             </div>
 
@@ -406,7 +382,7 @@ const TransactionDetail = observer(() => {
                     onClick={() => setSpeedUpDialogOpen(true)}
                   >
                     <Zap className="mr-2 h-4 w-4" />
-                    Speed Up
+                    {t('txDetail.speedUp')}
                   </Button>
                   <Button
                     variant="outline"
@@ -414,7 +390,7 @@ const TransactionDetail = observer(() => {
                     onClick={() => setCancelDialogOpen(true)}
                   >
                     <Ban className="mr-2 h-4 w-4" />
-                    Cancel
+                    {t('txDetail.cancel')}
                   </Button>
                 </div>
                 <Separator />
@@ -429,8 +405,8 @@ const TransactionDetail = observer(() => {
                   <div className="flex flex-col gap-1">
                     <span className="text-xs text-muted-foreground">
                       {replacedByAction === "speed-up"
-                        ? "Replaced by (Speed Up)"
-                        : "Cancelled by"}
+                        ? t('txDetail.replacedBy')
+                        : t('txDetail.cancelledBy')}
                     </span>
                     <span className="break-all text-sm font-medium text-secondary">
                       {replacementTransactionHash}
@@ -441,7 +417,7 @@ const TransactionDetail = observer(() => {
               )}
 
             <div className="flex flex-col gap-1">
-              <span className="text-xs text-muted-foreground">Amount</span>
+              <span className="text-xs text-muted-foreground">{t('txDetail.amount')}</span>
               <span className="text-lg font-bold">
                 {amount} {tokenSymbol}
               </span>
@@ -452,13 +428,13 @@ const TransactionDetail = observer(() => {
 
             <Separator />
 
-            <CopyableField label="From" value={from} />
-            <CopyableField label="To" value={to} />
+            <CopyableField label={t('txDetail.from')} value={from} />
+            <CopyableField label={t('txDetail.to')} value={to} />
 
             <Separator />
 
             <CopyableField
-              label="Transaction Hash"
+              label={t('txDetail.transactionHash')}
               value={transactionHash}
             />
 
@@ -469,13 +445,13 @@ const TransactionDetail = observer(() => {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1">
                     <span className="text-xs text-muted-foreground">
-                      Block Number
+                      {t('txDetail.blockNumber')}
                     </span>
                     <span className="text-sm font-medium">{blockNumber}</span>
                   </div>
                   <div className="flex flex-col gap-1">
                     <span className="text-xs text-muted-foreground">
-                      Gas Used
+                      {t('txDetail.gasUsed')}
                     </span>
                     <span className="text-sm font-medium">
                       {Number(gasUsed).toLocaleString()}
@@ -483,7 +459,7 @@ const TransactionDetail = observer(() => {
                   </div>
                   <div className="flex flex-col gap-1">
                     <span className="text-xs text-muted-foreground">
-                      Gas Price
+                      {t('txDetail.gasPrice')}
                     </span>
                     <span className="text-sm font-medium">
                       {getOptimalGasFee(gasPriceQrl)}
@@ -491,7 +467,7 @@ const TransactionDetail = observer(() => {
                   </div>
                   <div className="flex flex-col gap-1">
                     <span className="text-xs text-muted-foreground">
-                      Total Gas Fee
+                      {t('txDetail.totalGasFee')}
                     </span>
                     <span className="text-sm font-medium">
                       {getOptimalGasFee(totalGasFeeQrl)}
@@ -506,7 +482,7 @@ const TransactionDetail = observer(() => {
 
                 <div className="flex flex-col gap-1">
                   <span className="text-xs text-muted-foreground">
-                    Total Cost
+                    {t('txDetail.totalCost')}
                   </span>
                   <span className="text-sm font-bold">
                     {getOptimalGasFee(totalCost.toString())}
@@ -525,13 +501,13 @@ const TransactionDetail = observer(() => {
             {isPending && (
               <div className="flex items-center gap-2 text-sm text-amber-500">
                 <Loader className="h-4 w-4 animate-spin" />
-                Waiting for confirmation...
+                {t('txDetail.waiting')}
               </div>
             )}
 
             <div className="flex flex-col gap-1">
               <span className="text-xs text-muted-foreground">
-                Date & Time
+                {t('txDetail.dateTime')}
               </span>
               <span className="text-sm font-medium">{formattedDate}</span>
             </div>
@@ -545,7 +521,7 @@ const TransactionDetail = observer(() => {
                   onClick={openInExplorer}
                 >
                   <ExternalLink className="mr-2 h-4 w-4" />
-                  View on Block Explorer
+                  {t('txDetail.viewExplorer')}
                 </Button>
               </>
             )}

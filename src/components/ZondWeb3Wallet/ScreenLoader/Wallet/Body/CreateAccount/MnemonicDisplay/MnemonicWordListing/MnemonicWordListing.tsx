@@ -10,18 +10,21 @@ const groupWords = (mnemonic: string) => {
   return groupedWords;
 };
 
+import { useTranslation } from "react-i18next";
+
 type MnemonicWordListingProps = {
   mnemonic: string;
 };
 
 const MnemonicWordListing = ({ mnemonic = "" }: MnemonicWordListingProps) => {
+  const { t } = useTranslation();
   const trimmedMnemonic = mnemonic.trim();
   const words = groupWords(trimmedMnemonic);
 
   return (
     trimmedMnemonic && (
       <div className="space-y-2">
-        <div className="font-bold">Mnemonic Phrases</div>
+        <div className="font-bold">{t('mnemonic.phrases')}</div>
         <div className="flex flex-col gap-2 text-secondary">
           {words.map((groupedWords) => (
             <div

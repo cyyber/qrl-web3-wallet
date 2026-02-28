@@ -5,9 +5,11 @@ import {
   TooltipTrigger,
 } from "@/components/UI/Tooltip";
 import { ROUTES } from "@/router/router";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 const ZondWeb3WalletLogo = () => {
+  const { t } = useTranslation();
   return (
     <Link to={ROUTES.HOME}>
       <Tooltip delayDuration={0}>
@@ -19,7 +21,7 @@ const ZondWeb3WalletLogo = () => {
           />
         </TooltipTrigger>
         <TooltipContent side="bottom">
-          <Label>Home</Label>
+          <Label>{t('nav.home')}</Label>
         </TooltipContent>
       </Tooltip>
     </Link>

@@ -10,6 +10,7 @@ import { ROUTES } from "@/router/router";
 import { useStore } from "@/stores/store";
 import { cva } from "class-variance-authority";
 import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 import DAppBadgeIcon from "./DAppBadgeIcon/DAppBadgeIcon";
 
@@ -40,6 +41,7 @@ const connectivityStatusClasses = cva("h-2 w-2 rounded-full", {
 });
 
 const DAppBadge = observer(() => {
+  const { t } = useTranslation();
   const location = useLocation();
   const pathName = location.pathname;
   const { dAppRequestStore } = useStore();
@@ -68,7 +70,7 @@ const DAppBadge = observer(() => {
           </Button>
         </TooltipTrigger>
         <TooltipContent side="bottom">
-          <Label>DApp Connectivity</Label>
+          <Label>{t('nav.dappConnectivity')}</Label>
         </TooltipContent>
       </Tooltip>
     </Link>

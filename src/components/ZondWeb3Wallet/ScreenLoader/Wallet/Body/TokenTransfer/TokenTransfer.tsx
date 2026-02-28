@@ -37,6 +37,8 @@ import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import { z } from "zod";
 import type { GasFeeOverrides } from "@/types/gasFee";
 import BackButton from "../../../Shared/BackButton/BackButton";
@@ -50,17 +52,20 @@ import { NATIVE_TOKEN_UNITS_OF_GAS } from "@/constants/nativeToken";
 
 const { Common } = qrl.accounts;
 
-const FormSchema = z
-  .object({
-    receiverAddress: z.string().min(1, "Receiver address is required"),
-    amount: z.coerce.number().gt(0, "Amount should be more than 0"),
-  })
-  .refine((fields) => validator.isAddressString(fields.receiverAddress), {
-    message: "Address is invalid",
-    path: ["receiverAddress"],
-  });
+const createFormSchema = (t: TFunction) =>
+  z
+    .object({
+      receiverAddress: z.string().min(1, t('validation.receiverRequired')),
+      amount: z.coerce.number().gt(0, t('validation.amountPositive')),
+    })
+    .refine((fields) => validator.isAddressString(fields.receiverAddress), {
+      message: t('validation.addressInvalid'),
+      path: ["receiverAddress"],
+    });
 
 const TokenTransfer = observer(() => {
+  const { t } = useTranslation();
+  const FormSchema = createFormSchema(t);
   const { state } = useLocation();
   const navigate = useNavigate();
   const { lockStore, zondStore, ledgerStore, transactionHistoryStore, priceStore, settingsStore } =
@@ -182,7 +187,7 @@ const TokenTransfer = observer(() => {
 
       if (error) {
         control.setError("amount", {
-          message: `An error occured. ${error}`,
+          message: t('transfer.errorOccurred', { error }),
         });
       } else {
         const isTransactionSuccessful =
@@ -229,13 +234,13 @@ const TokenTransfer = observer(() => {
           window.scrollTo(0, 0);
         } else {
           control.setError("amount", {
-            message: `Transaction failed.`,
+            message: t('transfer.errorFailed'),
           });
         }
       }
     } catch (error) {
       control.setError("amount", {
-        message: `An error occured. ${error}`,
+        message: t('transfer.errorOccurred', { error }),
       });
     }
   }
@@ -363,18 +368,18 @@ const TokenTransfer = observer(() => {
     if (isZrc20Token) {
       const tokenBal = parseBalanceValue(tokenBalance);
       if (sendAmount.greaterThan(tokenBal)) {
-        setBalanceError(`Insufficient ${tokenSymbol} balance`);
+        setBalanceError(t('transfer.errorInsufficientToken', { tokenSymbol }));
         return;
       }
       if (gasFee.greaterThan(nativeBalance)) {
-        setBalanceError("Insufficient QRL for gas fee");
+        setBalanceError(t('transfer.errorInsufficientGas'));
         return;
       }
     } else {
       const totalCost = sendAmount.plus(gasFee);
       if (totalCost.greaterThan(nativeBalance)) {
         setBalanceError(
-          "Insufficient QRL balance (amount + gas fee exceeds balance)",
+          t('transfer.errorInsufficientBalance'),
         );
         return;
       }
@@ -401,18 +406,18 @@ const TokenTransfer = observer(() => {
             </CardHeader>
             <CardContent className="flex flex-col gap-8 pt-6">
               <div className="flex flex-col gap-1">
-                <Label className="text-lg">Active account</Label>
+                <Label className="text-lg">{t('transfer.activeAccount')}</Label>
                 <AccountAddressSection tokenBalance={tokenBalance} />
               </div>
               <div className="flex flex-col gap-2">
-                <Label className="text-lg">Make a transaction</Label>
+                <Label className="text-lg">{t('transfer.makeTransaction')}</Label>
                 <div className="flex flex-col gap-4">
                   <FormField
                     control={control}
                     name="receiverAddress"
                     render={({ field }) => (
                       <FormItem>
-                        <Label>Send to</Label>
+                        <Label>{t('transfer.sendTo')}</Label>
                         <div className="flex items-center gap-1">
                           <FormControl>
                             <Input
@@ -420,7 +425,7 @@ const TokenTransfer = observer(() => {
                               aria-label={field.name}
                               autoComplete="off"
                               disabled={isSubmitting}
-                              placeholder="Receiver address"
+                              placeholder={t('transfer.receiverPlaceholder')}
                             />
                           </FormControl>
                           <RecipientPicker
@@ -434,7 +439,7 @@ const TokenTransfer = observer(() => {
                           />
                         </div>
                         <FormDescription>
-                          Receiver&apos;s public address
+                          {t('transfer.receiverDescription')}
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -446,20 +451,20 @@ const TokenTransfer = observer(() => {
                       name="amount"
                       render={({ field }) => (
                         <FormItem>
-                          <Label>Amount</Label>
+                          <Label>{t('transfer.amountLabel')}</Label>
                           <FormControl>
                             <Input
                               {...field}
                               aria-label={field.name}
                               autoComplete="off"
                               disabled={isSubmitting}
-                              placeholder="Amount"
+                              placeholder={t('transfer.amountPlaceholder')}
                               type="number"
                               step="any"
                             />
                           </FormControl>
                           <FormDescription>
-                            Amount to send
+                            {t('transfer.amountDescription')}
                             {!isZrc20Token &&
                               settingsStore.showBalanceAndPrice &&
                               priceStore.getPrice(settingsStore.currency) > 0 &&
@@ -506,7 +511,7 @@ const TokenTransfer = observer(() => {
                 onClick={() => cancelTransaction()}
               >
                 <X className="mr-2 h-4 w-4" />
-                Cancel
+                {t('transfer.cancelButton')}
               </Button>
               <Button disabled={isSubmitting || !isValid || !!balanceError} className="w-full">
                 {isSubmitting ? (
@@ -515,8 +520,8 @@ const TokenTransfer = observer(() => {
                   <Send className="mr-2 h-4 w-4" />
                 )}
                 {isSubmitting
-                  ? `Sending ${tokenSymbol}`
-                  : `Send ${tokenSymbol}`}
+                  ? t('transfer.sendingButton', { tokenSymbol })
+                  : t('transfer.sendButton', { tokenSymbol })}
               </Button>
             </CardFooter>
           </Card>
@@ -529,11 +534,11 @@ const TokenTransfer = observer(() => {
                       className="animate-spin text-foreground"
                       size="18"
                     />
-                    Transaction running
+                    {t('transfer.dialogRunning')}
                   </div>
                 </AlertDialogTitle>
                 <AlertDialogDescription>
-                  Please wait while the transaction completes.
+                  {t('transfer.dialogPleaseWait')}
                 </AlertDialogDescription>
               </AlertDialogHeader>
             </AlertDialogContent>

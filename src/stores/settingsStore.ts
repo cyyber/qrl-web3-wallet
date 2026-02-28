@@ -1,3 +1,4 @@
+import i18n from "@/i18n";
 import { LOCK_MANAGER_MESSAGES } from "@/scripts/lockManager/lockManager";
 import type { GasTier } from "@/types/gasFee";
 import StorageUtil from "@/utilities/storageUtil";
@@ -78,6 +79,7 @@ class SettingsStore {
       }
       if (settings.language) {
         this.language = settings.language;
+        i18n.changeLanguage(settings.language);
       }
       if (settings.defaultGasTier) {
         this.defaultGasTier = settings.defaultGasTier;
@@ -140,6 +142,7 @@ class SettingsStore {
 
   async setLanguage(language: string) {
     this.language = language;
+    i18n.changeLanguage(language);
     await this.#persistSettings();
   }
 

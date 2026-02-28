@@ -1,5 +1,6 @@
 import { useStore } from "@/stores/store";
 import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 import ZondSendTransactionForContent from "./ZondSendTransactionForContent/ZondSendTransactionForContent";
 import { useEffect, useState } from "react";
 
@@ -11,6 +12,7 @@ export const SEND_TRANSACTION_TYPES = {
 } as const;
 
 const ZondSendTransaction = observer(() => {
+  const { t } = useTranslation();
   const { dAppRequestStore } = useStore();
   const { dAppRequestData } = dAppRequestStore;
 
@@ -27,16 +29,16 @@ const ZondSendTransaction = observer(() => {
     }
     const { to, value, data } = params;
     if (!to && data) {
-      setTransactionHeading("Deploy a contract");
-      setTransactionSubHeading("This site wants to deploy a contract");
+      setTransactionHeading(t('dapp.sendTransaction.contractDeploy'));
+      setTransactionSubHeading(t('dapp.sendTransaction.contractDeployDescription'));
       setTransactionType(SEND_TRANSACTION_TYPES.CONTRACT_DEPLOYMENT);
     } else if (to && data) {
-      setTransactionHeading("Interact with a contract");
-      setTransactionSubHeading("This site wants to interact with a contract");
+      setTransactionHeading(t('dapp.sendTransaction.contractInteract'));
+      setTransactionSubHeading(t('dapp.sendTransaction.contractInteractDescription'));
       setTransactionType(SEND_TRANSACTION_TYPES.CONTRACT_INTERACTION);
     } else if (to && value && !data) {
-      setTransactionHeading("Transfer QRL");
-      setTransactionSubHeading("This site wants to send QRL");
+      setTransactionHeading(t('dapp.sendTransaction.transferQrl'));
+      setTransactionSubHeading(t('dapp.sendTransaction.transferQrlDescription'));
       setTransactionType(SEND_TRANSACTION_TYPES.QRL_TRANSFER);
     }
   }, [dAppRequestData]);

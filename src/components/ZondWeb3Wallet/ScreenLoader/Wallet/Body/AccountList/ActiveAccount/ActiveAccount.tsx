@@ -22,10 +22,12 @@ import {
 } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import AccountId from "../AccountId/AccountId";
 
 const ActiveAccount = observer(() => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { zondStore, accountLabelsStore } = useStore();
   const { activeAccount } = zondStore;
@@ -59,7 +61,7 @@ const ActiveAccount = observer(() => {
   return (
     !!accountAddress && (
       <div className="flex flex-col gap-2">
-        <Label className="text-lg">Active account</Label>
+        <Label className="text-lg">{t('home.activeAccount')}</Label>
         <Card className="flex w-full flex-col gap-3 p-3 font-bold text-foreground">
           {isEditing && (
             <div className="flex items-center gap-1">
@@ -73,14 +75,14 @@ const ActiveAccount = observer(() => {
                 className="h-7 w-40 text-sm"
                 autoFocus
                 maxLength={50}
-                aria-label="Edit account label"
+                aria-label={t('home.editAccountLabel')}
               />
               <Button
                 variant="ghost"
                 size="icon"
                 className="size-6"
                 onClick={saveEdit}
-                aria-label="Save label"
+                aria-label={t('home.saveLabel')}
               >
                 <Check className="h-3.5 w-3.5" />
               </Button>
@@ -89,7 +91,7 @@ const ActiveAccount = observer(() => {
                 size="icon"
                 className="size-6"
                 onClick={cancelEdit}
-                aria-label="Cancel edit"
+                aria-label={t('home.cancelEdit')}
               >
                 <X className="h-3.5 w-3.5" />
               </Button>
@@ -117,7 +119,7 @@ const ActiveAccount = observer(() => {
                   >
                     <div className="flex gap-2">
                       <Send size="16" />
-                      <span>Send Quanta</span>
+                      <span>{t('home.sendQuanta')}</span>
                     </div>
                   </DropdownMenuItem>
                   <DropdownMenuItem
@@ -126,7 +128,7 @@ const ActiveAccount = observer(() => {
                   >
                     <div className="flex gap-2">
                       <Download size="16" />
-                      <span>Receive</span>
+                      <span>{t('home.receive')}</span>
                     </div>
                   </DropdownMenuItem>
                   <DropdownMenuItem
@@ -135,7 +137,7 @@ const ActiveAccount = observer(() => {
                   >
                     <div className="flex gap-2">
                       <Copy size="16" />
-                      <span>Copy Address</span>
+                      <span>{t('home.copyAddress')}</span>
                     </div>
                   </DropdownMenuItem>
                   <DropdownMenuItem
@@ -144,7 +146,7 @@ const ActiveAccount = observer(() => {
                   >
                     <div className="flex gap-2">
                       <Pencil size="16" />
-                      <span>Rename</span>
+                      <span>{t('home.rename')}</span>
                     </div>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>

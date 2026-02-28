@@ -1,10 +1,12 @@
 import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 import ZondSignTypedDataV4Content from "./ZondSignTypedDataV4Content/ZondSignTypedDataV4Content";
 import { useStore } from "@/stores/store";
 import { RESTRICTED_METHODS } from "@/scripts/constants/requestConstants";
 import PersonalSign from "./PersonalSign/PersonalSign";
 
 const ZondSignTypedDataV4 = observer(() => {
+  const { t } = useTranslation();
   const { dAppRequestStore } = useStore();
   const { dAppRequestData } = dAppRequestStore;
   const method = dAppRequestData?.method;
@@ -15,8 +17,8 @@ const ZondSignTypedDataV4 = observer(() => {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <div className="text-2xl font-bold">Signature Request</div>
-        <div>Review and sign the below message data</div>
+        <div className="text-2xl font-bold">{t('dapp.signature.title')}</div>
+        <div>{t('dapp.signature.description')}</div>
       </div>
       <div className="flex flex-col gap-4">
         {isZondSignTypedDataV4 && <ZondSignTypedDataV4Content />}

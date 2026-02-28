@@ -24,6 +24,7 @@ import { Download, Loader } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { lazy, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import BackButton from "../../../Shared/BackButton/BackButton";
 import CircuitBackground from "../../../Shared/CircuitBackground/CircuitBackground";
@@ -50,6 +51,7 @@ const FormSchema = z.object({
 });
 
 const ImportAccount = observer(() => {
+  const { t } = useTranslation();
   const [account, setAccount] = useState<Web3BaseWalletAccount>();
   const [hasAccountImported, setHasAccountImported] = useState(false);
   const { lockStore, zondStore } = useStore();
@@ -70,12 +72,12 @@ const ImportAccount = observer(() => {
         setHasAccountImported(true);
       } else {
         control.setError("mnemonicPhrases", {
-          message: "Account could not be imported from the mnemonic phrases",
+          message: t('importAccount.importFailed'),
         });
       }
     } catch (error) {
       control.setError("mnemonicPhrases", {
-        message: `There was an error while reading the mnemonic phrases. ${error}`,
+        message: `${t('importAccount.readError')} ${error}`,
       });
     }
   }
@@ -112,7 +114,7 @@ const ImportAccount = observer(() => {
             >
               <Card>
                 <CardHeader>
-                  <CardTitle>Import an existing account</CardTitle>
+                  <CardTitle>{t('importAccount.title')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <FormField
@@ -126,11 +128,11 @@ const ImportAccount = observer(() => {
                             aria-label={field.name}
                             autoComplete="off"
                             disabled={isSubmitting}
-                            placeholder="Mnemonic Phrases"
+                            placeholder={t('mnemonic.phrases')}
                           />
                         </FormControl>
                         <FormDescription>
-                          Paste the mnemonic phrases
+                          {t('importAccount.pasteMnemonic')}
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -149,7 +151,7 @@ const ImportAccount = observer(() => {
                     ) : (
                       <Download className="mr-2 h-4 w-4" />
                     )}
-                    {isSubmitting ? "Importing account" : "Import account"}
+                    {isSubmitting ? t('importAccount.importing') : t('importAccount.button')}
                   </Button>
                 </CardFooter>
               </Card>

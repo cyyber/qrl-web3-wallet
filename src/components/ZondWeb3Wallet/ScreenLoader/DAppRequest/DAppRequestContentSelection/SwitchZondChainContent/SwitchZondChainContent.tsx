@@ -3,10 +3,12 @@ import { Card, CardContent, CardFooter } from "@/components/UI/Card";
 import { useStore } from "@/stores/store";
 import { Check, X } from "lucide-react";
 import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 import SwitchZondChainInfo from "./SwitchZondChainInfo/SwitchZondChainInfo";
 import { includeChainForUrlOrigin } from "@/scripts/utils/restrictedMethodsMiddlewareUtils";
 
 const SwitchZondChainContent = observer(() => {
+  const { t } = useTranslation();
   const { dAppRequestStore, zondStore } = useStore();
   const { selectBlockchain } = zondStore;
   const {
@@ -39,12 +41,12 @@ const SwitchZondChainContent = observer(() => {
   return (
     <Card className="w-full">
       <div className="p-6">
-        <div className="mb-1 text-xs font-bold">Switch chain</div>
-        <div>Here is a request to switch the current blockchain.</div>
+        <div className="mb-1 text-xs font-bold">{t('dapp.switchChain.title')}</div>
+        <div>{t('dapp.switchChain.description')}</div>
       </div>
       <CardContent className="space-y-6">
         <SwitchZondChainInfo />
-        <div className="font-bold">Do you want to switch the chain?</div>
+        <div className="font-bold">{t('dapp.switchChain.question')}</div>
       </CardContent>
       <CardFooter className="grid grid-cols-2 gap-4">
         <Button
@@ -56,7 +58,7 @@ const SwitchZondChainContent = observer(() => {
           onClick={() => onPermission(false)}
         >
           <X className="mr-2 h-4 w-4" />
-          No
+          {t('dapp.no')}
         </Button>
         <Button
           className="w-full"
@@ -66,7 +68,7 @@ const SwitchZondChainContent = observer(() => {
           onClick={() => switchChain()}
         >
           <Check className="mr-2 h-4 w-4" />
-          Yes
+          {t('dapp.yes')}
         </Button>
       </CardFooter>
     </Card>

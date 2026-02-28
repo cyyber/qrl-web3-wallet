@@ -8,6 +8,7 @@ import type {
 import { ArrowUpRight, Loader } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 type TransactionHistoryItemProps = {
   transaction: TransactionHistoryEntry;
@@ -38,28 +39,19 @@ function getStatusColor(displayStatus: PendingStatus): string {
   }
 }
 
-function getStatusLabel(displayStatus: PendingStatus): string {
-  switch (displayStatus) {
-    case "pending":
-      return "Pending";
-    case "confirmed":
-      return "Confirmed";
-    case "failed":
-      return "Failed";
-    case "replaced":
-      return "Replaced";
-    case "cancelled":
-      return "Cancelled";
-    case "dropped":
-      return "Dropped";
-    default:
-      return "Unknown";
-  }
-}
+const STATUS_LABEL_KEYS: Record<string, string> = {
+  pending: "txDetail.statusPending",
+  confirmed: "txDetail.statusConfirmed",
+  failed: "txDetail.statusFailed",
+  replaced: "txDetail.statusReplaced",
+  cancelled: "txDetail.statusCancelled",
+  dropped: "txDetail.statusDropped",
+};
 
 const TransactionHistoryItem = observer(({
   transaction,
 }: TransactionHistoryItemProps) => {
+  const { t } = useTranslation();
   const { priceStore, settingsStore } = useStore();
   const { amount, tokenSymbol, status, pendingStatus } = transaction;
   const navigate = useNavigate();
@@ -89,12 +81,12 @@ const TransactionHistoryItem = observer(({
         <ArrowUpRight className="h-8 w-8 shrink-0 text-secondary" />
         <div className="flex flex-1 items-center justify-between">
           <div className="flex flex-col">
-            <span className="text-sm font-medium">Send</span>
+            <span className="text-sm font-medium">{t('txHistory.typeSend')}</span>
             <span className={`text-xs ${getStatusColor(displayStatus)}`}>
               {isPending && (
                 <Loader className="mr-1 inline h-3 w-3 animate-spin" />
               )}
-              {getStatusLabel(displayStatus)}
+              {t(STATUS_LABEL_KEYS[displayStatus] ?? 'txDetail.statusUnknown')}
             </span>
           </div>
           <div className="flex flex-col items-end">
@@ -112,13 +104,13 @@ const TransactionHistoryItem = observer(({
                   onClick={(e) => handleAction(e, "speed-up")}
                   className="rounded bg-amber-500/10 px-2 py-0.5 text-[10px] font-medium text-amber-500 hover:bg-amber-500/20"
                 >
-                  Speed Up
+                  {t('txHistory.speedUp')}
                 </button>
                 <button
                   onClick={(e) => handleAction(e, "cancel")}
                   className="rounded bg-red-500/10 px-2 py-0.5 text-[10px] font-medium text-red-500 hover:bg-red-500/20"
                 >
-                  Cancel
+                  {t('txHistory.cancel')}
                 </button>
               </div>
             )}

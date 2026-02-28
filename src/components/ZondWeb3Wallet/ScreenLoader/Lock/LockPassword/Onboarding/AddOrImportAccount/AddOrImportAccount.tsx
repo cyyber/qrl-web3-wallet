@@ -32,6 +32,7 @@ import { getHexSeedFromMnemonic } from "@/functions/getHexSeedFromMnemonic";
 import { useStore } from "@/stores/store";
 import StringUtil from "@/utilities/stringUtil";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { TFunction } from "i18next";
 import Web3, { Web3BaseWalletAccount } from "@theqrl/web3";
 import {
   Download,
@@ -44,13 +45,15 @@ import {
 import { observer } from "mobx-react-lite";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { ONBOARDING_STEPS, OnboardingStepType } from "../Onboarding";
 import AccountAddressDisplay from "./AccountAddressDisplay/AccountAddressDisplay";
 
-const FormSchema = z.object({
-  mnemonicPhrases: z.string().min(1, "Mnemonic phrases are required"),
-});
+const createFormSchema = (t: TFunction) =>
+  z.object({
+    mnemonicPhrases: z.string().min(1, t("validation.mnemonicRequired")),
+  });
 
 type AddOrImportAccountProps = {
   selectStep: (step: OnboardingStepType) => void;
@@ -63,6 +66,8 @@ const AddOrImportAccount = observer(
     const { activeAccount } = zondStore;
     const { accountAddress } = activeAccount;
     const hasAccount = !!accountAddress;
+    const { t } = useTranslation();
+    const FormSchema = createFormSchema(t);
 
     const [open, setOpen] = useState(false);
     const [addedAccount, setAddedAccount] = useState<
@@ -112,28 +117,25 @@ const AddOrImportAccount = observer(
           onImportAccount(account);
         } else {
           control.setError("mnemonicPhrases", {
-            message: "Account could not be imported from your mnemonic phrases",
+            message: t("onboarding.account.importError"),
           });
         }
       } catch (error) {
         control.setError("mnemonicPhrases", {
-          message: `There was an error while reading the mnemonic phrases. ${error}`,
+          message: t("onboarding.account.importMnemonicError", { error: String(error) }),
         });
       }
     }
 
-    const revoceryPhrasesDescription =
-      "Don't lose this recovery mnemonic phrases. Download it right now. You may need this someday to import or recover your account.";
-    const continueWarning =
-      "It is highly recommended that you continue after downloading the recovery mnemonic phrases. If you already have, please continue.";
+    const revoceryPhrasesDescription = t("onboarding.account.recoveryDescription");
+    const continueWarning = t("onboarding.account.continueDialogWarning");
 
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Add/Import account</CardTitle>
+          <CardTitle>{t("onboarding.account.title")}</CardTitle>
           <CardDescription>
-            You can either add a new account, or import an existing account
-            using your mnemonic phrases.
+            {t("onboarding.account.description")}
           </CardDescription>
         </CardHeader>
         {hasAccount && (
@@ -155,19 +157,19 @@ const AddOrImportAccount = observer(
                       onClick={onDownload}
                     >
                       <HardDriveDownload className="mr-2 h-4 w-4" />
-                      Download Recovery Phrases
+                      {t("onboarding.account.downloadButton")}
                     </Button>
                   </div>
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button className="w-full" type="button">
                         <MoveRight className="mr-2 h-4 w-4" />
-                        Continue
+                        {t("onboarding.account.continueButton")}
                       </Button>
                     </DialogTrigger>
                     <DialogContent className="w-80 rounded-md">
                       <DialogHeader className="text-left">
-                        <DialogTitle>Important!</DialogTitle>
+                        <DialogTitle>{t("onboarding.account.continueDialogTitle")}</DialogTitle>
                         <DialogDescription>{continueWarning}</DialogDescription>
                       </DialogHeader>
                       <DialogFooter className="flex flex-row gap-4">
@@ -178,7 +180,7 @@ const AddOrImportAccount = observer(
                             variant="outline"
                           >
                             <Undo className="mr-2 h-4 w-4" />
-                            Go back
+                            {t("onboarding.account.goBack")}
                           </Button>
                         </DialogClose>
                         <Button
@@ -189,7 +191,7 @@ const AddOrImportAccount = observer(
                           }}
                         >
                           <MoveRight className="mr-2 h-4 w-4" />
-                          Continue
+                          {t("onboarding.account.continueButton")}
                         </Button>
                       </DialogFooter>
                     </DialogContent>
@@ -203,7 +205,7 @@ const AddOrImportAccount = observer(
                   }}
                 >
                   <MoveRight className="mr-2 h-4 w-4" />
-                  Continue
+                  {t("onboarding.account.continueButton")}
                 </Button>
               )}
             </>
@@ -211,7 +213,7 @@ const AddOrImportAccount = observer(
             <>
               <Button className="w-full" onClick={onAddAccount}>
                 <Plus className="mr-2 h-4 w-4" />
-                Create a new account
+                {t("onboarding.account.createButton")}
               </Button>
               <Form {...form}>
                 <form
@@ -229,11 +231,11 @@ const AddOrImportAccount = observer(
                       }}
                     >
                       <Download className="mr-2 h-4 w-4" />
-                      Import an existing account
+                      {t("onboarding.account.importButton")}
                     </Button>
                     <DialogContent className="w-80 rounded-md">
                       <DialogHeader className="text-left">
-                        <DialogTitle>Import account</DialogTitle>
+                        <DialogTitle>{t("onboarding.account.importDialogTitle")}</DialogTitle>
                       </DialogHeader>
                       <FormField
                         control={control}
@@ -247,12 +249,12 @@ const AddOrImportAccount = observer(
                                 aria-label={field.name}
                                 autoComplete="off"
                                 disabled={isSubmitting}
-                                placeholder="Mnemonic Phrases"
+                                placeholder={t("onboarding.account.importPlaceholder")}
                                 type="text"
                               />
                             </FormControl>
                             <FormDescription>
-                              Enter your mnemonic phrases
+                              {t("onboarding.account.importDescription")}
                             </FormDescription>
                             <FormMessage />
                           </FormItem>
@@ -268,7 +270,7 @@ const AddOrImportAccount = observer(
                             aria-label="Cancel"
                           >
                             <X className="mr-2 h-4 w-4" />
-                            Cancel
+                            {t("onboarding.account.importCancel")}
                           </Button>
                         </DialogClose>
                         <Button
@@ -279,7 +281,7 @@ const AddOrImportAccount = observer(
                           onClick={handleSubmit(onSubmit)}
                         >
                           <Download className="mr-2 h-4 w-4" />
-                          Import
+                          {t("onboarding.account.importSubmit")}
                         </Button>
                       </DialogFooter>
                     </DialogContent>

@@ -10,6 +10,7 @@ import { ROUTES } from "@/router/router";
 import { useStore } from "@/stores/store";
 import { cva } from "class-variance-authority";
 import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 import ChainBadgeIcon from "./ChainBadgeIcon/ChainBadgeIcon";
 
@@ -50,6 +51,7 @@ type ChainBadgeProps = {
 
 const ChainBadge = observer(
   ({ isDisabled = false, displayChainName = true }: ChainBadgeProps) => {
+    const { t } = useTranslation();
     const location = useLocation();
     const pathName = location.pathname;
     const { zondStore } = useStore();
@@ -82,7 +84,7 @@ const ChainBadge = observer(
             </Button>
           </TooltipTrigger>
           <TooltipContent side="bottom">
-            <Label>Blockchain Selection</Label>
+            <Label>{t('nav.blockchainSelection')}</Label>
           </TooltipContent>
         </Tooltip>
       </Link>

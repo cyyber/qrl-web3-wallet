@@ -11,9 +11,11 @@ import ChainBadge from "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Header/C
 import { useStore } from "@/stores/store";
 import { Check, Loader, X } from "lucide-react";
 import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 import DAppRequestWebsite from "./DAppRequestWebsite/DAppRequestWebsite";
 
 const PermissionRequiredContent = observer(() => {
+  const { t } = useTranslation();
   const { dAppRequestStore } = useStore();
   const { onPermission, canProceed, approvalProcessingStatus } =
     dAppRequestStore;
@@ -28,15 +30,14 @@ const PermissionRequiredContent = observer(() => {
           <ChainBadge isDisabled={true} />
         </div>
         <div className="p-6">
-          <div className="mb-1 text-xs font-bold">Your permission required</div>
+          <div className="mb-1 text-xs font-bold">{t('dapp.permissionTitle')}</div>
           <div>
-            Here is a request coming in. Go through the details and decide if it
-            needs to be allowed.
+            {t('dapp.permissionDescription')}
           </div>
         </div>
         <CardContent className="space-y-6">
           <DAppRequestWebsite />
-          <div className="font-bold">Do you trust and want to allow this?</div>
+          <div className="font-bold">{t('dapp.permissionQuestion')}</div>
         </CardContent>
         <CardFooter className="grid grid-cols-2 gap-4">
           <Button
@@ -52,7 +53,7 @@ const PermissionRequiredContent = observer(() => {
             ) : (
               <X className="mr-2 h-4 w-4" />
             )}
-            No
+            {t('dapp.no')}
           </Button>
           <Button
             className="w-full"
@@ -66,7 +67,7 @@ const PermissionRequiredContent = observer(() => {
             ) : (
               <Check className="mr-2 h-4 w-4" />
             )}
-            Yes
+            {t('dapp.yes')}
           </Button>
         </CardFooter>
       </Card>
@@ -76,11 +77,11 @@ const PermissionRequiredContent = observer(() => {
             <AlertDialogTitle>
               <div className="flex items-center gap-2">
                 <Loader className="animate-spin text-foreground" size="18" />
-                Transaction running
+                {t('dapp.transactionRunning')}
               </div>
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Please wait. This may take a while.
+              {t('dapp.pleaseWait')}
             </AlertDialogDescription>
           </AlertDialogHeader>
         </AlertDialogContent>

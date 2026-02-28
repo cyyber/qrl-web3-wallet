@@ -18,23 +18,25 @@ import { ROUTES } from "@/router/router";
 import { useStore } from "@/stores/store";
 import { MoveLeft } from "lucide-react";
 import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import CircuitBackground from "../../../Shared/CircuitBackground/CircuitBackground";
-
-const AUTO_LOCK_OPTIONS = [
-  { value: "1", label: "1 minute" },
-  { value: "5", label: "5 minutes" },
-  { value: "15", label: "15 minutes" },
-  { value: "30", label: "30 minutes" },
-  { value: "60", label: "60 minutes" },
-  { value: "0", label: "Never" },
-];
 
 const SettingsSecurity = observer(() => {
   const navigate = useNavigate();
   const { settingsStore, priceStore } = useStore();
+  const { t } = useTranslation();
   const { autoLockMinutes, setAutoLockMinutes, showBalanceAndPrice, setShowBalanceAndPrice } =
     settingsStore;
+
+  const AUTO_LOCK_OPTIONS = [
+    { value: "1", label: t("settings.security.1minute") },
+    { value: "5", label: t("settings.security.5minutes") },
+    { value: "15", label: t("settings.security.15minutes") },
+    { value: "30", label: t("settings.security.30minutes") },
+    { value: "60", label: t("settings.security.60minutes") },
+    { value: "0", label: t("settings.security.never") },
+  ];
 
   const handleTogglePrice = (checked: boolean | "indeterminate") => {
     const enabled = checked === true;
@@ -59,13 +61,13 @@ const SettingsSecurity = observer(() => {
                 onClick={() => navigate(ROUTES.SETTINGS)}
                 data-testid="back-arrow"
               />
-              Security & Privacy
+              {t("settings.security.title")}
             </CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
             <div>
               <Label className="mb-2 block text-xs text-muted-foreground">
-                Auto-lock timeout
+                {t("settings.security.autoLockLabel")}
               </Label>
               <Select
                 value={String(autoLockMinutes)}
@@ -92,21 +94,11 @@ const SettingsSecurity = observer(() => {
                   onCheckedChange={handleTogglePrice}
                 />
                 <Label htmlFor="show-balance-price" className="text-sm">
-                  Show balance and token price
+                  {t("settings.security.showBalanceLabel")}
                 </Label>
               </div>
               <p className="text-[11px] text-muted-foreground">
-                We use{" "}
-                <a
-                  href="https://www.coingecko.com/en/privacy"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline"
-                >
-                  CoinGecko API
-                </a>{" "}
-                to display token prices. When disabled, no external API calls
-                are made and no fiat values are shown.
+                {t("settings.security.showBalanceDescription")}
               </p>
             </div>
           </CardContent>

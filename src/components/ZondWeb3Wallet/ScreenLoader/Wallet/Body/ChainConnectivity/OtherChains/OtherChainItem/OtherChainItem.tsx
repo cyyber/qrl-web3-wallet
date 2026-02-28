@@ -28,6 +28,7 @@ import { useStore } from "@/stores/store";
 import { Check, EllipsisVertical, Pencil, Trash, Wifi, X } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import ChainIcon from "../../ChainIcon/ChainIcon";
 import StorageUtil from "@/utilities/storageUtil";
@@ -43,6 +44,7 @@ type OtherChainItemProps = {
 
 const OtherChainItem = observer(
   ({ blockchain, triggerReRender }: OtherChainItemProps) => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const { dAppRequestStore, zondStore } = useStore();
     const { selectBlockchain } = zondStore;
@@ -84,7 +86,7 @@ const OtherChainItem = observer(
           <div className="flex flex-col break-all">
             <span className="font-bold">{chainName}</span>
             <span className="text-xm opacity-80">
-              Chain ID {parseInt(chainId, 16)}
+              {t('dapp.chainId', { id: parseInt(chainId, 16) })}
             </span>
             <span className="text-xm opacity-80">{defaultRpcUrl}</span>
           </div>
@@ -96,7 +98,7 @@ const OtherChainItem = observer(
                 className="size-7 hover:bg-accent hover:text-secondary"
                 variant="outline"
                 size="icon"
-                aria-label="Connect chain"
+                aria-label={t('chain.connectChain')}
                 onClick={() => {
                   connectChain(chainId);
                 }}
@@ -105,7 +107,7 @@ const OtherChainItem = observer(
               </Button>
             </TooltipTrigger>
             <TooltipContent side="left">
-              <Label>Connect chain</Label>
+              <Label>{t('chain.connectChain')}</Label>
             </TooltipContent>
           </Tooltip>
           <DropdownMenu>
@@ -114,7 +116,7 @@ const OtherChainItem = observer(
                 className="size-7 hover:bg-accent hover:text-secondary"
                 variant="outline"
                 size="icon"
-                aria-label="More"
+                aria-label={t('common.more')}
               >
                 <EllipsisVertical size="16" />
               </Button>
@@ -124,12 +126,12 @@ const OtherChainItem = observer(
                 <Link
                   to={ROUTES.ADD_EDIT_CHAIN}
                   state={{ hasState: true, chainId }}
-                  aria-label="Edit chain"
+                  aria-label={t('chain.editChain')}
                 >
                   <DropdownMenuItem className="cursor-pointer data-[highlighted]:text-secondary">
                     <div className="flex gap-2">
                       <Pencil size="16" />
-                      <button aria-label="Edit chain">Edit chain</button>
+                      <button aria-label={t('chain.editChain')}>{t('chain.editChain')}</button>
                     </div>
                   </DropdownMenuItem>
                 </Link>
@@ -142,8 +144,8 @@ const OtherChainItem = observer(
                 >
                   <div className="flex gap-2">
                     <Trash size="16" />
-                    <button disabled={!isCustomChain} aria-label="Delete chain">
-                      Delete chain
+                    <button disabled={!isCustomChain} aria-label={t('chain.deleteChain')}>
+                      {t('chain.deleteChain')}
                     </button>
                   </div>
                 </DropdownMenuItem>
@@ -153,9 +155,9 @@ const OtherChainItem = observer(
           <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
             <DialogContent className="w-80 rounded-md">
               <DialogHeader className="text-left">
-                <DialogTitle>Delete chain</DialogTitle>
+                <DialogTitle>{t('chain.deleteChain')}</DialogTitle>
                 <DialogDescription>
-                  Do you want to delete the chain '{chainName}'?
+                  {t('chain.deleteChainConfirm', { name: chainName })}
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter className="flex flex-row gap-4">
@@ -164,22 +166,22 @@ const OtherChainItem = observer(
                     className="w-full"
                     type="button"
                     variant="outline"
-                    aria-label="Cancel Delete"
+                    aria-label={t('chain.cancelDelete')}
                   >
                     <X className="mr-2 h-4 w-4" />
-                    No
+                    {t('common.no')}
                   </Button>
                 </DialogClose>
                 <Button
                   className="w-full"
                   type="button"
-                  aria-label="Confirm Delete"
+                  aria-label={t('chain.confirmDelete')}
                   onClick={() => {
                     deleteChain(chainId);
                   }}
                 >
                   <Check className="mr-2 h-4 w-4" />
-                  Yes
+                  {t('common.yes')}
                 </Button>
               </DialogFooter>
             </DialogContent>

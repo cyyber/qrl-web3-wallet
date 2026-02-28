@@ -6,6 +6,7 @@ import { cva } from "class-variance-authority";
 import { Loader } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 type GasFeeNoticeProps = {
   isZrc20Token: boolean;
@@ -46,6 +47,7 @@ export const GasFeeNotice = observer(
     onGasFeeCalculated,
     overrides,
   }: GasFeeNoticeProps) => {
+    const { t } = useTranslation();
     const { zondStore, priceStore, settingsStore } = useStore();
     const { getNativeTokenGas, getZrc20TokenGas } = zondStore;
 
@@ -110,13 +112,13 @@ export const GasFeeNotice = observer(
           {gasFee.isLoading ? (
             <div className="flex gap-2">
               <Loader className="h-4 w-4 animate-spin" />
-              Estimating gas fee
+              {t('gasFee.estimating')}
             </div>
           ) : gasFee.error ? (
             <div>{gasFee.error}</div>
           ) : (
             <div className="w-full overflow-hidden">
-              Estimated gas fee is {gasFee?.estimatedGas}
+              {t('gasFee.estimated', { amount: gasFee?.estimatedGas })}
               {fiatGas && (
                 <span className="ml-1 text-muted-foreground">{fiatGas}</span>
               )}

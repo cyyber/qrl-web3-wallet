@@ -17,20 +17,25 @@ import {
 } from "@/components/UI/Form";
 import { Input } from "@/components/UI/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { TFunction } from "i18next";
 import { Loader, LockKeyholeOpen } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { useStore } from "@/stores/store";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 
-const FormSchema = z.object({
-  password: z.string().min(1, "Enter your password"),
-});
+const createFormSchema = (t: TFunction) =>
+  z.object({
+    password: z.string().min(1, t("validation.passwordRequired")),
+  });
 
 const LockPasswordCheck = observer(() => {
   const { lockStore } = useStore();
   const { unlock } = lockStore;
+  const { t } = useTranslation();
+  const FormSchema = createFormSchema(t);
 
   const [unlockAttempt, setUnlockAttempt] = useState(0);
 
@@ -58,14 +63,14 @@ const LockPasswordCheck = observer(() => {
       const unlocked = await unlock(formData.password);
       if (!unlocked) {
         setError("password", {
-          message: "The entered password is incorrect",
+          message: t("lock.unlock.errorIncorrect"),
         });
       }
     } catch (error) {
       const message =
         error instanceof Error
           ? error.message
-          : "Failed to unlock wallet. Please try again.";
+          : t("lock.unlock.errorFailed");
       setError("password", { message });
     }
     setUnlockAttempt((attempt) => attempt + 1);
@@ -80,9 +85,9 @@ const LockPasswordCheck = observer(() => {
       >
         <Card className="animate-appear-in shadow-xl">
           <CardHeader>
-            <CardTitle>Unlock Wallet</CardTitle>
+            <CardTitle>{t("lock.unlock.title")}</CardTitle>
             <CardDescription className="break-words">
-              Unlock the wallet with your password
+              {t("lock.unlock.description")}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -96,11 +101,11 @@ const LockPasswordCheck = observer(() => {
                       {...field}
                       aria-label={field.name}
                       disabled={isSubmitting}
-                      placeholder="Password"
+                      placeholder={t("lock.unlock.passwordPlaceholder")}
                       type="password"
                     />
                   </FormControl>
-                  <FormDescription>Enter the wallet password</FormDescription>
+                  <FormDescription>{t("lock.unlock.passwordDescription")}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -117,7 +122,7 @@ const LockPasswordCheck = observer(() => {
               ) : (
                 <LockKeyholeOpen className="mr-2 h-4 w-4" />
               )}
-              {isSubmitting ? "Unlocking" : "Unlock"}
+              {isSubmitting ? t("lock.unlock.buttonLoading") : t("lock.unlock.button")}
             </Button>
           </CardFooter>
         </Card>

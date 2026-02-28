@@ -11,6 +11,7 @@ import { useStore } from "@/stores/store";
 import { cva } from "class-variance-authority";
 import { Pencil } from "lucide-react";
 import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import ChainIcon from "../ChainIcon/ChainIcon";
 
@@ -31,6 +32,7 @@ const connectivityStatusClasses = cva("h-3 w-3 rounded-full", {
 });
 
 const ActiveChain = observer(() => {
+  const { t } = useTranslation();
   const { zondStore } = useStore();
   const { zondConnection } = zondStore;
   const { isLoading, isConnected, blockchain } = zondConnection;
@@ -38,7 +40,7 @@ const ActiveChain = observer(() => {
 
   return (
     <div className="flex flex-col gap-2">
-      <Label className="text-lg">Active chain</Label>
+      <Label className="text-lg">{t('chain.activeChain')}</Label>
       <Card className="flex justify-between gap-4 p-4">
         <div className="flex gap-4">
           <div className="flex h-min items-center gap-2 pt-1">
@@ -53,7 +55,7 @@ const ActiveChain = observer(() => {
           <div className="flex flex-col break-all">
             <span className="font-bold">{chainName}</span>
             <span className="text-xm opacity-80">
-              Chain ID {parseInt(chainId, 16)}
+              {t('chain.chainId', { chainId: parseInt(chainId, 16) })}
             </span>
             <span className="text-xm opacity-80">{defaultRpcUrl}</span>
           </div>
@@ -77,7 +79,7 @@ const ActiveChain = observer(() => {
               </Link>
             </TooltipTrigger>
             <TooltipContent side="left">
-              <Label>Edit chain</Label>
+              <Label>{t('chain.editChain')}</Label>
             </TooltipContent>
           </Tooltip>
         </div>

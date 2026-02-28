@@ -9,6 +9,7 @@ import { useStore } from "@/stores/store";
 import type { Contact } from "@/types/contact";
 import { BookUser, Plus } from "lucide-react";
 import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import BackButton from "../../../Shared/BackButton/BackButton";
 import CircuitBackground from "../../../Shared/CircuitBackground/CircuitBackground";
@@ -16,6 +17,7 @@ import ContactForm from "./ContactForm";
 import ContactList from "./ContactList";
 
 const ContactsPage = observer(() => {
+  const { t } = useTranslation();
   const { contactsStore } = useStore();
   const { contacts } = contactsStore;
 
@@ -65,12 +67,12 @@ const ContactsPage = observer(() => {
             <div className="flex items-center justify-between">
               <CardTitle className="flex items-center gap-2">
                 <BookUser className="h-5 w-5" />
-                Contacts
+                {t('contacts.title')}
               </CardTitle>
               {!showForm && (
                 <Button size="sm" variant="outline" onClick={handleAdd}>
                   <Plus className="mr-1 h-4 w-4" />
-                  Add
+                  {t('contacts.addButton')}
                 </Button>
               )}
             </div>

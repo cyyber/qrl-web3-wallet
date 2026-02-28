@@ -4,9 +4,11 @@ import { useStore } from "@/stores/store";
 import StorageUtil from "@/utilities/storageUtil";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import OtherChainItem from "./OtherChainItem/OtherChainItem";
 
 const OtherChains = observer(() => {
+  const { t } = useTranslation();
   const { zondStore } = useStore();
   const { zondConnection } = zondStore;
   const { blockchain } = zondConnection;
@@ -28,7 +30,7 @@ const OtherChains = observer(() => {
 
   return (
     <div className="flex flex-col gap-2">
-      <Label className="text-lg">Other chains</Label>
+      <Label className="text-lg">{t('chain.otherChains')}</Label>
       {otherChains.map((blockchain) => {
         return (
           <OtherChainItem

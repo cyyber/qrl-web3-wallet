@@ -1,6 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/UI/tabs";
 import { useStore } from "@/stores/store";
 import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import ZondRequestAccountAccountSelection from "./ZondRequestAccountAccountSelection/ZondRequestAccountAccountSelection";
 import ZondRequestAccountBlockchainSelection from "./ZondRequestAccountBlockchainSelection/ZondRequestAccountBlockchainSelection";
@@ -8,6 +9,7 @@ import StorageUtil from "@/utilities/storageUtil";
 import { BlockchainDataType } from "@/configuration/zondBlockchainConfig";
 
 const ZondRequestAccountContent = observer(() => {
+  const { t } = useTranslation();
   const { dAppRequestStore } = useStore();
   const { addToResponseData, setCanProceed, currentTabData } = dAppRequestStore;
 
@@ -76,13 +78,13 @@ const ZondRequestAccountContent = observer(() => {
           value="accounts"
           className="w-full data-[state=active]:text-secondary"
         >
-          Accounts
+          {t('dapp.requestAccount.tabAccounts')}
         </TabsTrigger>
         <TabsTrigger
           value="blockchains"
           className="w-full data-[state=active]:text-secondary"
         >
-          Blockchains
+          {t('dapp.requestAccount.tabBlockchains')}
         </TabsTrigger>
       </TabsList>
       <TabsContent value="accounts" className="rounded-md p-2">

@@ -3,12 +3,14 @@ import { Card, CardContent, CardFooter } from "@/components/UI/Card";
 import { useStore } from "@/stores/store";
 import { Check, X } from "lucide-react";
 import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 import ChainBadge from "../../../Wallet/Header/ChainBadge/ChainBadge";
 import WatchAssetInfo from "./WatchAssetInfo/WatchAssetInfo";
 import StorageUtil from "@/utilities/storageUtil";
 import WatchAssetVerification from "./WatchAssetVerification/WatchAssetVerification";
 
 const WatchAssetContent = observer(() => {
+  const { t } = useTranslation();
   const { dAppRequestStore, zondStore } = useStore();
   const { activeAccount } = zondStore;
   const { accountAddress } = activeAccount;
@@ -46,12 +48,12 @@ const WatchAssetContent = observer(() => {
         <ChainBadge isDisabled={true} />
       </div>
       <div className="p-6">
-        <div>Here is a request to add an ZRC20 token to the wallet.</div>
+        <div>{t('dapp.watchAsset.description')}</div>
       </div>
       <CardContent className="space-y-6">
         <WatchAssetInfo />
         <WatchAssetVerification />
-        <div className="font-bold">Do you want to add this token?</div>
+        <div className="font-bold">{t('dapp.watchAsset.question')}</div>
       </CardContent>
       <CardFooter className="grid grid-cols-2 gap-4">
         <Button
@@ -63,7 +65,7 @@ const WatchAssetContent = observer(() => {
           onClick={() => onPermission(false)}
         >
           <X className="mr-2 h-4 w-4" />
-          No
+          {t('dapp.no')}
         </Button>
         <Button
           className="w-full"
@@ -73,7 +75,7 @@ const WatchAssetContent = observer(() => {
           onClick={() => addBlockchain()}
         >
           <Check className="mr-2 h-4 w-4" />
-          Yes
+          {t('dapp.yes')}
         </Button>
       </CardFooter>
     </Card>

@@ -3,12 +3,14 @@ import { Card, CardContent, CardFooter } from "@/components/UI/Card";
 import { useStore } from "@/stores/store";
 import { Check, X } from "lucide-react";
 import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 import AddZondChainInfo from "./AddZondChainInfo/AddZondChainInfo";
 import { BlockchainBaseDataType } from "@/configuration/zondBlockchainConfig";
 import StorageUtil from "@/utilities/storageUtil";
 import { includeChainForUrlOrigin } from "@/scripts/utils/restrictedMethodsMiddlewareUtils";
 
 const AddZondChainContent = observer(() => {
+  const { t } = useTranslation();
   const { dAppRequestStore, zondStore } = useStore();
   const { addChain, selectBlockchain } = zondStore;
   const {
@@ -58,14 +60,14 @@ const AddZondChainContent = observer(() => {
   return (
     <Card className="w-full">
       <div className="p-6">
-        <div className="mb-1 text-xs font-bold">Add new chain</div>
+        <div className="mb-1 text-xs font-bold">{t('dapp.addChain.title')}</div>
         <div>
-          Here is a request to add the following blockchain to the wallet.
+          {t('dapp.addChain.description')}
         </div>
       </div>
       <CardContent className="space-y-6">
         <AddZondChainInfo />
-        <div className="font-bold">Do you want to add this chain?</div>
+        <div className="font-bold">{t('dapp.addChain.question')}</div>
       </CardContent>
       <CardFooter className="grid grid-cols-2 gap-4">
         <Button
@@ -77,7 +79,7 @@ const AddZondChainContent = observer(() => {
           onClick={() => onPermission(false)}
         >
           <X className="mr-2 h-4 w-4" />
-          No
+          {t('dapp.no')}
         </Button>
         <Button
           className="w-full"
@@ -87,7 +89,7 @@ const AddZondChainContent = observer(() => {
           onClick={() => addBlockchain()}
         >
           <Check className="mr-2 h-4 w-4" />
-          Yes
+          {t('dapp.yes')}
         </Button>
       </CardFooter>
     </Card>

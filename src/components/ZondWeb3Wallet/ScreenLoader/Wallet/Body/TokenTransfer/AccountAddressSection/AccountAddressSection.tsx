@@ -1,6 +1,7 @@
 import { useStore } from "@/stores/store";
 import StringUtil from "@/utilities/stringUtil";
 import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 
 type AccountAddressSectionProps = {
   tokenBalance?: string;
@@ -8,6 +9,7 @@ type AccountAddressSectionProps = {
 
 const AccountAddressSection = observer(
   ({ tokenBalance }: AccountAddressSectionProps) => {
+    const { t } = useTranslation();
     const { zondStore } = useStore();
     const { activeAccount, getAccountBalance } = zondStore;
     const { accountAddress } = activeAccount;
@@ -20,11 +22,11 @@ const AccountAddressSection = observer(
     return (
       <div className="flex flex-col gap-2">
         <div className="flex flex-col gap-1">
-          <div>Account address</div>
+          <div>{t('transfer.accountAddress')}</div>
           <div className="font-bold text-secondary">{`${prefix} ${addressSplit.join(" ")}`}</div>
         </div>
         <div className="flex flex-col gap-1">
-          <div>Balance</div>
+          <div>{t('transfer.balance')}</div>
           <div className="font-bold text-secondary">{tokenAccountBalance}</div>
         </div>
       </div>

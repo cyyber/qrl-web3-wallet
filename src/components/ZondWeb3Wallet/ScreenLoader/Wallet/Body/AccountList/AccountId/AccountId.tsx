@@ -5,6 +5,7 @@ import StringUtil from "@/utilities/stringUtil";
 import { Usb } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 type AccountIdType = {
   account: string;
@@ -12,6 +13,7 @@ type AccountIdType = {
 };
 
 const AccountId = observer(({ account, hideLabel }: AccountIdType) => {
+  const { t } = useTranslation();
   const { zondStore, ledgerStore, accountLabelsStore, priceStore, settingsStore } = useStore();
   const { getAccountBalance, zondAccounts } = zondStore;
   const { accounts } = zondAccounts;
@@ -38,7 +40,7 @@ const AccountId = observer(({ account, hideLabel }: AccountIdType) => {
         <div className="flex items-center gap-1">
           <span className="text-sm font-medium">{label}</span>
           {isLedgerAccount && (
-            <span title="Ledger account">
+            <span title={t('account.ledger')}>
               <Usb className="h-3 w-3 text-muted-foreground" />
             </span>
           )}
@@ -58,7 +60,7 @@ const AccountId = observer(({ account, hideLabel }: AccountIdType) => {
             ))}
           </div>
           {(hideLabel || !label) && isLedgerAccount && (
-            <span title="Ledger account">
+            <span title={t('account.ledger')}>
               <Usb className="h-3 w-3 text-muted-foreground" />
             </span>
           )}

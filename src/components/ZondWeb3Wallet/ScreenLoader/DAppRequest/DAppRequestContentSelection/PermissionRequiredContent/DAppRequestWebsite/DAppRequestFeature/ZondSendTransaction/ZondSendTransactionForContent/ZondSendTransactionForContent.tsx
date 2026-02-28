@@ -11,6 +11,7 @@ import { useStore } from "@/stores/store";
 import StringUtil from "@/utilities/stringUtil";
 import { Copy } from "lucide-react";
 import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
 import { SEND_TRANSACTION_TYPES } from "../ZondSendTransaction";
 import { utils, qrl } from "@theqrl/web3";
@@ -23,6 +24,7 @@ type ZondSendTransactionForContentProps = {
 
 const ZondSendTransactionForContent = observer(
   ({ transactionType }: ZondSendTransactionForContentProps) => {
+    const { t } = useTranslation();
     const { lockStore, zondStore, dAppRequestStore, ledgerStore } = useStore();
     const { getMnemonicPhrases } = lockStore;
     const { qrlInstance, getGasFeeData, zondConnection } = zondStore;
@@ -242,21 +244,21 @@ const ZondSendTransactionForContent = observer(
             value="details"
             className="w-full data-[state=active]:text-secondary"
           >
-            Details
+            {t('dapp.sendTransaction.tabDetails')}
           </TabsTrigger>
           {transactionType !== SEND_TRANSACTION_TYPES.QRL_TRANSFER && (
             <TabsTrigger
               value="data"
               className="w-full data-[state=active]:text-secondary"
             >
-              Data
+              {t('dapp.sendTransaction.tabData')}
             </TabsTrigger>
           )}
         </TabsList>
         <TabsContent value="details" className="rounded-md p-2">
           <div className="flex flex-col gap-2">
             <div className="flex flex-col gap-1">
-              <div>From Address</div>
+              <div>{t('dapp.sendTransaction.fromAddress')}</div>
               <div className="w-64 font-bold text-secondary">{`${prefixFrom} ${addressSplitFrom.join(" ")}`}</div>
             </div>
             {(transactionType === SEND_TRANSACTION_TYPES.CONTRACT_INTERACTION ||
@@ -265,23 +267,22 @@ const ZondSendTransactionForContent = observer(
                 <div>
                   {transactionType ===
                   SEND_TRANSACTION_TYPES.CONTRACT_INTERACTION
-                    ? "Contract "
-                    : "To "}
-                  Address
+                    ? t('dapp.sendTransaction.contractAddress')
+                    : t('dapp.sendTransaction.toAddress')}
                 </div>
                 <div className="w-64 font-bold text-secondary">{`${prefixTo} ${addressSplitTo.join(" ")}`}</div>
               </div>
             )}
             {transactionType === SEND_TRANSACTION_TYPES.QRL_TRANSFER && (
               <div className="flex flex-col gap-1">
-                <div>Value</div>
+                <div>{t('dapp.sendTransaction.value')}</div>
                 <div className="font-bold text-secondary">
                   {utils.fromPlanck(value, "quanta")} QRL
                 </div>
               </div>
             )}
             <div className="flex flex-col gap-1">
-              <div>Gas Limit</div>
+              <div>{t('dapp.sendTransaction.gasLimit')}</div>
               <div className="font-bold text-secondary">
                 {gasLimit.toString()}
               </div>
@@ -291,7 +292,7 @@ const ZondSendTransactionForContent = observer(
         {transactionType !== SEND_TRANSACTION_TYPES.QRL_TRANSFER && (
           <TabsContent value="data" className="rounded-md p-2">
             <div className="flex flex-col gap-1">
-              <div>Data</div>
+              <div>{t('dapp.sendTransaction.data')}</div>
               <div className="flex gap-2">
                 <div className="max-h-[8rem] w-full overflow-hidden break-words font-bold text-secondary">
                   {data}
@@ -308,7 +309,7 @@ const ZondSendTransactionForContent = observer(
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent side="left">
-                    <Label>Copy Data</Label>
+                    <Label>{t('dapp.sendTransaction.copyData')}</Label>
                   </TooltipContent>
                 </Tooltip>
               </div>

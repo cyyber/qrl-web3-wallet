@@ -2,6 +2,7 @@ import { Checkbox } from "@/components/UI/Checkbox";
 import ChainIcon from "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/ChainConnectivity/ChainIcon/ChainIcon";
 import { BlockchainDataType } from "@/configuration/zondBlockchainConfig";
 import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 
 type ZondRequestAccountBlockchainSelectionProps = {
   isLoading: boolean;
@@ -20,6 +21,7 @@ const ZondRequestAccountBlockchainSelection = observer(
     selectedBlockchains,
     onBlockchainSelection,
   }: ZondRequestAccountBlockchainSelectionProps) => {
+    const { t } = useTranslation();
     const hasBlockchains = !!allBlockchains?.length;
     const selectedBlockchainIds = selectedBlockchains.map(
       (blockchain) => blockchain?.chainId,
@@ -27,7 +29,7 @@ const ZondRequestAccountBlockchainSelection = observer(
 
     return (
       <div className="flex flex-col gap-4">
-        <div>Select the blockchains you want this site to use</div>
+        <div>{t('dapp.selectBlockchains')}</div>
         {isLoading ? (
           <div className="flex h-12 w-full animate-pulse items-center justify-between">
             <div className="h-full w-full rounded-md bg-accent" />
@@ -56,7 +58,7 @@ const ZondRequestAccountBlockchainSelection = observer(
                     <div className="flex flex-col gap-1 break-all">
                       <span className="font-bold">{blockchain.chainName}</span>
                       <span className="text-xm opacity-80">
-                        Chain ID {parseInt(blockchain.chainId, 16)}
+                        {t('dapp.chainId', { id: parseInt(blockchain.chainId, 16) })}
                       </span>
                       <span className="text-xm opacity-80">
                         {blockchain.defaultRpcUrl}
@@ -68,7 +70,7 @@ const ZondRequestAccountBlockchainSelection = observer(
             ))}
           </div>
         ) : (
-          <div>No blockchains available</div>
+          <div>{t('dapp.noBlockchainsAvailable')}</div>
         )}
       </div>
     );

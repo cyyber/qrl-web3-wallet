@@ -12,6 +12,7 @@ import { getOptimalGasFee } from "@/functions/getOptimalGasFee";
 import type { TransactionHistoryEntry } from "@/types/transactionHistory";
 import { utils } from "@theqrl/web3";
 import { Loader } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 type ReplacementConfirmationDialogProps = {
   open: boolean;
@@ -34,11 +35,12 @@ const ReplacementConfirmationDialog = ({
   error,
   onConfirm,
 }: ReplacementConfirmationDialogProps) => {
+  const { t } = useTranslation();
   const isSpeedUp = action === "speed-up";
-  const title = isSpeedUp ? "Speed Up Transaction" : "Cancel Transaction";
+  const title = isSpeedUp ? t('txDetail.speedUpTitle') : t('txDetail.cancelTitle');
   const description = isSpeedUp
-    ? "This will re-submit your transaction with a higher gas fee to prioritize it. The new gas fee will be at least 10% higher than the original."
-    : "This will submit a self-send transaction (0 QRL to your own address) with the same nonce, effectively replacing the original transaction. You only pay gas for the empty transaction.";
+    ? t('txDetail.speedUpDescription')
+    : t('txDetail.cancelDescription');
 
   const originalGasCost =
     originalTransaction.gasUsed && originalTransaction.effectiveGasPrice
@@ -60,18 +62,18 @@ const ReplacementConfirmationDialog = ({
         <div className="flex flex-col gap-2 px-1">
           {originalGasCost && (
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Original gas fee</span>
+              <span className="text-muted-foreground">{t('txDetail.originalGasFee')}</span>
               <span>{getOptimalGasFee(originalGasCost)}</span>
             </div>
           )}
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">
-              New estimated gas fee
+              {t('txDetail.newEstimatedGasFee')}
             </span>
             <span className="font-medium text-amber-500">
               {estimatedNewGasFee
                 ? getOptimalGasFee(estimatedNewGasFee)
-                : "Estimating..."}
+                : t('txDetail.estimating')}
             </span>
           </div>
         </div>
@@ -82,13 +84,13 @@ const ReplacementConfirmationDialog = ({
 
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isProcessing}>
-            Go Back
+            {t('txDetail.goBack')}
           </AlertDialogCancel>
           <Button onClick={onConfirm} disabled={isProcessing}>
             {isProcessing && (
               <Loader className="mr-2 h-4 w-4 animate-spin" />
             )}
-            {isSpeedUp ? "Speed Up" : "Cancel Transaction"}
+            {isSpeedUp ? t('txDetail.speedUp') : t('txDetail.cancelTransaction')}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

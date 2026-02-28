@@ -8,15 +8,16 @@ import {
   CardTitle,
 } from "@/components/UI/Card";
 import { Check } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const OnboardingCompleted = () => {
+  const { t } = useTranslation();
   return (
     <Card className="animate-appear-in shadow-xl">
       <CardHeader>
-        <CardTitle>That's All</CardTitle>
+        <CardTitle>{t("onboarding.completed.title")}</CardTitle>
         <CardDescription className="break-words">
-          The Zond Web3 Wallet is now ready for use. You can open it from the
-          browser extensions.
+          {t("onboarding.completed.description")}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -30,7 +31,7 @@ const OnboardingCompleted = () => {
       <CardFooter>
         <Button className="w-full" onClick={() => window.close()}>
           <Check className="mr-2 h-4 w-4" />
-          Done
+          {t("onboarding.completed.button")}
         </Button>
       </CardFooter>
     </Card>

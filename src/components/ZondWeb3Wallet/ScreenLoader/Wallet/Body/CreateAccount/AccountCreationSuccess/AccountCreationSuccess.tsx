@@ -11,6 +11,7 @@ import StringUtil from "@/utilities/stringUtil";
 import { Web3BaseWalletAccount } from "@theqrl/web3";
 import { Check, Copy } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 type AccountCreationSuccessProps = {
@@ -18,6 +19,7 @@ type AccountCreationSuccessProps = {
 };
 
 const AccountCreationSuccess = ({ account }: AccountCreationSuccessProps) => {
+  const { t } = useTranslation();
   const accountAddress = account?.address ?? "";
   const { prefix, addressSplit } = StringUtil.getSplitAddress(accountAddress);
   const spacedAccountAddress = addressSplit.join(" ");
@@ -45,15 +47,14 @@ const AccountCreationSuccess = ({ account }: AccountCreationSuccessProps) => {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Account created</CardTitle>
+        <CardTitle>{t('account.created')}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-8">
         <div className="flex flex-col gap-2">
-          <div>Account public address:</div>
+          <div>{t('account.publicAddress')}</div>
           <div className="font-bold text-secondary">{`${prefix} ${spacedAccountAddress}`}</div>
           <div>
-            You can share this account public address with anyone. Others need
-            it to interact with you.
+            {t('account.shareInfo')}
           </div>
         </div>
       </CardContent>
@@ -65,7 +66,7 @@ const AccountCreationSuccess = ({ account }: AccountCreationSuccessProps) => {
           onClick={onCopy}
         >
           <Copy className="mr-2 h-4 w-4" />
-          {hasJustCopied ? "Copied" : "Copy"}
+          {hasJustCopied ? t('account.copied') : t('account.copy')}
         </Button>
         <Link
           className="w-full"
@@ -74,7 +75,7 @@ const AccountCreationSuccess = ({ account }: AccountCreationSuccessProps) => {
         >
           <Button className="w-full" type="button">
             <Check className="mr-2 h-4 w-4" />
-            Done
+            {t('account.done')}
           </Button>
         </Link>
       </CardFooter>

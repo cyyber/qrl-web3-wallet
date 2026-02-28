@@ -12,9 +12,13 @@ const config: Config = {
     "^@/stores/store": "<rootDir>/src/__mocks__/mockedStore.ts",
     "^webextension-polyfill$":
       "<rootDir>/src/__mocks__/mockedWebExtensionPolyfill.ts",
+    "^@/i18n$": "<rootDir>/src/__mocks__/i18nTestSetup.ts",
     "^@/(.*)$": "<rootDir>/src/$1",
   },
-  setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
+  setupFilesAfterEnv: [
+    "<rootDir>/src/__mocks__/i18nTestSetup.ts",
+    "<rootDir>/jest.setup.ts",
+  ],
   transformIgnorePatterns: [
     "/node_modules/(?!(@theqrl|@noble|qrl-cryptography)/)",
   ],

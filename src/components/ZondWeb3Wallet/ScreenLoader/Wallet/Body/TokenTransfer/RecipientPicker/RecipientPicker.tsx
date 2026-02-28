@@ -15,6 +15,7 @@ import { useStore } from "@/stores/store";
 import StringUtil from "@/utilities/stringUtil";
 import { BookUser, Users, Wallet, History } from "lucide-react";
 import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 import { useEffect, useMemo } from "react";
 
 type RecipientPickerProps = {
@@ -48,6 +49,7 @@ const AddressRow = ({ address, label, onClick }: AddressRowProps) => {
 
 const RecipientPicker = observer(
   ({ open, onOpenChange, onSelect }: RecipientPickerProps) => {
+    const { t } = useTranslation();
     const {
       zondStore,
       contactsStore,
@@ -108,7 +110,7 @@ const RecipientPicker = observer(
         <DialogTrigger asChild>
           <button
             type="button"
-            aria-label="Open address book"
+            aria-label={t('recipient.openAddressBook')}
             className="shrink-0 rounded p-2 text-muted-foreground transition-colors hover:text-secondary"
           >
             <BookUser size={18} />
@@ -116,18 +118,18 @@ const RecipientPicker = observer(
         </DialogTrigger>
         <DialogContent className="max-h-[80vh] overflow-y-auto sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Select Recipient</DialogTitle>
+            <DialogTitle>{t('recipient.dialogTitle')}</DialogTitle>
           </DialogHeader>
           <Tabs defaultValue="accounts">
             <TabsList className="w-full">
               <TabsTrigger value="accounts" className="flex-1">
-                My Accounts
+                {t('recipient.tabAccounts')}
               </TabsTrigger>
               <TabsTrigger value="contacts" className="flex-1">
-                Contacts
+                {t('recipient.tabContacts')}
               </TabsTrigger>
               <TabsTrigger value="recent" className="flex-1">
-                Recent
+                {t('recipient.tabRecent')}
               </TabsTrigger>
             </TabsList>
 
@@ -135,7 +137,7 @@ const RecipientPicker = observer(
               {otherAccounts.length === 0 ? (
                 <div className="flex flex-col items-center gap-2 py-6 text-muted-foreground">
                   <Wallet className="h-8 w-8" />
-                  <p className="text-sm">No other accounts</p>
+                  <p className="text-sm">{t('recipient.emptyAccounts')}</p>
                 </div>
               ) : (
                 <div className="flex flex-col gap-2">
@@ -155,7 +157,7 @@ const RecipientPicker = observer(
               {contacts.length === 0 ? (
                 <div className="flex flex-col items-center gap-2 py-6 text-muted-foreground">
                   <Users className="h-8 w-8" />
-                  <p className="text-sm">No contacts saved</p>
+                  <p className="text-sm">{t('recipient.emptyContacts')}</p>
                 </div>
               ) : (
                 <div className="flex flex-col gap-2">
@@ -175,7 +177,7 @@ const RecipientPicker = observer(
               {recentAddresses.length === 0 ? (
                 <div className="flex flex-col items-center gap-2 py-6 text-muted-foreground">
                   <History className="h-8 w-8" />
-                  <p className="text-sm">No recent transactions</p>
+                  <p className="text-sm">{t('recipient.emptyRecent')}</p>
                 </div>
               ) : (
                 <div className="flex flex-col gap-2">

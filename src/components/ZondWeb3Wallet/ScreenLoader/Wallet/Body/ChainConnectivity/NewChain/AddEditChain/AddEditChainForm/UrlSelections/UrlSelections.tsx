@@ -8,6 +8,7 @@ import {
 } from "@/components/UI/Tooltip";
 import { cva } from "class-variance-authority";
 import { Star, Trash } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import AddUrlItem from "./AddUrlItem/AddUrlItem";
 
 const defaultIconClasses = cva("", {
@@ -38,6 +39,7 @@ const UrlSelections = ({
   setDefaultUrl,
   canBeEmpty,
 }: UrlSelectionsProps) => {
+  const { t } = useTranslation();
   const addUrl = (url: string) => {
     const updatedList = urls.filter((urlItem) => urlItem !== url);
     setUrls([...updatedList, url]);
@@ -77,7 +79,7 @@ const UrlSelections = ({
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent side="left">
-                    <Label>Default URL</Label>
+                    <Label>{t('chain.defaultUrl')}</Label>
                   </TooltipContent>
                 </Tooltip>
                 <Tooltip delayDuration={0}>
@@ -88,7 +90,7 @@ const UrlSelections = ({
                       disabled={!canBeEmpty && urls.length === 1}
                       size="icon"
                       type="button"
-                      aria-label="Delete URL"
+                      aria-label={t('chain.deleteUrl')}
                       onClick={() => {
                         deleteUrl(urlItem);
                       }}
@@ -97,7 +99,7 @@ const UrlSelections = ({
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent side="left">
-                    <Label>Delete URL</Label>
+                    <Label>{t('chain.deleteUrl')}</Label>
                   </TooltipContent>
                 </Tooltip>
               </div>

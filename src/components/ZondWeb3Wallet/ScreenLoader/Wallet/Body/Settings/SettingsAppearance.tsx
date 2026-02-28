@@ -16,19 +16,21 @@ import { ROUTES } from "@/router/router";
 import { useStore } from "@/stores/store";
 import { MoveLeft } from "lucide-react";
 import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import CircuitBackground from "../../../Shared/CircuitBackground/CircuitBackground";
-
-const THEME_OPTIONS = [
-  { value: "system", label: "System" },
-  { value: "light", label: "Light" },
-  { value: "dark", label: "Dark" },
-];
 
 const SettingsAppearance = observer(() => {
   const navigate = useNavigate();
   const { settingsStore } = useStore();
+  const { t } = useTranslation();
   const { themePreference, setThemePreference } = settingsStore;
+
+  const THEME_OPTIONS = [
+    { value: "system", label: t("settings.appearance.system") },
+    { value: "light", label: t("settings.appearance.light") },
+    { value: "dark", label: t("settings.appearance.dark") },
+  ];
 
   return (
     <div className="w-full">
@@ -42,12 +44,12 @@ const SettingsAppearance = observer(() => {
                 onClick={() => navigate(ROUTES.SETTINGS)}
                 data-testid="back-arrow"
               />
-              Appearance
+              {t("settings.appearance.title")}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <Label className="mb-2 block text-xs text-muted-foreground">
-              Theme
+              {t("settings.appearance.themeLabel")}
             </Label>
             <Select
               value={themePreference}

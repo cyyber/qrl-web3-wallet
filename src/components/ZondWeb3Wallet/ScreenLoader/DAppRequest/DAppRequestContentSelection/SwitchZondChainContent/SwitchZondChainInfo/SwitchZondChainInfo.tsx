@@ -3,10 +3,12 @@ import { BlockchainDataType } from "@/configuration/zondBlockchainConfig";
 import { useStore } from "@/stores/store";
 import StorageUtil from "@/utilities/storageUtil";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import ChainInfoCard from "./ChainInfoCard/ChainInfoCard";
 import { ArrowDown } from "lucide-react";
 
 const SwitchZondChainInfo = () => {
+  const { t } = useTranslation();
   const { dAppRequestStore } = useStore();
   const { dAppRequestData } = dAppRequestStore;
   const paramObject = dAppRequestData?.params?.[0];
@@ -48,16 +50,16 @@ const SwitchZondChainInfo = () => {
   return (
     <Card className="flex flex-col gap-4 p-4">
       <ChainInfoCard
-        title="Current chain"
-        description="The currently active blockchain of the wallet"
+        title={t('dapp.switchChain.current')}
+        description={t('dapp.switchChain.currentDescription')}
         chain={currentChain}
       />
       <div className="flex justify-center">
         <ArrowDown data-testid="arrow-down-icon" />
       </div>
       <ChainInfoCard
-        title="Switching to"
-        description="The blockchain to which the wallet will be switched to"
+        title={t('dapp.switchChain.to')}
+        description={t('dapp.switchChain.toDescription')}
         chain={switchingChain}
       />
     </Card>

@@ -14,6 +14,7 @@ import { validator } from "@theqrl/web3";
 import { Save, X } from "lucide-react";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
 const createContactFormSchema = (existingAddresses: string[]) =>
@@ -53,6 +54,7 @@ const ContactForm = ({
   onSave,
   onCancel,
 }: ContactFormProps) => {
+  const { t } = useTranslation();
   // In edit mode, exclude the current address from the duplicate check
   const addressesToCheck = useMemo(
     () =>
@@ -97,7 +99,7 @@ const ContactForm = ({
           name="name"
           render={({ field }) => (
             <FormItem>
-              <Label>Name</Label>
+              <Label>{t('contacts.nameLabel')}</Label>
               <FormControl>
                 <Input
                   {...field}
@@ -114,7 +116,7 @@ const ContactForm = ({
           name="address"
           render={({ field }) => (
             <FormItem>
-              <Label>Address</Label>
+              <Label>{t('contacts.addressLabel')}</Label>
               <FormControl>
                 <Input
                   {...field}
@@ -135,11 +137,11 @@ const ContactForm = ({
             onClick={onCancel}
           >
             <X className="mr-2 h-4 w-4" />
-            Cancel
+            {t('contacts.cancelButton')}
           </Button>
           <Button type="submit" disabled={!isValid} className="flex-1">
             <Save className="mr-2 h-4 w-4" />
-            Save
+            {t('contacts.saveButton')}
           </Button>
         </div>
       </form>

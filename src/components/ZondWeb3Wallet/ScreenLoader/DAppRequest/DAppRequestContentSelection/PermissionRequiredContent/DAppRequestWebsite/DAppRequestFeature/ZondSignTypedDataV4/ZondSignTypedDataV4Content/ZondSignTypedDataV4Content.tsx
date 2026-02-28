@@ -20,9 +20,11 @@ import { getEncodedEip712Data } from "@theqrl/web3-qrl-abi";
 import { parseAndValidateSeed, sign } from "@theqrl/web3-qrl-accounts";
 import { Copy } from "lucide-react";
 import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
 
 const ZondSignTypedDataV4Content = observer(() => {
+  const { t } = useTranslation();
   const { lockStore, zondStore, dAppRequestStore } = useStore();
   const { getMnemonicPhrases } = lockStore;
   const { qrlInstance, zondConnection } = zondStore;
@@ -109,7 +111,7 @@ const ZondSignTypedDataV4Content = observer(() => {
     <div className="flex flex-col gap-6">
       <div className="flex flex-col rounded-md p-2">
         <div className="flex flex-col gap-1">
-          <div>From Address</div>
+          <div>{t('dapp.signature.fromAddress')}</div>
           <div className="w-64 font-bold text-secondary">{`${prefixFromAddress} ${addressSplitFromAddress.join(" ")}`}</div>
         </div>
       </div>
@@ -161,7 +163,7 @@ const ZondSignTypedDataV4Content = observer(() => {
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent side="left">
-                    <Label>Copy Message Data</Label>
+                    <Label>{t('dapp.signature.copyMessage')}</Label>
                   </TooltipContent>
                 </Tooltip>
               </div>

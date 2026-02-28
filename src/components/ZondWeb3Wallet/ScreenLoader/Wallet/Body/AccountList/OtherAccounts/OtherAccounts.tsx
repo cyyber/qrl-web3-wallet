@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import AccountId from "../AccountId/AccountId";
 
@@ -35,6 +36,7 @@ type OtherAccountCardProps = {
 
 const OtherAccountCard = observer(
   ({ accountAddress, onSwitch, onCopy, onReceive }: OtherAccountCardProps) => {
+    const { t } = useTranslation();
     const { accountLabelsStore } = useStore();
     const label = accountLabelsStore.getLabel(accountAddress);
     const [isEditing, setIsEditing] = useState(false);
@@ -71,14 +73,14 @@ const OtherAccountCard = observer(
               className="h-6 w-32 text-xs"
               autoFocus
               maxLength={50}
-              aria-label="Edit account label"
+              aria-label={t('home.editAccountLabel')}
             />
             <Button
               variant="ghost"
               size="icon"
               className="size-5"
               onClick={saveEdit}
-              aria-label="Save label"
+              aria-label={t('home.saveLabel')}
             >
               <Check className="h-3 w-3" />
             </Button>
@@ -87,7 +89,7 @@ const OtherAccountCard = observer(
               size="icon"
               className="size-5"
               onClick={cancelEdit}
-              aria-label="Cancel edit"
+              aria-label={t('home.cancelEdit')}
             >
               <X className="h-3 w-3" />
             </Button>
@@ -111,7 +113,7 @@ const OtherAccountCard = observer(
                 >
                   <div className="flex gap-2">
                     <ArrowRight size="16" />
-                    <span>Switch</span>
+                    <span>{t('home.switch')}</span>
                   </div>
                 </DropdownMenuItem>
                 <DropdownMenuItem
@@ -120,7 +122,7 @@ const OtherAccountCard = observer(
                 >
                   <div className="flex gap-2">
                     <Download size="16" />
-                    <span>Receive</span>
+                    <span>{t('home.receive')}</span>
                   </div>
                 </DropdownMenuItem>
                 <DropdownMenuItem
@@ -129,7 +131,7 @@ const OtherAccountCard = observer(
                 >
                   <div className="flex gap-2">
                     <Copy size="16" />
-                    <span>Copy Address</span>
+                    <span>{t('home.copyAddress')}</span>
                   </div>
                 </DropdownMenuItem>
                 <DropdownMenuItem
@@ -138,7 +140,7 @@ const OtherAccountCard = observer(
                 >
                   <div className="flex gap-2">
                     <Pencil size="16" />
-                    <span>Rename</span>
+                    <span>{t('home.rename')}</span>
                   </div>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
@@ -151,13 +153,16 @@ const OtherAccountCard = observer(
 );
 
 const OtherAccounts = observer(() => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { zondStore } = useStore();
   const { zondAccounts, activeAccount, setActiveAccount } = zondStore;
   const { accountAddress: activeAccountAddress } = activeAccount;
   const { accounts } = zondAccounts;
 
-  const otherAccountsLabel = `${activeAccountAddress ? "Other accounts" : "Accounts"} in the wallet`;
+  const otherAccountsLabel = activeAccountAddress
+    ? t('home.otherAccountsLabel')
+    : t('home.accountsLabel');
   const otherAccounts = accounts.filter(
     ({ accountAddress }) => accountAddress !== activeAccountAddress,
   );

@@ -14,11 +14,13 @@ import { useStore } from "@/stores/store";
 import { Pencil, X } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import ActiveBrowserTabIcon from "../../../../ActiveBrowserTab/ActiveBrowserTabIcon/ActiveBrowserTabIcon";
 import { updateAccountsAndBlockchainsForUrlOrigin } from "@/scripts/utils/restrictedMethodsMiddlewareUtils";
 
 const EditDAppConnectedAccounts = observer(() => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { state } = useLocation();
   const { dAppRequestStore } = useStore();
@@ -65,7 +67,7 @@ const EditDAppConnectedAccounts = observer(() => {
         <BackButton />
         <Card>
           <CardHeader className="flex-row justify-between">
-            <CardTitle>Edit connected accounts</CardTitle>
+            <CardTitle>{t('dapp.editConnectedAccounts')}</CardTitle>
             <ActiveBrowserTabIcon
               favIconUrl={currentTabData?.favIconUrl}
               altText={currentTabData?.title}
@@ -82,23 +84,23 @@ const EditDAppConnectedAccounts = observer(() => {
               className="w-full"
               type="button"
               variant="outline"
-              aria-label="Cancel"
+              aria-label={t('common.cancel')}
               onClick={() => {
                 navigate(ROUTES.DAPP_CONNECTIVITY);
               }}
             >
               <X className="mr-2 h-4 w-4" />
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button
               className="w-full"
               disabled={!selectedAccounts.length}
               type="submit"
-              aria-label="Edit accounts"
+              aria-label={t('dapp.editAccounts')}
               onClick={onEdit}
             >
               <Pencil className="mr-2 h-4 w-4" />
-              Edit
+              {t('common.edit')}
             </Button>
           </CardFooter>
         </Card>

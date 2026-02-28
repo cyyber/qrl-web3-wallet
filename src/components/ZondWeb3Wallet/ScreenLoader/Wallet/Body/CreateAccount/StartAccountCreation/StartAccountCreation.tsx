@@ -10,6 +10,7 @@ import { useStore } from "@/stores/store";
 import { Web3BaseWalletAccount } from "@theqrl/web3";
 import { Plus } from "lucide-react";
 import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 import BackButton from "../../../../Shared/BackButton/BackButton";
 
 type StartAccountCreationProps = {
@@ -18,6 +19,7 @@ type StartAccountCreationProps = {
 
 const StartAccountCreation = observer(
   ({ onAccountCreated }: StartAccountCreationProps) => {
+    const { t } = useTranslation();
     const { zondStore } = useStore();
     const { qrlInstance } = zondStore;
 
@@ -31,16 +33,15 @@ const StartAccountCreation = observer(
         <BackButton />
         <Card>
           <CardHeader>
-            <CardTitle>Create a new account</CardTitle>
+            <CardTitle>{t('createAccount.title')}</CardTitle>
             <CardDescription className="break-words">
-              You can add a new account to this wallet. After creating the
-              account, ensure you keep the account recovery phrases safe.
+              {t('createAccount.description')}
             </CardDescription>
           </CardHeader>
           <CardFooter>
             <Button className="w-full" onClick={onAddAccount}>
               <Plus className="mr-2 h-4 w-4" />
-              Create account
+              {t('createAccount.button')}
             </Button>
           </CardFooter>
         </Card>

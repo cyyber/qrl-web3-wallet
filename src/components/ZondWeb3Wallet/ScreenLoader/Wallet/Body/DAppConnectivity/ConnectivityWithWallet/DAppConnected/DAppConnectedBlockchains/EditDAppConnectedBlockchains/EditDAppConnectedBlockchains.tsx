@@ -16,11 +16,13 @@ import StorageUtil from "@/utilities/storageUtil";
 import { Pencil, X } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import ActiveBrowserTabIcon from "../../../../ActiveBrowserTab/ActiveBrowserTabIcon/ActiveBrowserTabIcon";
 import { updateAccountsAndBlockchainsForUrlOrigin } from "@/scripts/utils/restrictedMethodsMiddlewareUtils";
 
 const EditDAppConnectedBlockchains = observer(() => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { state } = useLocation();
   const { dAppRequestStore, zondStore } = useStore();
@@ -84,7 +86,7 @@ const EditDAppConnectedBlockchains = observer(() => {
         <BackButton />
         <Card>
           <CardHeader className="flex-row justify-between">
-            <CardTitle>Edit connected blockchains</CardTitle>
+            <CardTitle>{t('dapp.editConnectedBlockchains')}</CardTitle>
             <ActiveBrowserTabIcon
               favIconUrl={currentTabData?.favIconUrl}
               altText={currentTabData?.title}
@@ -108,17 +110,17 @@ const EditDAppConnectedBlockchains = observer(() => {
               }}
             >
               <X className="mr-2 h-4 w-4" />
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button
               className="w-full"
               disabled={!selectedBlockchains.length}
               type="submit"
-              aria-label="Edit blockchains"
+              aria-label={t('dapp.editBlockchains')}
               onClick={onEdit}
             >
               <Pencil className="mr-2 h-4 w-4" />
-              Edit
+              {t('common.edit')}
             </Button>
           </CardFooter>
         </Card>

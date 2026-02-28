@@ -13,19 +13,21 @@ import {
   Palette,
   Shield,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import CircuitBackground from "../../../Shared/CircuitBackground/CircuitBackground";
 
-const MENU_ITEMS = [
-  { label: "Appearance", icon: Palette, route: ROUTES.SETTINGS_APPEARANCE },
-  { label: "Security", icon: Shield, route: ROUTES.SETTINGS_SECURITY },
-  { label: "Preferences", icon: Globe, route: ROUTES.SETTINGS_PREFERENCES },
-  { label: "Data", icon: Download, route: ROUTES.SETTINGS_DATA },
-  { label: "About", icon: Info, route: ROUTES.SETTINGS_ABOUT },
-];
-
 const Settings = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+
+  const MENU_ITEMS = [
+    { label: t("settings.appearance"), icon: Palette, route: ROUTES.SETTINGS_APPEARANCE },
+    { label: t("settings.security"), icon: Shield, route: ROUTES.SETTINGS_SECURITY },
+    { label: t("settings.preferences"), icon: Globe, route: ROUTES.SETTINGS_PREFERENCES },
+    { label: t("settings.data"), icon: Download, route: ROUTES.SETTINGS_DATA },
+    { label: t("settings.about"), icon: Info, route: ROUTES.SETTINGS_ABOUT },
+  ];
 
   return (
     <div className="w-full">
@@ -33,7 +35,7 @@ const Settings = () => {
       <div className="relative z-10 p-8">
         <Card className="w-full">
           <CardHeader>
-            <CardTitle>Settings</CardTitle>
+            <CardTitle>{t("settings.title")}</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
             {MENU_ITEMS.map((item, index) => (

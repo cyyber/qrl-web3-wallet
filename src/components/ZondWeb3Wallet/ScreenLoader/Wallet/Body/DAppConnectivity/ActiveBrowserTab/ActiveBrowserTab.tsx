@@ -23,6 +23,7 @@ import {
   DialogTitle,
 } from "@/components/UI/Dialog";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const connectivityStatusClasses = cva("h-3 w-3 rounded-full", {
   variants: {
@@ -37,6 +38,7 @@ const connectivityStatusClasses = cva("h-3 w-3 rounded-full", {
 });
 
 const ActiveBrowserTab = observer(() => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { dAppRequestStore } = useStore();
   const { hasDAppConnected, currentTabData, disconnectFromCurrentTab } =
@@ -52,7 +54,7 @@ const ActiveBrowserTab = observer(() => {
 
   return (
     <div className="flex flex-col gap-2">
-      <Label className="text-lg">Active browser tab</Label>
+      <Label className="text-lg">{t('dapp.activeBrowserTab')}</Label>
       <Card className="flex justify-between gap-4 p-4">
         <div className="flex gap-4">
           <div className="flex h-min items-center gap-2 pt-1">
@@ -79,14 +81,14 @@ const ActiveBrowserTab = observer(() => {
                   className="size-7"
                   variant="destructive"
                   size="icon"
-                  aria-label="Disconnect"
+                  aria-label={t('dapp.disconnect')}
                   onClick={() => setDisconnectDialogOpen(true)}
                 >
                   <Unlink size="16" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="left">
-                <Label>Disconnect</Label>
+                <Label>{t('dapp.disconnect')}</Label>
               </TooltipContent>
             </Tooltip>
             <Dialog
@@ -95,10 +97,9 @@ const ActiveBrowserTab = observer(() => {
             >
               <DialogContent className="w-80 rounded-md">
                 <DialogHeader className="text-left">
-                  <DialogTitle>Disconnect</DialogTitle>
+                  <DialogTitle>{t('dapp.disconnect')}</DialogTitle>
                   <DialogDescription>
-                    Do you want to disconnect '{currentTabData?.urlOrigin}' from
-                    wallet?
+                    {t('dapp.disconnectConfirm', { origin: currentTabData?.urlOrigin })}
                   </DialogDescription>
                 </DialogHeader>
                 <DialogFooter className="flex flex-row gap-4">
@@ -107,20 +108,20 @@ const ActiveBrowserTab = observer(() => {
                       className="w-full"
                       type="button"
                       variant="outline"
-                      aria-label="Cancel Disconnect"
+                      aria-label={t('dapp.cancelDisconnect')}
                     >
                       <X className="mr-2 h-4 w-4" />
-                      No
+                      {t('common.no')}
                     </Button>
                   </DialogClose>
                   <Button
                     className="w-full"
                     type="button"
-                    aria-label="Confirm Disconnect"
+                    aria-label={t('dapp.confirmDisconnect')}
                     onClick={disconnect}
                   >
                     <Check className="mr-2 h-4 w-4" />
-                    Yes
+                    {t('common.yes')}
                   </Button>
                 </DialogFooter>
               </DialogContent>

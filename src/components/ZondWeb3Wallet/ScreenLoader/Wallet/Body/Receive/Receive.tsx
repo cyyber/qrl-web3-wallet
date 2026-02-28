@@ -11,10 +11,12 @@ import { QRCodeSVG } from "qrcode.react";
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import BackButton from "../../../Shared/BackButton/BackButton";
 import CircuitBackground from "../../../Shared/CircuitBackground/CircuitBackground";
 
 const Receive = observer(() => {
+  const { t } = useTranslation();
   const { zondStore } = useStore();
   const { activeAccount } = zondStore;
   const { state } = useLocation();
@@ -36,7 +38,7 @@ const Receive = observer(() => {
         <BackButton />
         <Card className="w-full">
           <CardHeader>
-            <CardTitle>Receive</CardTitle>
+            <CardTitle>{t('receive.title')}</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col items-center gap-4">
             <div className="rounded-lg bg-white p-3">
@@ -49,7 +51,7 @@ const Receive = observer(() => {
               <button
                 onClick={onCopy}
                 className="shrink-0 text-muted-foreground hover:text-foreground"
-                aria-label="Copy address"
+                aria-label={t('receive.copyAddress')}
               >
                 {copied ? (
                   <Check className="h-4 w-4 text-green-500" />

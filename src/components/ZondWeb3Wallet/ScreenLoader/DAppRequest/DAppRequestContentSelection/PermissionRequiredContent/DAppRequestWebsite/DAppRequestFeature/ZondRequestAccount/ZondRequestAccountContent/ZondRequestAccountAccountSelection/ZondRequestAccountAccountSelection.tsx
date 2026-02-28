@@ -2,6 +2,7 @@ import { Checkbox } from "@/components/UI/Checkbox";
 import AccountId from "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/AccountList/AccountId/AccountId";
 import { useStore } from "@/stores/store";
 import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 
 type ZondRequestAccountAccountSelectionProps = {
   selectedAccounts: string[];
@@ -13,6 +14,7 @@ const ZondRequestAccountAccountSelection = observer(
     selectedAccounts,
     onAccountSelection,
   }: ZondRequestAccountAccountSelectionProps) => {
+    const { t } = useTranslation();
     const { zondStore } = useStore();
     const { zondAccounts } = zondStore;
     const { accounts, isLoading } = zondAccounts;
@@ -22,7 +24,7 @@ const ZondRequestAccountAccountSelection = observer(
 
     return (
       <div className="flex flex-col gap-4">
-        <div>Select the accounts you want this site to connect with</div>
+        <div>{t('dapp.selectAccounts')}</div>
         {isLoading ? (
           <div className="flex h-12 w-full animate-pulse items-center justify-between">
             <div className="h-full w-full rounded-md bg-accent" />
@@ -49,7 +51,7 @@ const ZondRequestAccountAccountSelection = observer(
             ))}
           </div>
         ) : (
-          <div>No accounts available to connect</div>
+          <div>{t('dapp.noAccountsAvailable')}</div>
         )}
       </div>
     );

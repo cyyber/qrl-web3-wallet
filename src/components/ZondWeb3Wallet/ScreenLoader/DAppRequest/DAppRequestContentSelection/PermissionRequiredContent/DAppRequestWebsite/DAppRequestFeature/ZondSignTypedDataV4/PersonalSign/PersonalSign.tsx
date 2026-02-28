@@ -14,9 +14,11 @@ import { parseAndValidateSeed } from "@theqrl/web3-qrl-accounts";
 import { Buffer } from "buffer";
 import { Copy } from "lucide-react";
 import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
 
 const PersonalSign = observer(() => {
+  const { t } = useTranslation();
   const { lockStore, zondStore, dAppRequestStore } = useStore();
   const { getMnemonicPhrases } = lockStore;
   const { qrlInstance, zondConnection } = zondStore;
@@ -90,11 +92,11 @@ const PersonalSign = observer(() => {
   return (
     <div className="flex flex-col gap-2 rounded-md p-2">
       <div className="flex flex-col gap-1">
-        <div>From Address</div>
+        <div>{t('dapp.signature.fromAddress')}</div>
         <div className="w-64 font-bold text-secondary">{`${prefixFromAddress} ${addressSplitFromAddress.join(" ")}`}</div>
       </div>
       <div className="flex flex-col gap-1">
-        <div>Message</div>
+        <div>{t('dapp.signature.message')}</div>
         <div className="flex justify-between gap-2">
           <div className="max-h-[8rem] w-full overflow-hidden break-words font-bold text-secondary">
             {challenge}
@@ -112,7 +114,7 @@ const PersonalSign = observer(() => {
               </Button>
             </TooltipTrigger>
             <TooltipContent side="left">
-              <Label>Copy Message</Label>
+              <Label>{t('dapp.signature.copyMessage')}</Label>
             </TooltipContent>
           </Tooltip>
         </div>

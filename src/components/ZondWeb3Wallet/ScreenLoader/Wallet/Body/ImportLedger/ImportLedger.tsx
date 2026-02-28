@@ -35,6 +35,7 @@ import {
 } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 type ImportStep = "connect" | "select" | "success";
@@ -42,6 +43,7 @@ type ImportStep = "connect" | "select" | "success";
 const ACCOUNTS_PER_PAGE = 5;
 
 const ImportLedger = observer(() => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { ledgerStore, zondStore } = useStore();
   const {
@@ -99,7 +101,7 @@ const ImportLedger = observer(() => {
         setImportError(
           error instanceof Error
             ? error.message
-            : "Failed to load accounts from device"
+            : t('ledger.failedToLoadFromDevice')
         );
       });
     }
@@ -141,7 +143,7 @@ const ImportLedger = observer(() => {
       );
     } catch (error) {
       setImportError(
-        error instanceof Error ? error.message : "Failed to load accounts"
+        error instanceof Error ? error.message : t('ledger.failedToLoadAccounts')
       );
     }
   };
@@ -152,7 +154,7 @@ const ImportLedger = observer(() => {
   // Handle import confirmation
   const handleImportSelected = async () => {
     if (selectedAccountsMap.size === 0) {
-      setImportError("Please select at least one account to import");
+      setImportError(t('ledger.selectAtLeastOne'));
       return;
     }
 
@@ -185,7 +187,7 @@ const ImportLedger = observer(() => {
     } catch (error) {
       console.error("[ImportLedger] Failed to import accounts:", error);
       setImportError(
-        error instanceof Error ? error.message : "Failed to import accounts"
+        error instanceof Error ? error.message : t('ledger.failedToImport')
       );
     }
   };
@@ -212,20 +214,19 @@ const ImportLedger = observer(() => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Usb className="h-5 w-5" />
-              Connect Ledger Device
+              {t('ledger.connectTitle')}
             </CardTitle>
             <CardDescription>
-              Connect your Ledger device and open the QRL Zond app to import
-              accounts.
+              {t('ledger.connectDescription')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="rounded-lg bg-muted p-4 text-sm">
-              <p className="font-medium">Before connecting:</p>
+              <p className="font-medium">{t('ledger.beforeConnecting')}</p>
               <ul className="mt-2 list-inside list-disc space-y-1 text-muted-foreground">
-                <li>Connect your Ledger device via USB</li>
-                <li>Unlock your device with your PIN</li>
-                <li>Open the QRL Zond app on your device</li>
+                <li>{t('ledger.stepUsb')}</li>
+                <li>{t('ledger.stepPin')}</li>
+                <li>{t('ledger.stepApp')}</li>
               </ul>
             </div>
 
@@ -245,12 +246,12 @@ const ImportLedger = observer(() => {
               {isConnecting ? (
                 <>
                   <Loader className="mr-2 h-4 w-4 animate-spin" />
-                  Connecting...
+                  {t('ledger.connecting')}
                 </>
               ) : (
                 <>
                   <Usb className="mr-2 h-4 w-4" />
-                  Connect Ledger
+                  {t('ledger.connectButton')}
                 </>
               )}
             </Button>
@@ -262,15 +263,15 @@ const ImportLedger = observer(() => {
       {step === "select" && (
         <Card>
           <CardHeader>
-            <CardTitle>Select Accounts</CardTitle>
+            <CardTitle>{t('ledger.selectTitle')}</CardTitle>
             <CardDescription>
               {deviceInfo && (
                 <span className="text-xs text-muted-foreground">
-                  Connected to {deviceInfo.model} (v{deviceInfo.version})
+                  {t('ledger.connectedTo', { model: deviceInfo.model, version: deviceInfo.version })}
                 </span>
               )}
               <br />
-              Choose which accounts you want to import from your Ledger device.
+              {t('ledger.selectDescription')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -278,7 +279,7 @@ const ImportLedger = observer(() => {
               <div className="flex items-center justify-center py-8">
                 <Loader className="h-6 w-6 animate-spin text-muted-foreground" />
                 <span className="ml-2 text-sm text-muted-foreground">
-                  Loading accounts...
+                  {t('ledger.loadingAccounts')}
                 </span>
               </div>
             ) : (
@@ -305,10 +306,10 @@ const ImportLedger = observer(() => {
                           {account.address.slice(-6)}
                         </span>
                         <span className="text-xs text-muted-foreground">
-                          Account #{account.index + 1}
+                          {t('ledger.accountIndex', { index: account.index + 1 })}
                           {imported && (
                             <span className="ml-2 text-xs font-medium text-green-600">
-                              Already imported
+                              {t('ledger.alreadyImported')}
                             </span>
                           )}
                         </span>
@@ -349,7 +350,7 @@ const ImportLedger = observer(() => {
                 className="flex-1"
               >
                 <ChevronLeft className="mr-1 h-4 w-4" />
-                Previous
+                {t('ledger.previous')}
               </Button>
               <Button
                 variant="outline"
@@ -358,7 +359,7 @@ const ImportLedger = observer(() => {
                 disabled={isLoadingAccounts}
                 className="flex-1"
               >
-                Next
+                {t('ledger.next')}
                 <ChevronRight className="ml-1 h-4 w-4" />
               </Button>
             </div>
@@ -367,8 +368,9 @@ const ImportLedger = observer(() => {
               disabled={newlySelectedCount === 0}
               className="w-full"
             >
-              Import {newlySelectedCount} account
-              {newlySelectedCount !== 1 ? "s" : ""}
+              {newlySelectedCount !== 1
+                ? t('ledger.importButtonPlural', { count: newlySelectedCount })
+                : t('ledger.importButton', { count: newlySelectedCount })}
             </Button>
           </CardFooter>
         </Card>
@@ -380,27 +382,27 @@ const ImportLedger = observer(() => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-green-600">
               <CheckCircle2 className="h-5 w-5" />
-              Import Successful
+              {t('ledger.successTitle')}
             </CardTitle>
             <CardDescription>
-              Your Ledger accounts have been imported successfully.
+              {t('ledger.successDescription')}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="rounded-lg bg-muted p-4">
               <p className="text-sm font-medium">
-                {selectedAccountsMap.size} account
-                {selectedAccountsMap.size !== 1 ? "s" : ""} imported
+                {selectedAccountsMap.size !== 1
+                  ? t('ledger.accountsImportedPlural', { count: selectedAccountsMap.size })
+                  : t('ledger.accountsImported', { count: selectedAccountsMap.size })}
               </p>
               <p className="mt-1 text-xs text-muted-foreground">
-                You can now use these accounts to sign transactions. Your Ledger
-                device will be required to approve each transaction.
+                {t('ledger.successInfo')}
               </p>
             </div>
           </CardContent>
           <CardFooter>
             <Button onClick={handleFinish} className="w-full">
-              Done
+              {t('ledger.done')}
             </Button>
           </CardFooter>
         </Card>

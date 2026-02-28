@@ -14,7 +14,8 @@ import type { GasFeeOverrides, GasTier } from "@/types/gasFee";
 import { cn } from "@/utilities/stylingUtil";
 import { ChevronDown, ChevronUp, Info, Loader } from "lucide-react";
 import { observer } from "mobx-react-lite";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 type GasFeeSelectorProps = {
   isZrc20Token: boolean;
@@ -34,24 +35,6 @@ type TierConfig = {
   description: string;
 };
 
-const TIERS: TierConfig[] = [
-  {
-    value: "low",
-    label: "Low",
-    description: "Base priority fee. May take longer to confirm.",
-  },
-  {
-    value: "market",
-    label: "Market",
-    description: "1.5x priority fee. Standard confirmation speed.",
-  },
-  {
-    value: "aggressive",
-    label: "Aggressive",
-    description: "2x priority fee. Faster confirmation.",
-  },
-];
-
 export const GasFeeSelector = observer(
   ({
     isZrc20Token,
@@ -64,7 +47,26 @@ export const GasFeeSelector = observer(
     onOverridesChange,
     onGasFeeCalculated,
   }: GasFeeSelectorProps) => {
+    const { t } = useTranslation();
     const { settingsStore, zondStore, priceStore } = useStore();
+
+    const TIERS: TierConfig[] = useMemo(() => [
+      {
+        value: "low" as GasTier,
+        label: t('gasFee.tierLow'),
+        description: t('gasFee.tierLowDescription'),
+      },
+      {
+        value: "market" as GasTier,
+        label: t('gasFee.tierMarket'),
+        description: t('gasFee.tierMarketDescription'),
+      },
+      {
+        value: "aggressive" as GasTier,
+        label: t('gasFee.tierAggressive'),
+        description: t('gasFee.tierAggressiveDescription'),
+      },
+    ], [t]);
     const { defaultGasTier, showBalanceAndPrice, currency } = settingsStore;
     const qrlPrice = priceStore.getPrice(currency);
     const { getNativeTokenGas, getZrc20TokenGas } = zondStore;
@@ -229,7 +231,7 @@ export const GasFeeSelector = observer(
       <TooltipProvider delayDuration={200}>
         <div className="m-1">
           <Label className="mb-2 block text-xs text-muted-foreground">
-            Gas fee
+            {t('gasFee.label')}
           </Label>
           <div className="flex flex-col gap-1">
             {TIERS.map((tier) => {
@@ -311,13 +313,13 @@ export const GasFeeSelector = observer(
                     showAdvanced ? "bg-secondary" : "bg-muted-foreground/30",
                   )}
                 />
-                <div className="text-sm font-medium">Advanced</div>
+                <div className="text-sm font-medium">{t('gasFee.tierAdvanced')}</div>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info className="h-3 w-3 text-muted-foreground" />
                   </TooltipTrigger>
                   <TooltipContent side="top" className="max-w-52 text-xs">
-                    Set custom gas parameters manually.
+                    {t('gasFee.tierAdvancedDescription')}
                   </TooltipContent>
                 </Tooltip>
               </div>
@@ -332,12 +334,12 @@ export const GasFeeSelector = observer(
               <div className="flex flex-col gap-2 rounded-md border border-border p-3">
                 <div>
                   <Label className="mb-1 block text-xs text-muted-foreground">
-                    Max priority fee (planck)
+                    {t('gasFee.maxPriorityFee')}
                   </Label>
                   <Input
                     type="text"
                     inputMode="numeric"
-                    placeholder="Auto"
+                    placeholder={t('gasFee.placeholderAuto')}
                     value={advancedValues.maxPriorityFeePerGas}
                     onChange={(e) =>
                       handleAdvancedChange(
@@ -351,12 +353,12 @@ export const GasFeeSelector = observer(
                 </div>
                 <div>
                   <Label className="mb-1 block text-xs text-muted-foreground">
-                    Max fee (planck)
+                    {t('gasFee.maxFee')}
                   </Label>
                   <Input
                     type="text"
                     inputMode="numeric"
-                    placeholder="Auto"
+                    placeholder={t('gasFee.placeholderAuto')}
                     value={advancedValues.maxFeePerGas}
                     onChange={(e) =>
                       handleAdvancedChange("maxFeePerGas", e.target.value)
@@ -367,12 +369,12 @@ export const GasFeeSelector = observer(
                 </div>
                 <div>
                   <Label className="mb-1 block text-xs text-muted-foreground">
-                    Gas limit
+                    {t('gasFee.gasLimit')}
                   </Label>
                   <Input
                     type="text"
                     inputMode="numeric"
-                    placeholder="Auto"
+                    placeholder={t('gasFee.placeholderAuto')}
                     value={advancedValues.gasLimit}
                     onChange={(e) =>
                       handleAdvancedChange("gasLimit", e.target.value)

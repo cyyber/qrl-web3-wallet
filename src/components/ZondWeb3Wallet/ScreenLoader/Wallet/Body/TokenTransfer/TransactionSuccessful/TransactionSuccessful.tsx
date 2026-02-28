@@ -11,6 +11,7 @@ import { ROUTES } from "@/router/router";
 import StringUtil from "@/utilities/stringUtil";
 import { TransactionReceipt, utils } from "@theqrl/web3";
 import { Check } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import CircuitBackground from "../../../../Shared/CircuitBackground/CircuitBackground";
 
@@ -21,6 +22,7 @@ type TransactionSuccessfulProps = {
 export const TransactionSuccessful = ({
   transactionReceipt,
 }: TransactionSuccessfulProps) => {
+  const { t } = useTranslation();
   const {
     blockHash,
     blockNumber,
@@ -40,30 +42,30 @@ export const TransactionSuccessful = ({
       <div className="relative z-10 p-8">
         <Card className="w-full">
           <CardHeader>
-            <CardTitle>Transaction completed</CardTitle>
+            <CardTitle>{t('transfer.completed')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-8">
             <div className="flex flex-col gap-2">
-              <div>Transaction Hash</div>
+              <div>{t('transfer.completedHash')}</div>
               <div className="font-bold text-secondary">
                 {`${prefixTxHash} ${addressSplitTxHash.join(" ")}`}
               </div>
             </div>
             <div className="flex flex-col gap-2">
-              <div>Block hash</div>
+              <div>{t('transfer.completedBlockHash')}</div>
               <div className="font-bold text-secondary">
                 {`${prefixBlockHash} ${addressSplitBlockHash.join(" ")}`}
               </div>
             </div>
             <div className="grid grid-cols-2 gap-8">
               <div className="flex flex-col gap-2">
-                <div>Block number</div>
+                <div>{t('transfer.completedBlockNumber')}</div>
                 <div className="font-bold text-secondary">
                   {blockNumber.toString()}
                 </div>
               </div>
               <div className="flex flex-col gap-2">
-                <div>Gas used</div>
+                <div>{t('transfer.completedGasUsed')}</div>
                 <div className="font-bold text-secondary">
                   {getOptimalGasFee(
                     utils.fromPlanck(
@@ -80,7 +82,7 @@ export const TransactionSuccessful = ({
             <Link className="w-full" to={ROUTES.HOME}>
               <Button className="w-full" type="button">
                 <Check className="mr-2 h-4 w-4" />
-                Done
+                {t('transfer.completedDone')}
               </Button>
             </Link>
           </CardFooter>

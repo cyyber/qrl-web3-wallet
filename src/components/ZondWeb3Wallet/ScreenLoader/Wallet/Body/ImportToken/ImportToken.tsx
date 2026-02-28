@@ -21,6 +21,7 @@ import { Loader, RefreshCw } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import BackButton from "../../../Shared/BackButton/BackButton";
 import TokenImportSuccess from "./TokenImportSuccess/TokenImportSuccess";
@@ -31,6 +32,7 @@ const FormSchema = z.object({
 });
 
 const ImportToken = observer(() => {
+  const { t } = useTranslation();
   const { zondStore } = useStore();
   const { getZrc20TokenDetails } = zondStore;
 
@@ -90,7 +92,7 @@ const ImportToken = observer(() => {
             >
               <Card>
                 <CardHeader>
-                  <CardTitle>Import token</CardTitle>
+                  <CardTitle>{t('importToken.title')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-8">
                   <FormField
@@ -104,11 +106,11 @@ const ImportToken = observer(() => {
                             aria-label={field.name}
                             autoComplete="off"
                             disabled={isSubmitting}
-                            placeholder="Contract address"
+                            placeholder={t('importToken.contractAddressPlaceholder')}
                           />
                         </FormControl>
                         <FormDescription>
-                          Paste the token's contract address
+                          {t('importToken.contractAddressDescription')}
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -127,8 +129,8 @@ const ImportToken = observer(() => {
                       <RefreshCw className="mr-2 h-4 w-4" />
                     )}
                     {isSubmitting
-                      ? "Fetching token details"
-                      : "Fetch token details"}
+                      ? t('importToken.importingButton')
+                      : t('importToken.importButton')}
                   </Button>
                 </CardFooter>
               </Card>

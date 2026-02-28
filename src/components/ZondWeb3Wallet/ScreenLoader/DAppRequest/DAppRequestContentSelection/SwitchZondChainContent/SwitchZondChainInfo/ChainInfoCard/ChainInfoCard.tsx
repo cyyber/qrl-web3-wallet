@@ -1,6 +1,7 @@
 import { Card } from "@/components/UI/Card";
 import ChainIcon from "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/ChainConnectivity/ChainIcon/ChainIcon";
 import { BlockchainDataType } from "@/configuration/zondBlockchainConfig";
+import { useTranslation } from "react-i18next";
 
 type ChainInfoCardProps = {
   title: string;
@@ -9,6 +10,7 @@ type ChainInfoCardProps = {
 };
 
 const ChainInfoCard = ({ title, description, chain }: ChainInfoCardProps) => {
+  const { t } = useTranslation();
   const chainId = chain.chainId;
   const chainName = chain.chainName;
   const defaultIconUrl = chain.defaultIconUrl;
@@ -28,7 +30,7 @@ const ChainInfoCard = ({ title, description, chain }: ChainInfoCardProps) => {
           <div className="flex flex-col break-all">
             <span className="font-bold">{chainName}</span>
             <span className="text-xm opacity-80">
-              Chain ID {parseInt(chainId, 16)}
+              {t('chain.chainId', { chainId: parseInt(chainId, 16) })}
             </span>
             <span className="text-xm opacity-80">{defaultRpcUrl}</span>
           </div>
