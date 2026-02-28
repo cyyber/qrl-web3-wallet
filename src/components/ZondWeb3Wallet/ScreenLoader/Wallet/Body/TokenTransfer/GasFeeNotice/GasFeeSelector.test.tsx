@@ -195,8 +195,8 @@ describe("GasFeeSelector", () => {
       (call: any) => call[0].tier === "advanced",
     );
     expect(advancedCalls.length).toBeGreaterThan(0);
-    const lastAdvancedCall = advancedCalls[advancedCalls.length - 1];
-    expect(lastAdvancedCall[0].tier).toBe("advanced");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    expect((advancedCalls[advancedCalls.length - 1] as any)[0].tier).toBe("advanced");
   });
 
   it("should sanitize non-numeric input in advanced fields", async () => {

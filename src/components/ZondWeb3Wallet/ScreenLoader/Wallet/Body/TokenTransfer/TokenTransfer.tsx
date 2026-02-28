@@ -23,6 +23,7 @@ import {
 import { Input } from "@/components/UI/Input";
 import { Label } from "@/components/UI/Label";
 import { NATIVE_TOKEN } from "@/constants/nativeToken";
+import { formatFiatCompact } from "@/functions/formatFiat";
 import { parseBalanceValue } from "@/functions/parseBalanceValue";
 import { ROUTES } from "@/router/router";
 import { useStore } from "@/stores/store";
@@ -62,7 +63,7 @@ const FormSchema = z
 const TokenTransfer = observer(() => {
   const { state } = useLocation();
   const navigate = useNavigate();
-  const { lockStore, zondStore, ledgerStore, transactionHistoryStore } =
+  const { lockStore, zondStore, ledgerStore, transactionHistoryStore, priceStore, settingsStore } =
     useStore();
   const { getMnemonicPhrases } = lockStore;
   const {
@@ -457,7 +458,21 @@ const TokenTransfer = observer(() => {
                               step="any"
                             />
                           </FormControl>
-                          <FormDescription>Amount to send</FormDescription>
+                          <FormDescription>
+                            Amount to send
+                            {!isZrc20Token &&
+                              settingsStore.showBalanceAndPrice &&
+                              priceStore.getPrice(settingsStore.currency) > 0 &&
+                              field.value > 0 && (
+                                <span className="ml-1 text-muted-foreground">
+                                  {formatFiatCompact(
+                                    field.value,
+                                    priceStore.getPrice(settingsStore.currency),
+                                    settingsStore.currency,
+                                  )}
+                                </span>
+                              )}
+                          </FormDescription>
                           <FormMessage />
                           {balanceError && (
                             <p className="text-sm font-medium text-destructive">

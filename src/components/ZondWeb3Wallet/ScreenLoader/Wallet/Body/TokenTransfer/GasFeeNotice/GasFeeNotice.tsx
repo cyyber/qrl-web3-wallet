@@ -1,3 +1,4 @@
+import { formatFiatCompact } from "@/functions/formatFiat";
 import { getOptimalGasFee } from "@/functions/getOptimalGasFee";
 import { useStore } from "@/stores/store";
 import type { GasFeeOverrides } from "@/types/gasFee";
@@ -45,13 +46,14 @@ export const GasFeeNotice = observer(
     onGasFeeCalculated,
     overrides,
   }: GasFeeNoticeProps) => {
-    const { zondStore } = useStore();
+    const { zondStore, priceStore, settingsStore } = useStore();
     const { getNativeTokenGas, getZrc20TokenGas } = zondStore;
 
     const hasValuesForGasCalculation = !!from && !!to && !!value;
 
     const [gasFee, setGasFee] = useState({
       estimatedGas: "",
+      rawAmount: "",
       isLoading: true,
       error: "",
     });
@@ -80,6 +82,7 @@ export const GasFeeNotice = observer(
         setGasFee({
           ...gasFee,
           estimatedGas: getOptimalGasFee(gasFeeAmount),
+          rawAmount: gasFeeAmount,
           error: "",
           isLoading: false,
         });
@@ -94,6 +97,13 @@ export const GasFeeNotice = observer(
       calculateGasFee();
     }, [from, to, value, overrides]);
 
+    const { showBalanceAndPrice, currency } = settingsStore;
+    const qrlPrice = priceStore.getPrice(currency);
+    const fiatGas =
+      showBalanceAndPrice && qrlPrice > 0 && gasFee.rawAmount
+        ? formatFiatCompact(gasFee.rawAmount, qrlPrice, currency)
+        : "";
+
     return (
       hasValuesForGasCalculation && (
         <div className={gasFeeNoticeClasses({ isSubmitting })}>
@@ -107,6 +117,9 @@ export const GasFeeNotice = observer(
           ) : (
             <div className="w-full overflow-hidden">
               Estimated gas fee is {gasFee?.estimatedGas}
+              {fiatGas && (
+                <span className="ml-1 text-muted-foreground">{fiatGas}</span>
+              )}
             </div>
           )}
         </div>

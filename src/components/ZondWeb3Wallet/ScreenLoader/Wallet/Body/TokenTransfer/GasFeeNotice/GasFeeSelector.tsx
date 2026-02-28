@@ -7,6 +7,7 @@ import {
   TooltipTrigger,
 } from "@/components/UI/Tooltip";
 import { NATIVE_TOKEN_UNITS_OF_GAS } from "@/constants/nativeToken";
+import { formatFiatCompact } from "@/functions/formatFiat";
 import { getOptimalGasFee } from "@/functions/getOptimalGasFee";
 import { useStore } from "@/stores/store";
 import type { GasFeeOverrides, GasTier } from "@/types/gasFee";
@@ -63,8 +64,9 @@ export const GasFeeSelector = observer(
     onOverridesChange,
     onGasFeeCalculated,
   }: GasFeeSelectorProps) => {
-    const { settingsStore, zondStore } = useStore();
-    const { defaultGasTier } = settingsStore;
+    const { settingsStore, zondStore, priceStore } = useStore();
+    const { defaultGasTier, showBalanceAndPrice, currency } = settingsStore;
+    const qrlPrice = priceStore.getPrice(currency);
     const { getNativeTokenGas, getZrc20TokenGas } = zondStore;
 
     const initialTier =
@@ -268,11 +270,18 @@ export const GasFeeSelector = observer(
                       </TooltipContent>
                     </Tooltip>
                   </div>
-                  <div className="text-right text-xs text-muted-foreground">
+                  <div className="flex flex-col items-end text-right text-xs text-muted-foreground">
                     {isLoadingCosts ? (
                       <Loader className="h-3 w-3 animate-spin" />
                     ) : cost ? (
-                      getOptimalGasFee(cost)
+                      <>
+                        <span>{getOptimalGasFee(cost)}</span>
+                        {showBalanceAndPrice && qrlPrice > 0 && (
+                          <span className="text-[10px]">
+                            {formatFiatCompact(cost, qrlPrice, currency)}
+                          </span>
+                        )}
+                      </>
                     ) : (
                       "—"
                     )}

@@ -1,3 +1,5 @@
+import { formatFiatCompact } from "@/functions/formatFiat";
+import { parseBalanceValue } from "@/functions/parseBalanceValue";
 import { useStore } from "@/stores/store";
 import StringUtil from "@/utilities/stringUtil";
 import { Usb } from "lucide-react";
@@ -10,7 +12,7 @@ type AccountIdType = {
 };
 
 const AccountId = observer(({ account, hideLabel }: AccountIdType) => {
-  const { zondStore, ledgerStore, accountLabelsStore } = useStore();
+  const { zondStore, ledgerStore, accountLabelsStore, priceStore, settingsStore } = useStore();
   const { getAccountBalance, zondAccounts } = zondStore;
   const { accounts } = zondAccounts;
   const { prefix, addressSplit } = StringUtil.getSplitAddress(account);
@@ -22,6 +24,13 @@ const AccountId = observer(({ account, hideLabel }: AccountIdType) => {
   useEffect(() => {
     setAccountBalance(getAccountBalance(account));
   }, [accounts]);
+
+  const numericBalance = parseBalanceValue(accountBalance).toNumber();
+  const price = priceStore.getPrice(settingsStore.currency);
+  const fiatDisplay =
+    settingsStore.showBalanceAndPrice && price > 0
+      ? formatFiatCompact(numericBalance, price, settingsStore.currency)
+      : "";
 
   return (
     <div className="flex flex-col gap-1">
@@ -54,7 +63,12 @@ const AccountId = observer(({ account, hideLabel }: AccountIdType) => {
             </span>
           )}
         </div>
-        <div className="text-xs text-secondary">{accountBalance}</div>
+        <div className="text-xs text-secondary">
+          {accountBalance}
+          {fiatDisplay && (
+            <span className="ml-1 text-muted-foreground">{fiatDisplay}</span>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -21,11 +21,13 @@ const mockedStoreValues: StoreType = {
     currency: "USD",
     language: "en",
     defaultGasTier: "market" as const,
+    showBalanceAndPrice: true,
     setThemePreference: async () => {},
     setAutoLockMinutes: async () => {},
     setCurrency: async () => {},
     setLanguage: async () => {},
     setDefaultGasTier: async () => {},
+    setShowBalanceAndPrice: async () => {},
   } as unknown as SettingsStore,
   zondStore: {
     activeAccount: {
@@ -286,6 +288,20 @@ const mockedStoreValues: StoreType = {
     getLabel: () => "",
     clearLabels: async () => {},
   },
+  priceStore: {
+    prices: {},
+    change24h: {},
+    lastUpdated: 0,
+    isLoading: false,
+    hasError: false,
+    getPrice: () => 0,
+    isCacheStale: false,
+    initialize: async () => {},
+    fetchPrices: async () => {},
+    startAutoRefresh: () => {},
+    stopAutoRefresh: () => {},
+    getChange24h: () => 0,
+  } as any,
 };
 
 export const mockedStore = (

@@ -7,6 +7,7 @@ import {
 } from "@/components/UI/Card";
 import { Separator } from "@/components/UI/Separator";
 import { NATIVE_TOKEN_UNITS_OF_GAS } from "@/constants/nativeToken";
+import { formatFiatCompact } from "@/functions/formatFiat";
 import { getOptimalGasFee } from "@/functions/getOptimalGasFee";
 import { useStore } from "@/stores/store";
 import type {
@@ -116,7 +117,7 @@ function getStatusBadge(displayStatus: PendingStatus) {
 }
 
 const TransactionDetail = observer(() => {
-  const { zondStore, lockStore, transactionHistoryStore } = useStore();
+  const { zondStore, lockStore, transactionHistoryStore, priceStore, settingsStore } = useStore();
   const location = useLocation();
   const navigate = useNavigate();
   const transaction = location.state
@@ -346,6 +347,13 @@ const TransactionDetail = observer(() => {
   const gasPriceQrl = utils.fromPlanck(Number(effectiveGasPrice), "quanta");
   const totalCost = amount + Number(totalGasFeeQrl);
 
+  const { showBalanceAndPrice, currency } = settingsStore;
+  const qrlPrice = priceStore.getPrice(currency);
+  const showFiat = showBalanceAndPrice && qrlPrice > 0 && !transaction.isZrc20Token;
+  const fiatAmount = showFiat ? formatFiatCompact(amount, qrlPrice, currency) : "";
+  const fiatGasFee = showFiat ? formatFiatCompact(totalGasFeeQrl, qrlPrice, currency) : "";
+  const fiatTotalCost = showFiat ? formatFiatCompact(totalCost, qrlPrice, currency) : "";
+
   const formattedDate = new Date(timestamp).toLocaleString(undefined, {
     year: "numeric",
     month: "short",
@@ -437,7 +445,9 @@ const TransactionDetail = observer(() => {
               <span className="text-lg font-bold">
                 {amount} {tokenSymbol}
               </span>
-              <span className="text-xs text-muted-foreground">—</span>
+              <span className="text-xs text-muted-foreground">
+                {fiatAmount || "—"}
+              </span>
             </div>
 
             <Separator />
@@ -486,6 +496,11 @@ const TransactionDetail = observer(() => {
                     <span className="text-sm font-medium">
                       {getOptimalGasFee(totalGasFeeQrl)}
                     </span>
+                    {fiatGasFee && (
+                      <span className="text-[10px] text-muted-foreground">
+                        {fiatGasFee}
+                      </span>
+                    )}
                   </div>
                 </div>
 
@@ -496,6 +511,11 @@ const TransactionDetail = observer(() => {
                   <span className="text-sm font-bold">
                     {getOptimalGasFee(totalCost.toString())}
                   </span>
+                  {fiatTotalCost && (
+                    <span className="text-xs text-muted-foreground">
+                      {fiatTotalCost}
+                    </span>
+                  )}
                 </div>
 
                 <Separator />

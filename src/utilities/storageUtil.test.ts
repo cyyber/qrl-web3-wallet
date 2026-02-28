@@ -791,6 +791,68 @@ describe("StorageUtil", () => {
     });
   });
 
+  // ── Price cache ──────────────────────────────────────────
+
+  describe("Price cache", () => {
+    it("should store and retrieve price cache", async () => {
+      const cache = {
+        prices: { usd: 1.5, eur: 1.3 },
+        change24h: { usd: 2.5, eur: 2.1 },
+        timestamp: Date.now(),
+      };
+      await StorageUtil.setPriceCache(cache);
+      const result = await StorageUtil.getPriceCache();
+      expect(result).toEqual(cache);
+    });
+
+    it("should return null when no price cache exists", async () => {
+      const result = await StorageUtil.getPriceCache();
+      expect(result).toBeNull();
+    });
+
+    it("should overwrite existing price cache", async () => {
+      const cache1 = {
+        prices: { usd: 1.0 },
+        change24h: { usd: 1.0 },
+        timestamp: 1000,
+      };
+      const cache2 = {
+        prices: { usd: 2.0, eur: 1.8 },
+        change24h: { usd: 3.0, eur: 2.5 },
+        timestamp: 2000,
+      };
+      await StorageUtil.setPriceCache(cache1);
+      await StorageUtil.setPriceCache(cache2);
+      const result = await StorageUtil.getPriceCache();
+      expect(result).toEqual(cache2);
+    });
+  });
+
+  // ── Settings (showBalanceAndPrice) ──────────────────────
+
+  describe("Settings", () => {
+    it("should store and retrieve settings with showBalanceAndPrice", async () => {
+      await StorageUtil.setSettings({
+        showBalanceAndPrice: false,
+        currency: "EUR",
+      });
+      const result = await StorageUtil.getSettings();
+      expect(result.showBalanceAndPrice).toBe(false);
+      expect(result.currency).toBe("EUR");
+    });
+
+    it("should return empty object when no settings stored", async () => {
+      const result = await StorageUtil.getSettings();
+      expect(result).toEqual({});
+    });
+
+    it("should preserve showBalanceAndPrice default as undefined", async () => {
+      await StorageUtil.setSettings({ currency: "USD" });
+      const result = await StorageUtil.getSettings();
+      expect(result.showBalanceAndPrice).toBeUndefined();
+    });
+  });
+
   // ── updateTransactionHistoryEntry ──
 
   describe("updateTransactionHistoryEntry", () => {

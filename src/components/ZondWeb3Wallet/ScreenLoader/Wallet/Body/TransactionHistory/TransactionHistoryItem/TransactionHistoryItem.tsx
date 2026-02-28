@@ -1,9 +1,12 @@
+import { formatFiatCompact } from "@/functions/formatFiat";
 import { ROUTES } from "@/router/router";
+import { useStore } from "@/stores/store";
 import type {
   PendingStatus,
   TransactionHistoryEntry,
 } from "@/types/transactionHistory";
 import { ArrowUpRight, Loader } from "lucide-react";
+import { observer } from "mobx-react-lite";
 import { Link, useNavigate } from "react-router-dom";
 
 type TransactionHistoryItemProps = {
@@ -54,13 +57,21 @@ function getStatusLabel(displayStatus: PendingStatus): string {
   }
 }
 
-const TransactionHistoryItem = ({
+const TransactionHistoryItem = observer(({
   transaction,
 }: TransactionHistoryItemProps) => {
+  const { priceStore, settingsStore } = useStore();
   const { amount, tokenSymbol, status, pendingStatus } = transaction;
   const navigate = useNavigate();
   const displayStatus = getDisplayStatus(pendingStatus, status);
   const isPending = displayStatus === "pending";
+
+  const { showBalanceAndPrice, currency } = settingsStore;
+  const qrlPrice = priceStore.getPrice(currency);
+  const fiatDisplay =
+    showBalanceAndPrice && qrlPrice > 0 && !transaction.isZrc20Token
+      ? formatFiatCompact(amount, qrlPrice, currency)
+      : "";
 
   const handleAction = (
     e: React.MouseEvent,
@@ -90,7 +101,12 @@ const TransactionHistoryItem = ({
             <span className="text-sm font-medium">
               {amount} {tokenSymbol}
             </span>
-            {isPending && transaction.nonce !== undefined ? (
+            {fiatDisplay && (
+              <span className="text-[10px] text-muted-foreground">
+                {fiatDisplay}
+              </span>
+            )}
+            {isPending && transaction.nonce !== undefined && (
               <div className="mt-1 flex gap-1">
                 <button
                   onClick={(e) => handleAction(e, "speed-up")}
@@ -105,14 +121,12 @@ const TransactionHistoryItem = ({
                   Cancel
                 </button>
               </div>
-            ) : (
-              <span className="text-xs text-muted-foreground">—</span>
             )}
           </div>
         </div>
       </div>
     </Link>
   );
-};
+});
 
 export default TransactionHistoryItem;

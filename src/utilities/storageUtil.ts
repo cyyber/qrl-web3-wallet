@@ -48,6 +48,7 @@ const ALL_CONTACTS_IDENTIFIER = "ALL_CONTACTS";
 const ACCOUNT_LABELS_IDENTIFIER = "ACCOUNT_LABELS";
 
 const SETTINGS_IDENTIFIER = "SETTINGS";
+const PRICE_CACHE_IDENTIFIER = "PRICE_CACHE";
 
 export type WalletSettings = {
   themePreference?: "system" | "light" | "dark";
@@ -55,6 +56,13 @@ export type WalletSettings = {
   currency?: string;
   language?: string;
   defaultGasTier?: GasTier;
+  showBalanceAndPrice?: boolean;
+};
+
+export type PriceCache = {
+  prices: Record<string, number>;
+  change24h: Record<string, number>;
+  timestamp: number;
 };
 
 type TransactionValuesType = {
@@ -724,6 +732,17 @@ class StorageUtil {
       ][chainId].transactions = [];
       await browser.storage.local.set(storageData);
     }
+  }
+
+  static async setPriceCache(cache: PriceCache) {
+    await browser.storage.local.set({
+      [PRICE_CACHE_IDENTIFIER]: cache,
+    });
+  }
+
+  static async getPriceCache(): Promise<PriceCache | null> {
+    const storageData = await browser.storage.local.get(PRICE_CACHE_IDENTIFIER);
+    return (storageData?.[PRICE_CACHE_IDENTIFIER] ?? null) as PriceCache | null;
   }
 }
 

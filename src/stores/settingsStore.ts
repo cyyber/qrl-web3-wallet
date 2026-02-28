@@ -21,6 +21,7 @@ class SettingsStore {
   currency = "USD";
   language = "en";
   defaultGasTier: GasTier = "market";
+  showBalanceAndPrice = true;
 
   constructor() {
     makeAutoObservable(this, {
@@ -31,11 +32,13 @@ class SettingsStore {
       currency: observable,
       language: observable,
       defaultGasTier: observable,
+      showBalanceAndPrice: observable,
       setThemePreference: action.bound,
       setAutoLockMinutes: action.bound,
       setCurrency: action.bound,
       setLanguage: action.bound,
       setDefaultGasTier: action.bound,
+      setShowBalanceAndPrice: action.bound,
     });
 
     this.isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -79,6 +82,9 @@ class SettingsStore {
       if (settings.defaultGasTier) {
         this.defaultGasTier = settings.defaultGasTier;
       }
+      if (settings.showBalanceAndPrice !== undefined) {
+        this.showBalanceAndPrice = settings.showBalanceAndPrice;
+      }
     });
   }
 
@@ -109,6 +115,7 @@ class SettingsStore {
       currency: this.currency,
       language: this.language,
       defaultGasTier: this.defaultGasTier,
+      showBalanceAndPrice: this.showBalanceAndPrice,
     });
   }
 
@@ -138,6 +145,11 @@ class SettingsStore {
 
   async setDefaultGasTier(tier: GasTier) {
     this.defaultGasTier = tier;
+    await this.#persistSettings();
+  }
+
+  async setShowBalanceAndPrice(enabled: boolean) {
+    this.showBalanceAndPrice = enabled;
     await this.#persistSettings();
   }
 }

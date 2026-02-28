@@ -1,3 +1,5 @@
+import { mockedStore } from "@/__mocks__/mockedStore";
+import { StoreProvider } from "@/stores/store";
 import type { TransactionHistoryEntry } from "@/types/transactionHistory";
 import { afterEach, describe, expect, it } from "@jest/globals";
 import { cleanup, render, screen } from "@testing-library/react";
@@ -32,9 +34,11 @@ describe("TransactionHistoryItem", () => {
 
   const renderComponent = (transaction: TransactionHistoryEntry) =>
     render(
-      <MemoryRouter>
-        <TransactionHistoryItem transaction={transaction} />
-      </MemoryRouter>,
+      <StoreProvider value={mockedStore()}>
+        <MemoryRouter>
+          <TransactionHistoryItem transaction={transaction} />
+        </MemoryRouter>
+      </StoreProvider>,
     );
 
   it("should render a confirmed native transaction", () => {
@@ -143,5 +147,100 @@ describe("TransactionHistoryItem", () => {
   it("should use status boolean as fallback when no pendingStatus", () => {
     renderComponent(makeSampleEntry({ pendingStatus: undefined, status: true }));
     expect(screen.getByText("Confirmed")).toBeInTheDocument();
+  });
+
+  it("should display fiat value when price is available", () => {
+    const storeWithPrice = mockedStore({
+      priceStore: {
+        getPrice: () => 1.5,
+      },
+      settingsStore: {
+        showBalanceAndPrice: true,
+        currency: "USD",
+      },
+    });
+
+    render(
+      <StoreProvider value={storeWithPrice}>
+        <MemoryRouter>
+          <TransactionHistoryItem transaction={makeSampleEntry({ amount: 10 })} />
+        </MemoryRouter>
+      </StoreProvider>,
+    );
+
+    // 10 QRL * $1.50 = $15.00 → should show ≈ $15.00
+    expect(screen.getByText(/≈/)).toBeInTheDocument();
+  });
+
+  it("should not display fiat value when showBalanceAndPrice is false", () => {
+    const storeHidden = mockedStore({
+      priceStore: {
+        getPrice: () => 1.5,
+      },
+      settingsStore: {
+        showBalanceAndPrice: false,
+        currency: "USD",
+      },
+    });
+
+    render(
+      <StoreProvider value={storeHidden}>
+        <MemoryRouter>
+          <TransactionHistoryItem transaction={makeSampleEntry({ amount: 10 })} />
+        </MemoryRouter>
+      </StoreProvider>,
+    );
+
+    expect(screen.queryByText(/≈/)).not.toBeInTheDocument();
+  });
+
+  it("should not display fiat value for ZRC-20 tokens", () => {
+    const storeWithPrice = mockedStore({
+      priceStore: {
+        getPrice: () => 1.5,
+      },
+      settingsStore: {
+        showBalanceAndPrice: true,
+        currency: "USD",
+      },
+    });
+
+    render(
+      <StoreProvider value={storeWithPrice}>
+        <MemoryRouter>
+          <TransactionHistoryItem
+            transaction={makeSampleEntry({
+              amount: 10,
+              isZrc20Token: true,
+              tokenSymbol: "TST",
+            })}
+          />
+        </MemoryRouter>
+      </StoreProvider>,
+    );
+
+    expect(screen.queryByText(/≈/)).not.toBeInTheDocument();
+  });
+
+  it("should not display fiat value when price is zero", () => {
+    const storeNoPrice = mockedStore({
+      priceStore: {
+        getPrice: () => 0,
+      },
+      settingsStore: {
+        showBalanceAndPrice: true,
+        currency: "USD",
+      },
+    });
+
+    render(
+      <StoreProvider value={storeNoPrice}>
+        <MemoryRouter>
+          <TransactionHistoryItem transaction={makeSampleEntry({ amount: 10 })} />
+        </MemoryRouter>
+      </StoreProvider>,
+    );
+
+    expect(screen.queryByText(/≈/)).not.toBeInTheDocument();
   });
 });
