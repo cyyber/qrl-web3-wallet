@@ -294,6 +294,14 @@ const mockedStoreValues: StoreType = {
     getLabel: () => "",
     clearLabels: async () => {},
   },
+  hiddenAccountsStore: {
+    hiddenAccounts: {},
+    hiddenAddresses: [],
+    loadHiddenAccounts: async () => {},
+    hideAccount: async () => {},
+    unhideAccount: async () => {},
+    isHidden: () => false,
+  } as any,
   priceStore: {
     prices: {},
     change24h: {},

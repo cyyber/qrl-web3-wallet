@@ -16,6 +16,7 @@ import {
   Copy,
   Download,
   EllipsisVertical,
+  EyeOff,
   Pencil,
   Send,
   X,
@@ -29,8 +30,8 @@ import AccountId from "../AccountId/AccountId";
 const ActiveAccount = observer(() => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { zondStore, accountLabelsStore } = useStore();
-  const { activeAccount } = zondStore;
+  const { zondStore, accountLabelsStore, hiddenAccountsStore } = useStore();
+  const { activeAccount, zondAccounts, setActiveAccount } = zondStore;
   const { accountAddress } = activeAccount;
 
   const label = accountLabelsStore.getLabel(accountAddress);
@@ -56,6 +57,19 @@ const ActiveAccount = observer(() => {
       await accountLabelsStore.setLabel(accountAddress, trimmed);
     }
     setIsEditing(false);
+  };
+
+  const visibleOtherAccounts = zondAccounts.accounts.filter(
+    ({ accountAddress: addr }) =>
+      addr !== accountAddress && !hiddenAccountsStore.isHidden(addr),
+  );
+  const canHide = visibleOtherAccounts.length > 0;
+
+  const hideActiveAccount = async () => {
+    if (!canHide) return;
+    const nextAccount = visibleOtherAccounts[0].accountAddress;
+    await hiddenAccountsStore.hideAccount(accountAddress);
+    await setActiveAccount(nextAccount);
   };
 
   return (
@@ -149,6 +163,17 @@ const ActiveAccount = observer(() => {
                       <span>{t('home.rename')}</span>
                     </div>
                   </DropdownMenuItem>
+                  {canHide && (
+                    <DropdownMenuItem
+                      className="cursor-pointer data-[highlighted]:text-secondary"
+                      onClick={hideActiveAccount}
+                    >
+                      <div className="flex gap-2">
+                        <EyeOff size="16" />
+                        <span>{t('home.hide')}</span>
+                      </div>
+                    </DropdownMenuItem>
+                  )}
                 </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>

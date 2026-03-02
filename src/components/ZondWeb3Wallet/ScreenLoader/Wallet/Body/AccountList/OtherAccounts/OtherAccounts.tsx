@@ -18,6 +18,7 @@ import {
   Copy,
   Download,
   EllipsisVertical,
+  EyeOff,
   Pencil,
   X,
 } from "lucide-react";
@@ -32,10 +33,11 @@ type OtherAccountCardProps = {
   onSwitch: (address: string) => void;
   onCopy: (address: string) => void;
   onReceive: (address: string) => void;
+  onHide: (address: string) => void;
 };
 
 const OtherAccountCard = observer(
-  ({ accountAddress, onSwitch, onCopy, onReceive }: OtherAccountCardProps) => {
+  ({ accountAddress, onSwitch, onCopy, onReceive, onHide }: OtherAccountCardProps) => {
     const { t } = useTranslation();
     const { accountLabelsStore } = useStore();
     const label = accountLabelsStore.getLabel(accountAddress);
@@ -143,6 +145,15 @@ const OtherAccountCard = observer(
                     <span>{t('home.rename')}</span>
                   </div>
                 </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="cursor-pointer data-[highlighted]:text-secondary"
+                  onClick={() => onHide(accountAddress)}
+                >
+                  <div className="flex gap-2">
+                    <EyeOff size="16" />
+                    <span>{t('home.hide')}</span>
+                  </div>
+                </DropdownMenuItem>
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -155,7 +166,7 @@ const OtherAccountCard = observer(
 const OtherAccounts = observer(() => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { zondStore } = useStore();
+  const { zondStore, hiddenAccountsStore } = useStore();
   const { zondAccounts, activeAccount, setActiveAccount } = zondStore;
   const { accountAddress: activeAccountAddress } = activeAccount;
   const { accounts } = zondAccounts;
@@ -164,7 +175,9 @@ const OtherAccounts = observer(() => {
     ? t('home.otherAccountsLabel')
     : t('home.accountsLabel');
   const otherAccounts = accounts.filter(
-    ({ accountAddress }) => accountAddress !== activeAccountAddress,
+    ({ accountAddress }) =>
+      accountAddress !== activeAccountAddress &&
+      !hiddenAccountsStore.isHidden(accountAddress),
   );
 
   const copyAccount = (accountAddress: string) => {
@@ -181,6 +194,10 @@ const OtherAccounts = observer(() => {
     await setActiveAccount(accountAddress);
   };
 
+  const onHide = async (accountAddress: string) => {
+    await hiddenAccountsStore.hideAccount(accountAddress);
+  };
+
   return (
     !!otherAccounts.length && (
       <div className="flex flex-col gap-2">
@@ -192,6 +209,7 @@ const OtherAccounts = observer(() => {
             onSwitch={onAccountSwitch}
             onCopy={copyAccount}
             onReceive={receiveAccount}
+            onHide={onHide}
           />
         ))}
       </div>

@@ -69,6 +69,9 @@
   "home.importAccount": "Importar una cuenta existente",
   "home.connectLedger": "Conectar Ledger",
   "home.createOrImport": "Crear o importar una cuenta",
+  "home.hide": "Ocultar",
+  "home.unhide": "Mostrar",
+  "home.hiddenAccounts": "Cuentas ocultas ({{count}})",
 
   "account.addressLabel": "Dirección de la cuenta",
   "account.balanceLabel": "Saldo",

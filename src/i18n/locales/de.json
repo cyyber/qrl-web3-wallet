@@ -69,6 +69,9 @@
   "home.importAccount": "Bestehendes Konto importieren",
   "home.connectLedger": "Ledger Verbinden",
   "home.createOrImport": "Konto erstellen oder importieren",
+  "home.hide": "Ausblenden",
+  "home.unhide": "Einblenden",
+  "home.hiddenAccounts": "Ausgeblendete Konten ({{count}})",
 
   "account.addressLabel": "Kontoadresse",
   "account.balanceLabel": "Guthaben",

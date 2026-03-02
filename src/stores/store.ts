@@ -1,5 +1,6 @@
 import { createContext, useContext } from "react";
 import AccountLabelsStore from "./accountLabelsStore";
+import HiddenAccountsStore from "./hiddenAccountsStore";
 import ContactsStore from "./contactsStore";
 import DAppRequestStore from "./dAppRequestStore";
 import LedgerStore from "./ledgerStore";
@@ -18,6 +19,7 @@ class Store {
   transactionHistoryStore;
   contactsStore;
   accountLabelsStore;
+  hiddenAccountsStore;
   priceStore;
 
   constructor() {
@@ -29,6 +31,7 @@ class Store {
     this.transactionHistoryStore = new TransactionHistoryStore();
     this.contactsStore = new ContactsStore();
     this.accountLabelsStore = new AccountLabelsStore();
+    this.hiddenAccountsStore = new HiddenAccountsStore();
     this.priceStore = new PriceStore();
     this.priceStore.initialize(this.settingsStore.showBalanceAndPrice);
   }

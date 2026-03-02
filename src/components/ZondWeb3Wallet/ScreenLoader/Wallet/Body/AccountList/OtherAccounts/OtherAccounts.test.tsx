@@ -250,4 +250,96 @@ describe("OtherAccounts", () => {
       screen.queryByRole("textbox", { name: "Edit account label" }),
     ).not.toBeInTheDocument();
   });
+
+  it("should show Hide menu item", async () => {
+    renderComponent(twoAccountStore());
+
+    await openMenu();
+    expect(
+      screen.getByRole("menuitem", { name: "Hide" }),
+    ).toBeInTheDocument();
+  });
+
+  it("should call hideAccount when Hide is clicked", async () => {
+    const hideAccount = jest.fn<any>(() => Promise.resolve());
+    renderComponent(
+      mockedStore({
+        zondStore: {
+          activeAccount: {
+            accountAddress: "Q205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
+          },
+          zondAccounts: {
+            isLoading: false,
+            accounts: [
+              {
+                accountAddress: "Q205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
+                accountBalance: "2.4568 QRL",
+              },
+              {
+                accountAddress: "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+                accountBalance: "0.3695 QRL",
+              },
+            ],
+          },
+        },
+        hiddenAccountsStore: {
+          hiddenAccounts: {},
+          hiddenAddresses: [],
+          loadHiddenAccounts: async () => {},
+          hideAccount,
+          unhideAccount: async () => {},
+          isHidden: () => false,
+        },
+      }),
+    );
+
+    await openMenu();
+    await userEvent.click(
+      screen.getByRole("menuitem", { name: "Hide" }),
+    );
+
+    expect(hideAccount).toHaveBeenCalledWith(
+      "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+    );
+  });
+
+  it("should not show hidden accounts in the list", () => {
+    const hidden: Record<string, boolean> = {
+      Q20fB08fF1f1376A14C055E9F56df80563E16722b: true,
+    };
+    renderComponent(
+      mockedStore({
+        zondStore: {
+          activeAccount: {
+            accountAddress: "Q205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
+          },
+          zondAccounts: {
+            isLoading: false,
+            accounts: [
+              {
+                accountAddress: "Q205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
+                accountBalance: "2.4568 QRL",
+              },
+              {
+                accountAddress: "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+                accountBalance: "0.3695 QRL",
+              },
+            ],
+          },
+        },
+        hiddenAccountsStore: {
+          hiddenAccounts: hidden,
+          hiddenAddresses: ["Q20fB08fF1f1376A14C055E9F56df80563E16722b"],
+          loadHiddenAccounts: async () => {},
+          hideAccount: async () => {},
+          unhideAccount: async () => {},
+          isHidden: (addr: string) => !!hidden[addr],
+        },
+      }),
+    );
+
+    expect(
+      screen.queryByText("Other accounts in the wallet"),
+    ).not.toBeInTheDocument();
+  });
 });

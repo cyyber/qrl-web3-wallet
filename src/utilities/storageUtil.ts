@@ -46,6 +46,7 @@ const CONTACTS_IDENTIFIER = "CONTACTS";
 const ALL_CONTACTS_IDENTIFIER = "ALL_CONTACTS";
 
 const ACCOUNT_LABELS_IDENTIFIER = "ACCOUNT_LABELS";
+const HIDDEN_ACCOUNTS_IDENTIFIER = "HIDDEN_ACCOUNTS";
 
 const SETTINGS_IDENTIFIER = "SETTINGS";
 const PRICE_CACHE_IDENTIFIER = "PRICE_CACHE";
@@ -501,6 +502,26 @@ class StorageUtil {
 
   static async clearAccountLabels() {
     await browser.storage.local.remove(ACCOUNT_LABELS_IDENTIFIER);
+  }
+
+  static async setHiddenAccounts(hidden: Record<string, boolean>) {
+    await browser.storage.local.set({
+      [HIDDEN_ACCOUNTS_IDENTIFIER]: hidden,
+    });
+  }
+
+  static async getHiddenAccounts(): Promise<Record<string, boolean>> {
+    const storageData = await browser.storage.local.get(
+      HIDDEN_ACCOUNTS_IDENTIFIER,
+    );
+    return (storageData?.[HIDDEN_ACCOUNTS_IDENTIFIER] ?? {}) as Record<
+      string,
+      boolean
+    >;
+  }
+
+  static async clearHiddenAccounts() {
+    await browser.storage.local.remove(HIDDEN_ACCOUNTS_IDENTIFIER);
   }
 
   static async setSettings(settings: WalletSettings) {

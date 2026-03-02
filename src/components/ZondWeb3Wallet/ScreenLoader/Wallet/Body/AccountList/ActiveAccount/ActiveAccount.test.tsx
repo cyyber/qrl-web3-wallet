@@ -246,4 +246,108 @@ describe("ActiveAccount", () => {
       screen.queryByRole("textbox", { name: "Edit account label" }),
     ).not.toBeInTheDocument();
   });
+
+  it("should show Hide menu item when other visible accounts exist", async () => {
+    renderComponent(
+      mockedStore({
+        zondStore: {
+          activeAccount: {
+            accountAddress: "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+          },
+          zondAccounts: {
+            isLoading: false,
+            accounts: [
+              {
+                accountAddress: "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+                accountBalance: "1.0 QRL",
+              },
+              {
+                accountAddress: "Q205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
+                accountBalance: "2.0 QRL",
+              },
+            ],
+          },
+        },
+      }),
+    );
+
+    await openMenu();
+    expect(
+      screen.getByRole("menuitem", { name: "Hide" }),
+    ).toBeInTheDocument();
+  });
+
+  it("should not show Hide when it is the only visible account", async () => {
+    renderComponent(
+      mockedStore({
+        zondStore: {
+          activeAccount: {
+            accountAddress: "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+          },
+          zondAccounts: {
+            isLoading: false,
+            accounts: [
+              {
+                accountAddress: "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+                accountBalance: "1.0 QRL",
+              },
+            ],
+          },
+        },
+      }),
+    );
+
+    await openMenu();
+    expect(
+      screen.queryByRole("menuitem", { name: "Hide" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("should call hideAccount and setActiveAccount when Hide is clicked", async () => {
+    const hideAccount = jest.fn<any>(() => Promise.resolve());
+    const setActiveAccount = jest.fn<any>(() => Promise.resolve());
+    renderComponent(
+      mockedStore({
+        zondStore: {
+          activeAccount: {
+            accountAddress: "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+          },
+          zondAccounts: {
+            isLoading: false,
+            accounts: [
+              {
+                accountAddress: "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+                accountBalance: "1.0 QRL",
+              },
+              {
+                accountAddress: "Q205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
+                accountBalance: "2.0 QRL",
+              },
+            ],
+          },
+          setActiveAccount,
+        },
+        hiddenAccountsStore: {
+          hiddenAccounts: {},
+          hiddenAddresses: [],
+          loadHiddenAccounts: async () => {},
+          hideAccount,
+          unhideAccount: async () => {},
+          isHidden: () => false,
+        },
+      }),
+    );
+
+    await openMenu();
+    await userEvent.click(
+      screen.getByRole("menuitem", { name: "Hide" }),
+    );
+
+    expect(hideAccount).toHaveBeenCalledWith(
+      "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+    );
+    expect(setActiveAccount).toHaveBeenCalledWith(
+      "Q205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
+    );
+  });
 });
