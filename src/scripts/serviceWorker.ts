@@ -60,6 +60,37 @@ const prepareListeners = () => {
   });
   // Listening for messages related to the wallet locking.
   browser.runtime.onMessage.addListener(LockManager.lockManagerListener);
+  // Listening for transaction notification requests from the popup.
+  // IMPORTANT: Must NOT be async — returning a Promise from onMessage claims the
+  // message channel and prevents lockManagerListener from responding.
+  browser.runtime.onMessage.addListener((message) => {
+    if (message.name !== LOCK_MANAGER_MESSAGES.SEND_TX_NOTIFICATION) {
+      return;
+    }
+    (async () => {
+      const settings = await StorageUtil.getSettings();
+      if (!settings.notificationsEnabled && settings.notificationsEnabled !== undefined) {
+        return;
+      }
+      const { status, amount, tokenSymbol, txHash } = message.data ?? {};
+      const isConfirmed = status === "confirmed";
+      const title = isConfirmed ? "Transaction Confirmed" : "Transaction Failed";
+      const body =
+        amount !== undefined && tokenSymbol
+          ? `Your transaction of ${amount} ${tokenSymbol} ${isConfirmed ? "was confirmed" : "failed"}.`
+          : `Your transaction ${isConfirmed ? "was confirmed" : "failed"}.`;
+      try {
+        await browser.notifications.create(`tx-${txHash ?? Date.now()}`, {
+          type: "basic",
+          iconUrl: browser.runtime.getURL("icons/qrl/48.png"),
+          title,
+          message: body,
+        });
+      } catch (error) {
+        console.error("ZondWeb3Wallet: Failed to create notification:", error);
+      }
+    })();
+  });
   // Alarm listener for auto-lock and keep-alive.
   browser.alarms.onAlarm.addListener((alarm) => {
     if (alarm.name === LockManager.AUTO_LOCK_ALARM) {

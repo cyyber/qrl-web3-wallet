@@ -59,6 +59,7 @@ export type WalletSettings = {
   defaultGasTier?: GasTier;
   showBalanceAndPrice?: boolean;
   sidePanelPreferred?: boolean;
+  notificationsEnabled?: boolean;
 };
 
 export type PriceCache = {

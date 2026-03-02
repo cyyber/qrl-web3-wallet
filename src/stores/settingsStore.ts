@@ -25,6 +25,7 @@ class SettingsStore {
   defaultGasTier: GasTier = "market";
   showBalanceAndPrice = true;
   sidePanelPreferred = false;
+  notificationsEnabled = true;
 
   constructor() {
     makeAutoObservable(this, {
@@ -38,6 +39,7 @@ class SettingsStore {
       defaultGasTier: observable,
       showBalanceAndPrice: observable,
       sidePanelPreferred: observable,
+      notificationsEnabled: observable,
       setThemePreference: action.bound,
       setAutoLockMinutes: action.bound,
       setCurrency: action.bound,
@@ -45,6 +47,7 @@ class SettingsStore {
       setDefaultGasTier: action.bound,
       setShowBalanceAndPrice: action.bound,
       setSidePanelPreferred: action.bound,
+      setNotificationsEnabled: action.bound,
     });
 
     this.isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -108,6 +111,9 @@ class SettingsStore {
       if (settings.showBalanceAndPrice !== undefined) {
         this.showBalanceAndPrice = settings.showBalanceAndPrice;
       }
+      if (settings.notificationsEnabled !== undefined) {
+        this.notificationsEnabled = settings.notificationsEnabled;
+      }
       if (settings.sidePanelPreferred !== undefined) {
         this.sidePanelPreferred = settings.sidePanelPreferred;
         // Keep localStorage cache in sync with chrome.storage.
@@ -153,6 +159,7 @@ class SettingsStore {
       defaultGasTier: this.defaultGasTier,
       showBalanceAndPrice: this.showBalanceAndPrice,
       sidePanelPreferred: this.sidePanelPreferred,
+      notificationsEnabled: this.notificationsEnabled,
     });
   }
 
@@ -188,6 +195,11 @@ class SettingsStore {
 
   async setShowBalanceAndPrice(enabled: boolean) {
     this.showBalanceAndPrice = enabled;
+    await this.#persistSettings();
+  }
+
+  async setNotificationsEnabled(enabled: boolean) {
+    this.notificationsEnabled = enabled;
     await this.#persistSettings();
   }
 

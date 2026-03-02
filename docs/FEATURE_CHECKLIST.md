@@ -17,11 +17,14 @@
 | 13 | ✅ | Change Password -- re-encrypt keystores with new password |
 | 14 | ⬜ | DApp Phishing Detection -- blocklist check on dApp connection requests |
 | 15 | ⬜ | QRNS Integration -- resolve .qrl names to Q-addresses |
-| 16 | ⬜ | Notifications -- browser push for TX confirmation/failure |
+| 16 | ✅ | Notifications -- browser push for TX confirmation/failure |
 | 17 | ⬜ | NFT Support (ZRC-721 / ZRC-1155) -- gallery, import, and transfer |
 | 18 | ➖ | ~~Buy Crypto with Fiat -- requires on-ramp provider to support QRL~~ |
 | 19 | ➖ | ~~Swap / DEX Integration -- requires functioning DEX on Zond~~ |
 | 20 | ➖ | ~~Additional Hardware Wallets -- requires device-side firmware per vendor~~ |
 | 21 | ✅ | Account Labels -- custom names with inline editing |
-| 22 | ⬜ | Hide / Archive Accounts -- hide unused accounts from main list |
+| 22 | ✅ | Hide / Archive Accounts -- hide unused accounts from main list |
 | — | ✅ | i18n -- internationalization (English, Spanish, German) |
+
+## Future TODO
+- Refactor TX send to async broadcast: save as "pending" immediately after broadcast, let polling confirm. Enables closing popup while TX is pending and background notifications on actual confirmation.

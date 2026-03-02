@@ -1,8 +1,10 @@
+import { LOCK_MANAGER_MESSAGES } from "@/scripts/lockManager/lockManager";
 import type {
   TokenFilter,
   TransactionHistoryEntry,
 } from "@/types/transactionHistory";
 import StorageUtil from "@/utilities/storageUtil";
+import browser from "webextension-polyfill";
 import {
   action,
   computed,
@@ -90,6 +92,19 @@ class TransactionHistoryStore {
   ) {
     await StorageUtil.setTransactionHistoryEntry(accountAddress, entry);
     await this.loadHistory(accountAddress);
+    if (entry.pendingStatus === "confirmed" || entry.pendingStatus === "failed") {
+      browser.runtime
+        .sendMessage({
+          name: LOCK_MANAGER_MESSAGES.SEND_TX_NOTIFICATION,
+          data: {
+            status: entry.pendingStatus,
+            amount: entry.amount,
+            tokenSymbol: entry.tokenSymbol,
+            txHash: entry.transactionHash,
+          },
+        })
+        .catch(() => {});
+    }
   }
 
   async updateTransaction(
@@ -133,11 +148,12 @@ class TransactionHistoryStore {
           );
           if (receipt) {
             const isSuccess = receipt.status?.toString() === "1";
+            const newStatus = isSuccess ? "confirmed" : "failed";
             await this.updateTransaction(
               accountAddress,
               tx.transactionHash,
               {
-                pendingStatus: isSuccess ? "confirmed" : "failed",
+                pendingStatus: newStatus,
                 status: isSuccess,
                 blockNumber: receipt.blockNumber?.toString() ?? "",
                 gasUsed: receipt.gasUsed?.toString() ?? "",
@@ -146,6 +162,17 @@ class TransactionHistoryStore {
                 ).toString(),
               },
             );
+            browser.runtime
+              .sendMessage({
+                name: LOCK_MANAGER_MESSAGES.SEND_TX_NOTIFICATION,
+                data: {
+                  status: newStatus,
+                  amount: tx.amount,
+                  tokenSymbol: tx.tokenSymbol,
+                  txHash: tx.transactionHash,
+                },
+              })
+              .catch(() => {});
           }
         } catch (error) {
           console.error(

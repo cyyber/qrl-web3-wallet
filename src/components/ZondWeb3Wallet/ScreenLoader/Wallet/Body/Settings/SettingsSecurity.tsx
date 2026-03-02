@@ -66,8 +66,14 @@ const SettingsSecurity = observer(() => {
   const navigate = useNavigate();
   const { settingsStore, lockStore, priceStore } = useStore();
   const { t } = useTranslation();
-  const { autoLockMinutes, setAutoLockMinutes, showBalanceAndPrice, setShowBalanceAndPrice } =
-    settingsStore;
+  const {
+    autoLockMinutes,
+    setAutoLockMinutes,
+    showBalanceAndPrice,
+    setShowBalanceAndPrice,
+    notificationsEnabled,
+    setNotificationsEnabled,
+  } = settingsStore;
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [passwordChanged, setPasswordChanged] = useState(false);
@@ -186,6 +192,24 @@ const SettingsSecurity = observer(() => {
               </div>
               <p className="text-[11px] text-muted-foreground">
                 {t("settings.security.showBalanceDescription")}
+              </p>
+            </div>
+            <Separator />
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="notifications-enabled"
+                  checked={notificationsEnabled}
+                  onCheckedChange={(checked) =>
+                    setNotificationsEnabled(checked === true)
+                  }
+                />
+                <Label htmlFor="notifications-enabled" className="text-sm">
+                  {t("settings.security.notificationsLabel")}
+                </Label>
+              </div>
+              <p className="text-[11px] text-muted-foreground">
+                {t("settings.security.notificationsDescription")}
               </p>
             </div>
             <Separator />

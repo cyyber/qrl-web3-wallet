@@ -402,6 +402,8 @@
   "settings.security.changingPassword": "Cambiando contraseña...",
   "settings.security.passwordChanged": "Contraseña cambiada con éxito",
   "settings.security.incorrectPassword": "La contraseña actual es incorrecta",
+  "settings.security.notificationsLabel": "Notificaciones de transacciones",
+  "settings.security.notificationsDescription": "Mostrar una notificación del navegador cuando una transacción se confirma o falla.",
   "settings.preferences.title": "Preferencias",
   "settings.preferences.currencyLabel": "Moneda de visualización",
   "settings.preferences.languageLabel": "Idioma",
