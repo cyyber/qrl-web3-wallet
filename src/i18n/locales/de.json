@@ -103,6 +103,8 @@
   "transfer.errorFailed": "Transaktion fehlgeschlagen.",
   "transfer.dialogRunning": "Transaktion läuft",
   "transfer.dialogPleaseWait": "Bitte warte, während die Transaktion abgeschlossen wird.",
+  "transfer.dialogSigning": "Transaktion wird signiert",
+  "transfer.dialogSigningDescription": "Bitte warte, während die Transaktion signiert wird. Sie wird automatisch übertragen.",
   "transfer.completed": "Transaktion abgeschlossen",
   "transfer.completedHash": "Transaktions-Hash",
   "transfer.completedBlockHash": "Block-Hash",

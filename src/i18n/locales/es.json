@@ -103,6 +103,8 @@
   "transfer.errorFailed": "La transacción falló.",
   "transfer.dialogRunning": "Transacción en curso",
   "transfer.dialogPleaseWait": "Por favor espera mientras se completa la transacción.",
+  "transfer.dialogSigning": "Firmando transacción",
+  "transfer.dialogSigningDescription": "Por favor espera mientras se firma la transacción. Se transmitirá automáticamente.",
   "transfer.completed": "Transacción completada",
   "transfer.completedHash": "Hash de Transacción",
   "transfer.completedBlockHash": "Hash del bloque",

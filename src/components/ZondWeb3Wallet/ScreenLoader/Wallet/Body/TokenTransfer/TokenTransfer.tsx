@@ -1,10 +1,3 @@
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/UI/AlertDialog";
 import { Button } from "@/components/UI/Button";
 import {
   Card,
@@ -30,7 +23,7 @@ import { useStore } from "@/stores/store";
 import type { TransactionHistoryEntry } from "@/types/transactionHistory";
 import StorageUtil from "@/utilities/storageUtil";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { TransactionReceipt, validator, utils, qrl } from "@theqrl/web3";
+import { validator, utils, qrl } from "@theqrl/web3";
 import { BigNumber } from "bignumber.js";
 import { Loader, Send, X } from "lucide-react";
 import { observer } from "mobx-react-lite";
@@ -47,7 +40,6 @@ import AccountAddressSection from "./AccountAddressSection/AccountAddressSection
 import { GasFeeSelector } from "./GasFeeNotice/GasFeeSelector";
 import RecipientPicker from "./RecipientPicker/RecipientPicker";
 import TokenDisplaySection from "./TokenDisplaySection/TokenDisplaySection";
-import { TransactionSuccessful } from "./TransactionSuccessful/TransactionSuccessful";
 import { NATIVE_TOKEN_UNITS_OF_GAS } from "@/constants/nativeToken";
 
 const { Common } = qrl.accounts;
@@ -73,17 +65,16 @@ const TokenTransfer = observer(() => {
   const { getMnemonicPhrases } = lockStore;
   const {
     activeAccount,
-    signAndSendNativeToken,
+    signNativeToken,
     fetchAccounts,
-    signAndSendZrc20Token,
+    signZrc20Token,
+    sendRawTransaction,
     qrlInstance,
     getGasFeeData,
     getAccountBalance,
   } = zondStore;
   const { accountAddress } = activeAccount;
 
-  const [transactionReceipt, setTransactionReceipt] =
-    useState<TransactionReceipt>();
   const [isZrc20Token, setIsZrc20Token] = useState(false);
   const [tokenContractAddress, setTokenContractAddress] = useState("");
   const [tokenDecimals, setTokenDecimals] = useState(0);
@@ -98,15 +89,24 @@ const TokenTransfer = observer(() => {
     GasFeeOverrides | undefined
   >();
 
-  const sendNativeToken = async (formData: z.infer<typeof FormSchema>) => {
+  type SignResult = {
+    transactionHash?: string;
+    rawTransaction?: string;
+    error: string;
+    nonce?: number;
+    maxFeePerGas?: string;
+    maxPriorityFeePerGas?: string;
+    gasLimit?: number;
+    data?: string;
+  };
+
+  const signNativeTokenLocal = async (formData: z.infer<typeof FormSchema>): Promise<SignResult> => {
     const isLedgerAccount = ledgerStore.isLedgerAccount(accountAddress);
     if (isLedgerAccount) {
-      // Ledger signing flow
-      return await sendNativeTokenWithLedger(formData);
+      return await signNativeTokenWithLedger(formData);
     } else {
-      // Regular mnemonic-based signing
       const mnemonicPhrases = await getMnemonicPhrases(accountAddress);
-      return await signAndSendNativeToken(
+      return await signNativeToken(
         accountAddress,
         formData.receiverAddress,
         formData.amount,
@@ -116,11 +116,8 @@ const TokenTransfer = observer(() => {
     }
   };
 
-  const sendNativeTokenWithLedger = async (formData: z.infer<typeof FormSchema>) => {
-    let transaction: {
-      transactionReceipt?: TransactionReceipt;
-      error: string;
-    } = { transactionReceipt: undefined, error: "" };
+  const signNativeTokenWithLedger = async (formData: z.infer<typeof FormSchema>): Promise<SignResult> => {
+    let result: SignResult = { error: "" };
 
     try {
       const { maxFeePerGas, maxPriorityFeePerGas } =
@@ -144,19 +141,28 @@ const TokenTransfer = observer(() => {
       };
 
       const signedRawTxHex = await ledgerStore.signAndSerializeTransaction(accountAddress, txData, common);
-      const transactionReceipt = await qrlInstance?.sendSignedTransaction(signedRawTxHex);
-      transaction.transactionReceipt = transactionReceipt;
+      const transactionHash = utils.sha3(signedRawTxHex);
+
+      result = {
+        transactionHash: transactionHash?.toString(),
+        rawTransaction: signedRawTxHex,
+        error: "",
+        nonce: Number(nonce),
+        maxFeePerGas: maxFeePerGas.toString(),
+        maxPriorityFeePerGas: maxPriorityFeePerGas.toString(),
+        gasLimit,
+      };
     } catch (error) {
-      console.error("[TokenTransfer] Ledger transaction failed:", error);
-      transaction.error = error instanceof Error ? error.message : String(error);
+      console.error("[TokenTransfer] Ledger signing failed:", error);
+      result.error = error instanceof Error ? error.message : String(error);
     }
 
-    return transaction;
+    return result;
   };
 
-  const sendZrc20Token = async (formData: z.infer<typeof FormSchema>) => {
+  const signZrc20TokenLocal = async (formData: z.infer<typeof FormSchema>): Promise<SignResult> => {
     const mnemonicPhrases = await getMnemonicPhrases(accountAddress);
-    return await signAndSendZrc20Token(
+    return await signZrc20Token(
       accountAddress,
       formData.receiverAddress,
       formData.amount,
@@ -169,75 +175,90 @@ const TokenTransfer = observer(() => {
 
   async function onSubmit(formData: z.infer<typeof FormSchema>) {
     try {
-      let transactionData;
+      // Step 1: Sign the transaction (fast — no blockchain wait)
+      let signResult: SignResult;
       if (isZrc20Token) {
-        transactionData = await sendZrc20Token(formData);
+        signResult = await signZrc20TokenLocal(formData);
       } else {
-        transactionData = await sendNativeToken(formData);
+        signResult = await signNativeTokenLocal(formData);
       }
-      const { transactionReceipt, error, nonce, maxFeePerGas, maxPriorityFeePerGas, gasLimit, data } = transactionData as {
-        transactionReceipt?: import("@theqrl/web3").TransactionReceipt;
-        error: string;
-        nonce?: number;
-        maxFeePerGas?: string;
-        maxPriorityFeePerGas?: string;
-        gasLimit?: number;
-        data?: string;
-      };
+
+      const { transactionHash, rawTransaction, error, nonce, maxFeePerGas, maxPriorityFeePerGas, gasLimit, data } = signResult;
 
       if (error) {
         control.setError("amount", {
           message: t('transfer.errorOccurred', { error }),
         });
-      } else {
-        const isTransactionSuccessful =
-          transactionReceipt?.status.toString() === "1";
-
-        if (transactionReceipt) {
-          const { chainId } = await StorageUtil.getActiveBlockChain();
-          const historyEntry: TransactionHistoryEntry = {
-            id: transactionReceipt.transactionHash.toString(),
-            from: accountAddress,
-            to: formData.receiverAddress,
-            amount: formData.amount,
-            tokenSymbol,
-            tokenName,
-            isZrc20Token,
-            tokenContractAddress,
-            tokenDecimals,
-            transactionHash: transactionReceipt.transactionHash.toString(),
-            blockNumber: transactionReceipt.blockNumber.toString(),
-            gasUsed: transactionReceipt.gasUsed.toString(),
-            effectiveGasPrice: (
-              transactionReceipt.effectiveGasPrice ?? 0
-            ).toString(),
-            status: isTransactionSuccessful,
-            timestamp: Date.now(),
-            chainId,
-            pendingStatus: isTransactionSuccessful ? "confirmed" : "failed",
-            nonce,
-            maxFeePerGas,
-            maxPriorityFeePerGas,
-            gasLimit,
-            data,
-          };
-          await transactionHistoryStore.addTransaction(
-            accountAddress,
-            historyEntry,
-          );
-        }
-
-        if (isTransactionSuccessful) {
-          await resetForm();
-          setTransactionReceipt(transactionReceipt);
-          await fetchAccounts();
-          window.scrollTo(0, 0);
-        } else {
-          control.setError("amount", {
-            message: t('transfer.errorFailed'),
-          });
-        }
+        return;
       }
+
+      if (!transactionHash || !rawTransaction) {
+        control.setError("amount", {
+          message: t('transfer.errorFailed'),
+        });
+        return;
+      }
+
+      // Step 2: Save as "pending" in transaction history
+      const { chainId } = await StorageUtil.getActiveBlockChain();
+      const historyEntry: TransactionHistoryEntry = {
+        id: transactionHash,
+        from: accountAddress,
+        to: formData.receiverAddress,
+        amount: formData.amount,
+        tokenSymbol,
+        tokenName,
+        isZrc20Token,
+        tokenContractAddress,
+        tokenDecimals,
+        transactionHash,
+        blockNumber: "",
+        gasUsed: "",
+        effectiveGasPrice: "",
+        status: false,
+        timestamp: Date.now(),
+        chainId,
+        pendingStatus: "pending",
+        nonce,
+        maxFeePerGas,
+        maxPriorityFeePerGas,
+        gasLimit,
+        data,
+      };
+      await transactionHistoryStore.addTransaction(accountAddress, historyEntry);
+
+      // Step 3: Broadcast in background — don't await
+      sendRawTransaction(rawTransaction).then(
+        async (receipt) => {
+          if (receipt) {
+            const isSuccess = receipt.status?.toString() === "1";
+            await transactionHistoryStore.updateTransaction(
+              accountAddress,
+              transactionHash,
+              {
+                pendingStatus: isSuccess ? "confirmed" : "failed",
+                status: isSuccess,
+                blockNumber: receipt.blockNumber?.toString() ?? "",
+                gasUsed: receipt.gasUsed?.toString() ?? "",
+                effectiveGasPrice: (receipt.effectiveGasPrice ?? 0).toString(),
+              },
+            );
+            await fetchAccounts();
+          }
+        },
+        async (err) => {
+          console.error("[TokenTransfer] Broadcast failed:", err);
+          await transactionHistoryStore.updateTransaction(
+            accountAddress,
+            transactionHash,
+            { pendingStatus: "failed", status: false },
+          );
+        },
+      );
+
+      // Step 4: Navigate home immediately — TX is visible as "pending" in history
+      await resetForm();
+      navigate(ROUTES.TRANSACTION_HISTORY);
     } catch (error) {
       control.setError("amount", {
         message: t('transfer.errorOccurred', { error }),
@@ -388,9 +409,7 @@ const TokenTransfer = observer(() => {
     setBalanceError("");
   }, [watchedAmount, estimatedGasFee, tokenBalance, isZrc20Token, accountAddress]);
 
-  return transactionReceipt ? (
-    <TransactionSuccessful transactionReceipt={transactionReceipt} />
-  ) : (
+  return (
     <Form {...form}>
       <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
         <CircuitBackground />
@@ -461,6 +480,7 @@ const TokenTransfer = observer(() => {
                               placeholder={t('transfer.amountPlaceholder')}
                               type="number"
                               step="any"
+                              onWheel={(e) => (e.target as HTMLInputElement).blur()}
                             />
                           </FormControl>
                           <FormDescription>
@@ -525,24 +545,6 @@ const TokenTransfer = observer(() => {
               </Button>
             </CardFooter>
           </Card>
-          <AlertDialog open={isSubmitting}>
-            <AlertDialogContent className="w-80 rounded-md">
-              <AlertDialogHeader className="text-left">
-                <AlertDialogTitle>
-                  <div className="flex items-center gap-2">
-                    <Loader
-                      className="animate-spin text-foreground"
-                      size="18"
-                    />
-                    {t('transfer.dialogRunning')}
-                  </div>
-                </AlertDialogTitle>
-                <AlertDialogDescription>
-                  {t('transfer.dialogPleaseWait')}
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-            </AlertDialogContent>
-          </AlertDialog>
         </div>
       </form>
     </Form>

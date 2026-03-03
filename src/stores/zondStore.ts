@@ -13,7 +13,6 @@ import type { GasFeeOverrides } from "@/types/gasFee";
 import type { TransactionHistoryEntry } from "@/types/transactionHistory";
 import StorageUtil from "@/utilities/storageUtil";
 import Web3, {
-  TransactionReceipt,
   Web3QRLInterface,
   utils,
 } from "@theqrl/web3";
@@ -58,10 +57,10 @@ class ZondStore {
       getGasFeeData: action.bound,
       getAccountBalance: action.bound,
       getNativeTokenGas: action.bound,
-      signAndSendNativeToken: action.bound,
+      signNativeToken: action.bound,
       getZrc20TokenDetails: action.bound,
       getZrc20TokenGas: action.bound,
-      signAndSendZrc20Token: action.bound,
+      signZrc20Token: action.bound,
       signAndSendReplacementTransaction: action.bound,
       getTransactionReceipt: action.bound,
       sendRawTransaction: action.bound,
@@ -293,21 +292,22 @@ class ZondStore {
     );
   }
 
-  async signAndSendNativeToken(
+  async signNativeToken(
     from: string,
     to: string,
     value: number,
     mnemonicPhrases: string,
     overrides?: GasFeeOverrides,
   ) {
-    let transaction: {
-      transactionReceipt?: TransactionReceipt;
+    let result: {
+      transactionHash?: string;
+      rawTransaction?: string;
       error: string;
       nonce?: number;
       maxFeePerGas?: string;
       maxPriorityFeePerGas?: string;
       gasLimit?: number;
-    } = { transactionReceipt: undefined, error: "" };
+    } = { error: "" };
 
     try {
       const { maxFeePerGas, maxPriorityFeePerGas } =
@@ -333,13 +333,10 @@ class ZondStore {
           getHexSeedFromMnemonic(mnemonicPhrases),
         );
       if (signedTransaction) {
-        const transactionReceipt =
-          await this.qrlInstance?.sendSignedTransaction(
-            signedTransaction?.rawTransaction,
-          );
-        transaction = {
-          ...transaction,
-          transactionReceipt,
+        result = {
+          transactionHash: signedTransaction.transactionHash?.toString(),
+          rawTransaction: signedTransaction.rawTransaction?.toString(),
+          error: "",
           nonce: Number(nonce),
           maxFeePerGas: maxFeePerGas.toString(),
           maxPriorityFeePerGas: maxPriorityFeePerGas.toString(),
@@ -349,13 +346,13 @@ class ZondStore {
         throw new Error("Transaction could not be signed");
       }
     } catch (error) {
-      transaction = {
-        ...transaction,
-        error: `Transaction could not be completed. ${error}`,
+      result = {
+        ...result,
+        error: `Transaction could not be signed. ${error}`,
       };
     }
 
-    return transaction;
+    return result;
   }
 
   async getZrc20TokenDetails(contractAddress: string) {
@@ -435,7 +432,7 @@ class ZondStore {
     return "";
   }
 
-  async signAndSendZrc20Token(
+  async signZrc20Token(
     from: string,
     to: string,
     value: number,
@@ -444,22 +441,21 @@ class ZondStore {
     decimals: number,
     overrides?: GasFeeOverrides,
   ) {
-    let transaction: {
-      transactionReceipt?: TransactionReceipt;
+    let result: {
+      transactionHash?: string;
+      rawTransaction?: string;
       error: string;
       nonce?: number;
       maxFeePerGas?: string;
       maxPriorityFeePerGas?: string;
       gasLimit?: number;
       data?: string;
-    } = { transactionReceipt: undefined, error: "" };
+    } = { error: "" };
 
     const contractAbi = ZRC_20_CONTRACT_ABI;
 
     if (this.qrlInstance && this.qrlInstance.Contract) {
       try {
-        this.qrlInstance.wallet?.add(getHexSeedFromMnemonic(mnemonicPhrases));
-        this.qrlInstance.transactionConfirmationBlocks = 12;
         const contract = new this.qrlInstance.Contract(
           contractAbi,
           contractAddress,
@@ -487,32 +483,35 @@ class ZondStore {
           type: 2,
         };
 
-        const transactionReceipt = await this.qrlInstance.sendTransaction(
-          transactionObject,
-          undefined,
-          {
-            checkRevertBeforeSending: true,
-          },
-        );
+        const signedTransaction =
+          await this.qrlInstance?.accounts.signTransaction(
+            transactionObject,
+            getHexSeedFromMnemonic(mnemonicPhrases),
+          );
 
-        transaction = {
-          ...transaction,
-          transactionReceipt,
-          nonce: Number(nonce),
-          maxFeePerGas: maxFeePerGas.toString(),
-          maxPriorityFeePerGas: maxPriorityFeePerGas.toString(),
-          gasLimit,
-          data: encodedData,
-        };
+        if (signedTransaction) {
+          result = {
+            transactionHash: signedTransaction.transactionHash?.toString(),
+            rawTransaction: signedTransaction.rawTransaction?.toString(),
+            error: "",
+            nonce: Number(nonce),
+            maxFeePerGas: maxFeePerGas.toString(),
+            maxPriorityFeePerGas: maxPriorityFeePerGas.toString(),
+            gasLimit,
+            data: encodedData,
+          };
+        } else {
+          throw new Error("Transaction could not be signed");
+        }
       } catch (error) {
-        transaction = {
-          ...transaction,
-          error: `Transaction could not be completed. ${error}`,
+        result = {
+          ...result,
+          error: `Transaction could not be signed. ${error}`,
         };
       }
     }
 
-    return transaction;
+    return result;
   }
   async signAndSendReplacementTransaction(
     originalTx: TransactionHistoryEntry,

@@ -3,7 +3,6 @@ import { StoreProvider } from "@/stores/store";
 import { afterEach, beforeEach, describe, expect, it, jest } from "@jest/globals";
 import { act, cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { Bytes } from "@theqrl/web3";
 import { MemoryRouter } from "react-router-dom";
 import TokenTransfer from "./TokenTransfer";
 
@@ -38,19 +37,14 @@ jest.mock("@/utilities/storageUtil", () => {
   };
 });
 
-const successReceipt = {
-  status: 1,
+const successSignResult = {
   transactionHash: "0xtxhash",
-  transactionIndex: 1,
-  blockHash: 2 as unknown as Bytes,
-  blockNumber: 1,
-  from: "",
-  to: "",
-  gasUsed: 0,
-  cumulativeGasUsed: 0,
-  logs: [],
-  logsBloom: "",
-  root: "",
+  rawTransaction: "0xraw",
+  error: "",
+  nonce: 0,
+  maxFeePerGas: "1000",
+  maxPriorityFeePerGas: "100",
+  gasLimit: 21000,
 };
 
 describe("TokenTransfer", () => {
@@ -177,31 +171,38 @@ describe("TokenTransfer", () => {
     ).toBeInTheDocument();
   });
 
-  it("should display the transaction successful component for Ledger account", async () => {
-    const mockSendSignedTransaction = jest.fn<any>().mockResolvedValue({
-      ...successReceipt,
-      transactionHash: "0xledgertxhash",
-    });
+  it("should sign and add pending transaction for Ledger account", async () => {
+    const mockAddTransaction = jest.fn<any>().mockResolvedValue(undefined);
+    const validRawTxHex = "0x02f8a00180843b9aca00843b9aca0082520894";
 
     renderComponent(
       mockedStore({
         ledgerStore: {
           isLedgerAccount: () => true,
-          signAndSerializeTransaction: async () => "0x02signed",
+          signAndSerializeTransaction: async () => validRawTxHex,
         } as any,
         zondStore: {
           qrlInstance: {
             getTransactionCount: async () => 0,
             getChainId: async () => 1,
-            sendSignedTransaction: mockSendSignedTransaction,
           } as any,
+          sendRawTransaction: jest.fn<any>().mockResolvedValue(undefined),
+        },
+        transactionHistoryStore: {
+          addTransaction: mockAddTransaction,
         },
       }),
     );
 
     await fillAndSubmitForm();
-    expect(screen.getByText("Transaction completed")).toBeInTheDocument();
-    expect(mockSendSignedTransaction).toHaveBeenCalledWith("0x02signed");
+    expect(mockAddTransaction).toHaveBeenCalledWith(
+      "Q20B714091cF2a62DADda2847803e3f1B9D2D3779",
+      expect.objectContaining({
+        pendingStatus: "pending",
+        status: false,
+        tokenSymbol: "QRL",
+      }),
+    );
   });
 
   it("should display error when Ledger signing fails", async () => {
@@ -228,31 +229,13 @@ describe("TokenTransfer", () => {
     ).toBeInTheDocument();
   });
 
-  it("should display the transaction successful component if the transaction succeeds", async () => {
-    renderComponent(
-      mockedStore({
-        zondStore: {
-          signAndSendNativeToken: async () => ({
-            transactionReceipt: successReceipt,
-            error: "",
-          }),
-        },
-      }),
-    );
-
-    await fillAndSubmitForm();
-    expect(screen.getByText("Transaction completed")).toBeInTheDocument();
-  });
-
-  it("should call addTransaction on successful send", async () => {
+  it("should add pending transaction and navigate home on successful sign", async () => {
     const mockAddTransaction = jest.fn<any>().mockResolvedValue(undefined);
     renderComponent(
       mockedStore({
         zondStore: {
-          signAndSendNativeToken: async () => ({
-            transactionReceipt: successReceipt,
-            error: "",
-          }),
+          signNativeToken: async () => successSignResult,
+          sendRawTransaction: jest.fn<any>().mockResolvedValue(undefined),
         },
         transactionHistoryStore: {
           addTransaction: mockAddTransaction,
@@ -265,8 +248,35 @@ describe("TokenTransfer", () => {
       "Q20B714091cF2a62DADda2847803e3f1B9D2D3779",
       expect.objectContaining({
         transactionHash: "0xtxhash",
-        status: true,
+        pendingStatus: "pending",
+        status: false,
+      }),
+    );
+  });
+
+  it("should call addTransaction with pending entry on successful sign", async () => {
+    const mockAddTransaction = jest.fn<any>().mockResolvedValue(undefined);
+    renderComponent(
+      mockedStore({
+        zondStore: {
+          signNativeToken: async () => successSignResult,
+          sendRawTransaction: jest.fn<any>().mockResolvedValue(undefined),
+        },
+        transactionHistoryStore: {
+          addTransaction: mockAddTransaction,
+        },
+      }),
+    );
+
+    await fillAndSubmitForm();
+    expect(mockAddTransaction).toHaveBeenCalledWith(
+      "Q20B714091cF2a62DADda2847803e3f1B9D2D3779",
+      expect.objectContaining({
+        transactionHash: "0xtxhash",
+        pendingStatus: "pending",
         tokenSymbol: "QRL",
+        blockNumber: "",
+        gasUsed: "",
       }),
     );
   });
@@ -281,27 +291,26 @@ describe("TokenTransfer", () => {
     expect(mockClearTransactionValues).toHaveBeenCalled();
   });
 
-  it("should display error when transaction fails with non-success status", async () => {
+  it("should display error when signing returns an error", async () => {
     renderComponent(
       mockedStore({
         zondStore: {
-          signAndSendNativeToken: async () => ({
-            transactionReceipt: { ...successReceipt, status: 0 },
-            error: "",
+          signNativeToken: async () => ({
+            error: "Insufficient funds",
           }),
         },
       }),
     );
 
     await fillAndSubmitForm();
-    expect(screen.getByText("Transaction failed.")).toBeInTheDocument();
+    expect(screen.getByText(/Insufficient funds/)).toBeInTheDocument();
   });
 
   it("should display error when onSubmit throws an exception", async () => {
     renderComponent(
       mockedStore({
         zondStore: {
-          signAndSendNativeToken: async () => {
+          signNativeToken: async () => {
             throw new Error("Network timeout");
           },
         },
@@ -312,11 +321,12 @@ describe("TokenTransfer", () => {
     expect(screen.getByText(/Network timeout/)).toBeInTheDocument();
   });
 
-  it("should send ZRC20 token when token details are set from state", async () => {
-    const mockSignAndSendZrc20Token = jest.fn<any>().mockResolvedValue({
-      transactionReceipt: successReceipt,
-      error: "",
+  it("should sign ZRC20 token and add pending transaction when token details are set from state", async () => {
+    const mockSignZrc20Token = jest.fn<any>().mockResolvedValue({
+      ...successSignResult,
+      data: "0xcontractdata",
     });
+    const mockAddTransaction = jest.fn<any>().mockResolvedValue(undefined);
 
     renderComponentWithState(
       {
@@ -332,7 +342,11 @@ describe("TokenTransfer", () => {
       },
       mockedStore({
         zondStore: {
-          signAndSendZrc20Token: mockSignAndSendZrc20Token,
+          signZrc20Token: mockSignZrc20Token,
+          sendRawTransaction: jest.fn<any>().mockResolvedValue(undefined),
+        },
+        transactionHistoryStore: {
+          addTransaction: mockAddTransaction,
         },
       }),
     );
@@ -342,8 +356,14 @@ describe("TokenTransfer", () => {
     });
 
     await fillAndSubmitForm("Send TST");
-    expect(mockSignAndSendZrc20Token).toHaveBeenCalled();
-    expect(screen.getByText("Transaction completed")).toBeInTheDocument();
+    expect(mockSignZrc20Token).toHaveBeenCalled();
+    expect(mockAddTransaction).toHaveBeenCalledWith(
+      "Q20B714091cF2a62DADda2847803e3f1B9D2D3779",
+      expect.objectContaining({
+        pendingStatus: "pending",
+        tokenSymbol: "TST",
+      }),
+    );
   });
 
   it("should load token details from storage when no state is provided", async () => {

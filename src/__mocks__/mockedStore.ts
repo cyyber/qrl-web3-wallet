@@ -60,7 +60,7 @@ const mockedStoreValues: StoreType = {
     getNativeTokenGas: async () => {
       return "";
     },
-    signAndSendNativeToken: async (
+    signNativeToken: async (
       from: string,
       to: string,
       value: number,
@@ -70,7 +70,7 @@ const mockedStoreValues: StoreType = {
       to;
       value;
       mnemonicPhrases;
-      return { transactionReceipt: undefined, error: "" };
+      return { transactionHash: undefined, rawTransaction: undefined, error: "" };
     },
     validateActiveAccount: async () => {},
     getGasFeeData: async () => {
@@ -98,7 +98,7 @@ const mockedStoreValues: StoreType = {
       decimals;
       return "";
     },
-    signAndSendZrc20Token: async (
+    signZrc20Token: async (
       from: string,
       to: string,
       value: number,
@@ -112,7 +112,7 @@ const mockedStoreValues: StoreType = {
       mnemonicPhrases;
       contractAddress;
       decimals;
-      return { transactionReceipt: undefined, error: "" };
+      return { transactionHash: undefined, rawTransaction: undefined, error: "" };
     },
     signAndSendReplacementTransaction: async () => ({
       transactionHash: undefined,

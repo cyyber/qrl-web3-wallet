@@ -27,4 +27,4 @@
 | — | ✅ | i18n -- internationalization (English, Spanish, German) |
 
 ## Future TODO
-- Refactor TX send to async broadcast: save as "pending" immediately after broadcast, let polling confirm. Enables closing popup while TX is pending and background notifications on actual confirmation.
+- ~~Refactor TX send to async broadcast~~ ✅ Done — TX is now saved as "pending" immediately after signing, broadcast happens in background, polling confirms.
