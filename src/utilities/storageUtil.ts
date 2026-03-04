@@ -60,6 +60,7 @@ export type WalletSettings = {
   showBalanceAndPrice?: boolean;
   sidePanelPreferred?: boolean;
   notificationsEnabled?: boolean;
+  phishingDetectionEnabled?: boolean;
 };
 
 export type PriceCache = {

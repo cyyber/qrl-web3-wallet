@@ -1,10 +1,17 @@
 import { BlockchainDataType } from "@/configuration/zondBlockchainConfig";
 import { AdditionalJsonRpcRequestKeys } from "@theqrl/zond-wallet-provider/utils";
 
+export type PhishingCheckResult = {
+  isDomainPhishing: boolean;
+  matchType?: string;
+  matchedDomain?: string;
+};
+
 export type DAppRequestType = {
   method: string;
   params?: any;
   requestData?: AdditionalJsonRpcRequestKeys;
+  phishingResult?: PhishingCheckResult;
 };
 
 export type DAppResponseType = {

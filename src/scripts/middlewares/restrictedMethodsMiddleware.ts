@@ -8,6 +8,7 @@ import { Json, JsonRpcRequest } from "@theqrl/zond-wallet-provider/utils";
 import browser from "webextension-polyfill";
 import { RESTRICTED_METHODS } from "../constants/requestConstants";
 import { EXTENSION_MESSAGES } from "../constants/streamConstants";
+import { checkDomain } from "../phishing/phishingDetector";
 import {
   checkAccountHasBeenAuthorized,
   checkUrlOriginHasBeenConnected,
@@ -160,10 +161,16 @@ const getRestrictedMethodResult = async (
   req: JsonRpcRequest<JsonRpcRequest>,
 ): Promise<DAppResponseType> => {
   return new Promise(async (resolve) => {
+    const settings = await StorageUtil.getSettings();
+    const phishingEnabled = settings.phishingDetectionEnabled !== false;
+    const phishingResult = phishingEnabled
+      ? checkDomain(req.senderData?.url ?? "")
+      : { isDomainPhishing: false };
     const request: DAppRequestType = {
       method: req.method,
       params: req.params,
       requestData: { senderData: req.senderData },
+      phishingResult,
     };
 
     await StorageUtil.setDAppsRequestData(request);

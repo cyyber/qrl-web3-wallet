@@ -14,6 +14,12 @@ import { appendSenderDataMiddleware } from "./middlewares/appendSenderDataMiddle
 import { blockUnSupportedMethodsMiddleware } from "./middlewares/blockUnSupportedMethodsMiddleware";
 import { restrictedMethodsMiddleware } from "./middlewares/restrictedMethodsMiddleware";
 import { unrestrictedMethodsMiddleware } from "./middlewares/unrestrictedMethodsMiddleware";
+import {
+  handlePhishingRefreshAlarm,
+  initializePhishingDetector,
+  PHISHING_ALARM_NAME,
+  setupPhishingRefreshAlarm,
+} from "./phishing/phishingDetector";
 import { checkForLastError } from "./utils/scriptUtils";
 import { setupMultiplex } from "./utils/streamUtils";
 
@@ -97,6 +103,8 @@ const prepareListeners = () => {
       LockManager.handleAutoLockAlarm();
     } else if (alarm.name === LockManager.KEEP_ALIVE_ALARM) {
       LockManager.handleKeepAliveAlarm();
+    } else if (alarm.name === PHISHING_ALARM_NAME) {
+      handlePhishingRefreshAlarm();
     }
   });
 };
@@ -229,6 +237,10 @@ const initializeServiceWorker = async () => {
   }
 
   await applySidePanelPreference();
+
+  // Initialize phishing detection
+  await initializePhishingDetector();
+  await setupPhishingRefreshAlarm();
 };
 
 // This is the starting point of service worker of zond web3 wallet.

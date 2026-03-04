@@ -26,6 +26,7 @@ class SettingsStore {
   showBalanceAndPrice = true;
   sidePanelPreferred = false;
   notificationsEnabled = true;
+  phishingDetectionEnabled = true;
 
   constructor() {
     makeAutoObservable(this, {
@@ -40,6 +41,7 @@ class SettingsStore {
       showBalanceAndPrice: observable,
       sidePanelPreferred: observable,
       notificationsEnabled: observable,
+      phishingDetectionEnabled: observable,
       setThemePreference: action.bound,
       setAutoLockMinutes: action.bound,
       setCurrency: action.bound,
@@ -48,6 +50,7 @@ class SettingsStore {
       setShowBalanceAndPrice: action.bound,
       setSidePanelPreferred: action.bound,
       setNotificationsEnabled: action.bound,
+      setPhishingDetectionEnabled: action.bound,
     });
 
     this.isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -114,6 +117,9 @@ class SettingsStore {
       if (settings.notificationsEnabled !== undefined) {
         this.notificationsEnabled = settings.notificationsEnabled;
       }
+      if (settings.phishingDetectionEnabled !== undefined) {
+        this.phishingDetectionEnabled = settings.phishingDetectionEnabled;
+      }
       if (settings.sidePanelPreferred !== undefined) {
         this.sidePanelPreferred = settings.sidePanelPreferred;
         // Keep localStorage cache in sync with chrome.storage.
@@ -160,6 +166,7 @@ class SettingsStore {
       showBalanceAndPrice: this.showBalanceAndPrice,
       sidePanelPreferred: this.sidePanelPreferred,
       notificationsEnabled: this.notificationsEnabled,
+      phishingDetectionEnabled: this.phishingDetectionEnabled,
     });
   }
 
@@ -200,6 +207,11 @@ class SettingsStore {
 
   async setNotificationsEnabled(enabled: boolean) {
     this.notificationsEnabled = enabled;
+    await this.#persistSettings();
+  }
+
+  async setPhishingDetectionEnabled(enabled: boolean) {
+    this.phishingDetectionEnabled = enabled;
     await this.#persistSettings();
   }
 

@@ -406,6 +406,8 @@
   "settings.security.incorrectPassword": "La contraseña actual es incorrecta",
   "settings.security.notificationsLabel": "Notificaciones de transacciones",
   "settings.security.notificationsDescription": "Mostrar una notificación del navegador cuando una transacción se confirma o falla.",
+  "settings.security.phishingDetectionLabel": "Detección de phishing",
+  "settings.security.phishingDetectionDescription": "Advertir cuando una solicitud de conexión DApp proviene de un dominio de phishing conocido.",
   "settings.preferences.title": "Preferencias",
   "settings.preferences.currencyLabel": "Moneda de visualización",
   "settings.preferences.languageLabel": "Idioma",
@@ -485,5 +487,12 @@
   "common.back": "Volver",
   "common.yes": "Sí",
   "common.no": "No",
-  "common.loading": "Cargando..."
+  "common.loading": "Cargando...",
+
+  "phishing.warningTitle": "Advertencia de phishing",
+  "phishing.warningDescription": "Este sitio web ha sido identificado como un sitio de phishing conocido. Interactuar con él puede resultar en la pérdida de fondos.",
+  "phishing.matchedDomain": "Este dominio está suplantando a {{domain}}.",
+  "phishing.suspiciousDomain": "Este dominio ha sido identificado como sospechoso.",
+  "phishing.rejectButton": "Rechazar y cerrar",
+  "phishing.proceedButton": "Entiendo el riesgo, continuar de todos modos"
 }

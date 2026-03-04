@@ -73,6 +73,8 @@ const SettingsSecurity = observer(() => {
     setShowBalanceAndPrice,
     notificationsEnabled,
     setNotificationsEnabled,
+    phishingDetectionEnabled,
+    setPhishingDetectionEnabled,
   } = settingsStore;
 
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -210,6 +212,24 @@ const SettingsSecurity = observer(() => {
               </div>
               <p className="text-[11px] text-muted-foreground">
                 {t("settings.security.notificationsDescription")}
+              </p>
+            </div>
+            <Separator />
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="phishing-detection-enabled"
+                  checked={phishingDetectionEnabled}
+                  onCheckedChange={(checked) =>
+                    setPhishingDetectionEnabled(checked === true)
+                  }
+                />
+                <Label htmlFor="phishing-detection-enabled" className="text-sm">
+                  {t("settings.security.phishingDetectionLabel")}
+                </Label>
+              </div>
+              <p className="text-[11px] text-muted-foreground">
+                {t("settings.security.phishingDetectionDescription")}
               </p>
             </div>
             <Separator />

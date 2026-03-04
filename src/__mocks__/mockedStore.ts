@@ -142,6 +142,9 @@ const mockedStoreValues: StoreType = {
           favIconUrl: "http://localhost/mocked-fav-icon.svg",
         },
       },
+      phishingResult: {
+        isDomainPhishing: false,
+      },
     },
     hasDAppConnected: false,
     hasDAppRequest: true,
