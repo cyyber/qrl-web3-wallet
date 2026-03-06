@@ -11,6 +11,7 @@ import {
 import type { LedgerAccount } from "@/services/ledger/ledgerTypes";
 import type { Contact } from "@/types/contact";
 import type { GasTier } from "@/types/gasFee";
+import type { NFTCollectionType } from "@/types/nft";
 import type { TransactionHistoryEntry } from "@/types/transactionHistory";
 import { KeyStore } from "@theqrl/web3";
 import browser from "webextension-polyfill";
@@ -47,6 +48,9 @@ const ALL_CONTACTS_IDENTIFIER = "ALL_CONTACTS";
 
 const ACCOUNT_LABELS_IDENTIFIER = "ACCOUNT_LABELS";
 const HIDDEN_ACCOUNTS_IDENTIFIER = "HIDDEN_ACCOUNTS";
+
+const NFT_COLLECTIONS_IDENTIFIER = "NFT_COLLECTIONS";
+const ALL_NFT_COLLECTIONS_IDENTIFIER = "ALL_NFT_COLLECTIONS";
 
 const SETTINGS_IDENTIFIER = "SETTINGS";
 const PRICE_CACHE_IDENTIFIER = "PRICE_CACHE";
@@ -379,6 +383,89 @@ class StorageUtil {
       chainId
     ].tokens = storedTokenContracts.filter(
       (token) => token.address !== contractAddress,
+    );
+
+    await browser.storage.local.set({ ...storageData });
+  }
+
+  static async setNFTCollectionsList(
+    accountAddress: string,
+    collection: NFTCollectionType,
+  ) {
+    const { chainId } = await this.getActiveBlockChain();
+
+    const storageData = await browser.storage.local.get(
+      NFT_COLLECTIONS_IDENTIFIER,
+    );
+    if (!storageData[NFT_COLLECTIONS_IDENTIFIER]) {
+      storageData[NFT_COLLECTIONS_IDENTIFIER] = {};
+    }
+    if (
+      !storageData[NFT_COLLECTIONS_IDENTIFIER][ALL_NFT_COLLECTIONS_IDENTIFIER]
+    ) {
+      storageData[NFT_COLLECTIONS_IDENTIFIER][
+        ALL_NFT_COLLECTIONS_IDENTIFIER
+      ] = {};
+    }
+    if (
+      !storageData[NFT_COLLECTIONS_IDENTIFIER][
+        ALL_NFT_COLLECTIONS_IDENTIFIER
+      ][accountAddress]
+    ) {
+      storageData[NFT_COLLECTIONS_IDENTIFIER][
+        ALL_NFT_COLLECTIONS_IDENTIFIER
+      ][accountAddress] = {};
+    }
+    if (
+      !storageData[NFT_COLLECTIONS_IDENTIFIER][
+        ALL_NFT_COLLECTIONS_IDENTIFIER
+      ][accountAddress][chainId]
+    ) {
+      storageData[NFT_COLLECTIONS_IDENTIFIER][
+        ALL_NFT_COLLECTIONS_IDENTIFIER
+      ][accountAddress][chainId] = {};
+    }
+    const storedCollections =
+      await this.getNFTCollectionsList(accountAddress);
+    storageData[NFT_COLLECTIONS_IDENTIFIER][ALL_NFT_COLLECTIONS_IDENTIFIER][
+      accountAddress
+    ][chainId].collections = [
+      ...storedCollections.filter((c) => c.address !== collection.address),
+      collection,
+    ];
+
+    await browser.storage.local.set(storageData);
+  }
+
+  static async getNFTCollectionsList(accountAddress: string) {
+    const { chainId } = await this.getActiveBlockChain();
+
+    const storageData = await browser.storage.local.get(
+      NFT_COLLECTIONS_IDENTIFIER,
+    );
+    const storedCollections =
+      storageData?.[NFT_COLLECTIONS_IDENTIFIER]?.[
+        ALL_NFT_COLLECTIONS_IDENTIFIER
+      ]?.[accountAddress]?.[chainId]?.collections ?? [];
+
+    return storedCollections as NFTCollectionType[];
+  }
+
+  static async clearFromNFTCollectionsList(
+    accountAddress: string,
+    contractAddress: string,
+  ) {
+    const { chainId } = await this.getActiveBlockChain();
+
+    const storageData = await browser.storage.local.get(
+      NFT_COLLECTIONS_IDENTIFIER,
+    );
+    const storedCollections =
+      await this.getNFTCollectionsList(accountAddress);
+    storageData[NFT_COLLECTIONS_IDENTIFIER][ALL_NFT_COLLECTIONS_IDENTIFIER][
+      accountAddress
+    ][chainId].collections = storedCollections.filter(
+      (c) => c.address !== contractAddress,
     );
 
     await browser.storage.local.set({ ...storageData });

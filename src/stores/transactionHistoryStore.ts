@@ -55,7 +55,13 @@ class TransactionHistoryStore {
   get filteredTransactions(): TransactionHistoryEntry[] {
     if (this.filter === "all") return this.transactions;
     if (this.filter === "native")
-      return this.transactions.filter((tx) => !tx.isZrc20Token);
+      return this.transactions.filter(
+        (tx) => !tx.isZrc20Token && !tx.tokenContractAddress,
+      );
+    if (this.filter === "nft")
+      return this.transactions.filter(
+        (tx) => !tx.isZrc20Token && !!tx.tokenContractAddress,
+      );
     return this.transactions.filter((tx) => tx.isZrc20Token);
   }
 

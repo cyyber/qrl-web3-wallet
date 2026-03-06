@@ -48,6 +48,7 @@ describe("TransactionHistory", () => {
     expect(screen.getByText("All")).toBeInTheDocument();
     expect(screen.getByText("Native")).toBeInTheDocument();
     expect(screen.getByText("ZRC-20")).toBeInTheDocument();
+    expect(screen.getByText("NFT")).toBeInTheDocument();
   });
 
   it("should show empty state when no transactions", () => {

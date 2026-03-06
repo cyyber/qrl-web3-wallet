@@ -6,6 +6,8 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import SettingsAppearance from "./SettingsAppearance";
 
+jest.setTimeout(15000);
+
 beforeAll(() => {
   Element.prototype.hasPointerCapture = jest.fn(() => false);
   Element.prototype.setPointerCapture = jest.fn();

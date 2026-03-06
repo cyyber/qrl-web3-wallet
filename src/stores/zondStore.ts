@@ -4,6 +4,12 @@ import {
 } from "@/configuration/zondBlockchainConfig";
 import { NATIVE_TOKEN_UNITS_OF_GAS } from "@/constants/nativeToken";
 import {
+  ZRC_721_CONTRACT_ABI,
+  ERC_721_INTERFACE_ID,
+  ERC_721_ENUMERABLE_INTERFACE_ID,
+  NFT_UNITS_OF_GAS,
+} from "@/constants/nftToken";
+import {
   ZRC_20_CONTRACT_ABI,
   ZRC_20_TOKEN_UNITS_OF_GAS,
 } from "@/constants/zrc20Token";
@@ -64,6 +70,11 @@ class ZondStore {
       signAndSendReplacementTransaction: action.bound,
       getTransactionReceipt: action.bound,
       sendRawTransaction: action.bound,
+      getNftCollectionDetails: action.bound,
+      getOwnedNftTokenIds: action.bound,
+      getNftTokenUri: action.bound,
+      getNftTransferGas: action.bound,
+      signNftTransfer: action.bound,
     });
     this.initializeBlockchain();
   }
@@ -396,6 +407,246 @@ class ZondStore {
     }
 
     return tokenDetails;
+  }
+
+  async getNftCollectionDetails(contractAddress: string) {
+    let result: {
+      collection?: { name: string; symbol: string; balance: number };
+      error: string;
+    } = { error: "" };
+
+    if (this.qrlInstance && this.qrlInstance.Contract) {
+      try {
+        const contract = new this.qrlInstance.Contract(
+          ZRC_721_CONTRACT_ABI,
+          contractAddress,
+        );
+
+        // Verify it supports ERC-721 interface
+        const isErc721 = (await contract.methods
+          .supportsInterface(ERC_721_INTERFACE_ID)
+          .call()) as boolean;
+
+        if (!isErc721) {
+          return { ...result, error: "Contract does not support ZRC-721" };
+        }
+
+        const name = (await contract.methods.name().call()) as string;
+        const symbol = (await contract.methods.symbol().call()) as string;
+        const balance = Number(
+          (await contract.methods
+            .balanceOf(this.activeAccount.accountAddress)
+            .call()) as bigint,
+        );
+
+        return { ...result, collection: { name, symbol, balance } };
+      } catch (error) {
+        return {
+          ...result,
+          error:
+            "Could not retrieve the NFT collection with the entered contract address",
+        };
+      }
+    }
+
+    return result;
+  }
+
+  async getOwnedNftTokenIds(contractAddress: string) {
+    const tokenIds: string[] = [];
+
+    if (this.qrlInstance && this.qrlInstance.Contract) {
+      try {
+        const contract = new this.qrlInstance.Contract(
+          ZRC_721_CONTRACT_ABI,
+          contractAddress,
+        );
+
+        const balance = Number(
+          (await contract.methods
+            .balanceOf(this.activeAccount.accountAddress)
+            .call()) as bigint,
+        );
+
+        // Check if contract supports Enumerable extension
+        let isEnumerable = false;
+        try {
+          isEnumerable = (await contract.methods
+            .supportsInterface(ERC_721_ENUMERABLE_INTERFACE_ID)
+            .call()) as boolean;
+        } catch {
+          isEnumerable = false;
+        }
+
+        if (isEnumerable) {
+          for (let i = 0; i < balance; i++) {
+            const tokenId = (await contract.methods
+              .tokenOfOwnerByIndex(this.activeAccount.accountAddress, i)
+              .call()) as bigint;
+            tokenIds.push(tokenId.toString());
+          }
+        }
+      } catch {
+        // Silently fail — return empty array
+      }
+    }
+
+    return tokenIds;
+  }
+
+  async getNftTokenUri(contractAddress: string, tokenId: string) {
+    if (this.qrlInstance && this.qrlInstance.Contract) {
+      try {
+        const contract = new this.qrlInstance.Contract(
+          ZRC_721_CONTRACT_ABI,
+          contractAddress,
+        );
+        const uri = (await contract.methods
+          .tokenURI(tokenId)
+          .call()) as string;
+        return uri;
+      } catch {
+        return "";
+      }
+    }
+    return "";
+  }
+
+  async getNftTransferGas(
+    from: string,
+    to: string,
+    tokenId: string,
+    contractAddress: string,
+    overrides?: GasFeeOverrides,
+  ) {
+    if (this.qrlInstance && this.qrlInstance.Contract) {
+      try {
+        const contract = new this.qrlInstance.Contract(
+          ZRC_721_CONTRACT_ABI,
+          contractAddress,
+        );
+        const transferCall = contract.methods.safeTransferFrom(
+          from,
+          to,
+          BigInt(tokenId),
+        );
+        const estimatedGasLimit = Number(
+          await transferCall.estimateGas({ from }),
+        );
+        const gasLimit =
+          overrides?.tier === "advanced" && overrides.gasLimit
+            ? overrides.gasLimit
+            : estimatedGasLimit;
+        const { baseFeePerGas, maxPriorityFeePerGas } =
+          await this.getGasFeeData(overrides);
+        return utils.fromPlanck(
+          BigInt(gasLimit) * (baseFeePerGas + maxPriorityFeePerGas),
+          "quanta",
+        );
+      } catch {
+        return "";
+      }
+    }
+    return "";
+  }
+
+  async signNftTransfer(
+    from: string,
+    to: string,
+    tokenId: string,
+    mnemonicPhrases: string,
+    contractAddress: string,
+    overrides?: GasFeeOverrides,
+  ) {
+    let result: {
+      transactionHash?: string;
+      rawTransaction?: string;
+      error: string;
+      nonce?: number;
+      maxFeePerGas?: string;
+      maxPriorityFeePerGas?: string;
+      gasLimit?: number;
+      data?: string;
+    } = { error: "" };
+
+    if (this.qrlInstance && this.qrlInstance.Contract) {
+      try {
+        const contract = new this.qrlInstance.Contract(
+          ZRC_721_CONTRACT_ABI,
+          contractAddress,
+        );
+        const transferCall = contract.methods.safeTransferFrom(
+          from,
+          to,
+          BigInt(tokenId),
+        );
+        // Run all RPC calls in parallel for speed
+        const useAdvancedGas =
+          overrides?.tier === "advanced" && overrides.gasLimit;
+        const [gasFeeData, estimatedGasResult, nonce] = await Promise.all([
+          this.getGasFeeData(overrides),
+          useAdvancedGas
+            ? Promise.resolve(null)
+            : transferCall
+                .estimateGas({ from })
+                .catch(() => null),
+          this.qrlInstance?.getTransactionCount(from),
+        ]);
+        const { maxFeePerGas, maxPriorityFeePerGas } = gasFeeData;
+        let gasLimit = useAdvancedGas
+          ? overrides!.gasLimit!
+          : NFT_UNITS_OF_GAS;
+        if (estimatedGasResult !== null && estimatedGasResult !== undefined) {
+          // Add 20% buffer to estimated gas
+          gasLimit = Math.ceil(Number(estimatedGasResult) * 1.2);
+        }
+        const encodedData = transferCall.encodeABI();
+        const transactionObject = {
+          from,
+          to: contractAddress,
+          data: encodedData,
+          nonce,
+          gasLimit,
+          maxFeePerGas: Number(maxFeePerGas),
+          maxPriorityFeePerGas: Number(maxPriorityFeePerGas),
+          type: 2,
+        };
+
+        console.log("[signNftTransfer] Signing TX:", { from, to, tokenId, contractAddress, nonce, gasLimit });
+
+        const signedTransaction =
+          await this.qrlInstance?.accounts.signTransaction(
+            transactionObject,
+            getHexSeedFromMnemonic(mnemonicPhrases),
+          );
+
+        if (signedTransaction) {
+          result = {
+            transactionHash: signedTransaction.transactionHash?.toString(),
+            rawTransaction: signedTransaction.rawTransaction?.toString(),
+            error: "",
+            nonce: Number(nonce),
+            maxFeePerGas: maxFeePerGas.toString(),
+            maxPriorityFeePerGas: maxPriorityFeePerGas.toString(),
+            gasLimit,
+            data: encodedData,
+          };
+        } else {
+          throw new Error("Transaction could not be signed");
+        }
+      } catch (error) {
+        console.error("[signNftTransfer] Error:", error);
+        result = {
+          ...result,
+          error: `Transaction could not be signed. ${error}`,
+        };
+      }
+    } else {
+      console.error("[signNftTransfer] qrlInstance not available");
+      result = { ...result, error: "Blockchain connection not available" };
+    }
+
+    return result;
   }
 
   async getZrc20TokenGas(

@@ -15,6 +15,7 @@ jest.mock("@/utilities/storageUtil", () => {
     getTokenContractsList: jest.fn(async () => [
       "Qd180388b9a863728fdc2e865d5fea87ce100eb2f",
     ]),
+    getNFTCollectionsList: jest.fn(async () => []),
   };
 });
 jest.mock(
@@ -92,6 +93,9 @@ describe("AccountCreateImport", () => {
       screen.getByRole("button", { name: "Import token" }),
     ).toBeInTheDocument();
     expect(screen.getAllByRole("heading", { level: 3 })[2]).toHaveTextContent(
+      "NFT Collections",
+    );
+    expect(screen.getAllByRole("heading", { level: 3 })[3]).toHaveTextContent(
       "Add accounts",
     );
     expect(screen.getByRole("paragraph")).toHaveTextContent(

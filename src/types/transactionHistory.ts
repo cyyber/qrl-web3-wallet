@@ -34,4 +34,4 @@ export type TransactionHistoryEntry = {
   replacedByAction?: "speed-up" | "cancel";
 };
 
-export type TokenFilter = "all" | "native" | "zrc20";
+export type TokenFilter = "all" | "native" | "zrc20" | "nft";

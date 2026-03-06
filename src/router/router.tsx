@@ -179,6 +179,38 @@ const SettingsAbout = withSuspense(
       ),
   ),
 );
+const ImportNFTCollection = withSuspense(
+  lazy(
+    () =>
+      import(
+        "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/ImportNFTCollection/ImportNFTCollection"
+      ),
+  ),
+);
+const NFTGallery = withSuspense(
+  lazy(
+    () =>
+      import(
+        "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/NFTGallery/NFTGallery"
+      ),
+  ),
+);
+const NFTDetail = withSuspense(
+  lazy(
+    () =>
+      import(
+        "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/NFTDetail/NFTDetail"
+      ),
+  ),
+);
+const NFTTransfer = withSuspense(
+  lazy(
+    () =>
+      import(
+        "@/components/ZondWeb3Wallet/ScreenLoader/Wallet/Body/NFTTransfer/NFTTransfer"
+      ),
+  ),
+);
 const Receive = withSuspense(
   lazy(
     () =>
@@ -194,6 +226,10 @@ export const ROUTES = {
   IMPORT_ACCOUNT: "/import-account",
   IMPORT_LEDGER: "/import-ledger",
   IMPORT_TOKEN: "/import-token",
+  IMPORT_NFT_COLLECTION: "/import-nft-collection",
+  NFT_GALLERY: "/nft-gallery",
+  NFT_DETAIL: "/nft-detail",
+  NFT_TRANSFER: "/nft-transfer",
   ALL_ZRC_20_TOKENS: "/all-zrc-20-tokens",
   TOKEN_TRANSFER: "/token-transfer",
   ACCOUNT_LIST: "/account-list",
@@ -239,6 +275,22 @@ const router = createMemoryRouter([
       {
         path: ROUTES.IMPORT_TOKEN,
         element: <ImportToken />,
+      },
+      {
+        path: ROUTES.IMPORT_NFT_COLLECTION,
+        element: <ImportNFTCollection />,
+      },
+      {
+        path: ROUTES.NFT_GALLERY,
+        element: <NFTGallery />,
+      },
+      {
+        path: ROUTES.NFT_DETAIL,
+        element: <NFTDetail />,
+      },
+      {
+        path: ROUTES.NFT_TRANSFER,
+        element: <NFTTransfer />,
       },
       {
         path: ROUTES.ALL_ZRC_20_TOKENS,

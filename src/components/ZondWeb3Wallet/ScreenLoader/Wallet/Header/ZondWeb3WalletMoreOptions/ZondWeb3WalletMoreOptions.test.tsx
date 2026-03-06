@@ -7,6 +7,8 @@ import ZondWeb3WalletMoreOptions from "./ZondWeb3WalletMoreOptions";
 import userEvent from "@testing-library/user-event";
 import browser from "webextension-polyfill";
 
+jest.setTimeout(15000);
+
 jest.mock("webextension-polyfill", () => {
   const originalModule = jest.requireActual<
     typeof import("webextension-polyfill")

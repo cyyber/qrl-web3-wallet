@@ -10,12 +10,13 @@ import {
 import { ROUTES } from "@/router/router";
 import { useStore } from "@/stores/store";
 import { cva } from "class-variance-authority";
-import { Download, History, Logs, Plus, Send, Usb } from "lucide-react";
+import { Download, History, Image, Logs, Plus, Send, Usb } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import ActiveAccountDisplay from "./ActiveAccountDisplay/ActiveAccountDisplay";
 import TokensCardContent from "./ActiveAccountDisplay/TokensCardContent/TokensCardContent";
+import NFTCollections from "./ActiveAccountDisplay/TokensCardContent/NFTCollections/NFTCollections";
 import { useEffect, useState } from "react";
 import StorageUtil from "@/utilities/storageUtil";
 import { ZRC_20_ITEMS_DISPLAY_LIMIT } from "@/constants/zrc20Token";
@@ -32,11 +33,23 @@ const tokensClasses = cva("w-full", {
   },
 });
 
+const nftClasses = cva("w-full", {
+  variants: {
+    hasTokensPreference: {
+      true: ["order-first"],
+      false: ["order-3"],
+    },
+  },
+  defaultVariants: {
+    hasTokensPreference: false,
+  },
+});
+
 const addAccountsClasses = cva("w-full", {
   variants: {
     hasAccountCreationPreference: {
       true: ["order-first"],
-      false: ["order-3"],
+      false: ["order-4"],
     },
   },
   defaultVariants: {
@@ -117,6 +130,22 @@ const AccountCreateImport = observer(() => {
                   </Button>
                 </Link>
               )}
+            </CardFooter>
+          </Card>
+          <Card className={nftClasses({ hasTokensPreference })}>
+            <CardHeader>
+              <CardTitle>{t('home.nftCollections')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <NFTCollections />
+            </CardContent>
+            <CardFooter>
+              <Link className="w-full" to={ROUTES.IMPORT_NFT_COLLECTION}>
+                <Button className="w-full" type="button">
+                  <Image className="mr-2 h-4 w-4" />
+                  {t('nft.importButton')}
+                </Button>
+              </Link>
             </CardFooter>
           </Card>
         </>
