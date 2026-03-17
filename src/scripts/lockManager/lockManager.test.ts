@@ -349,13 +349,13 @@ describe("LockManager – keep-alive & auto-lock", () => {
 
   describe("AUTO_LOCK_ALARM", () => {
     it("should be publicly accessible", () => {
-      expect(LockManager.AUTO_LOCK_ALARM).toBe("ZOND_AUTO_LOCK");
+      expect(LockManager.AUTO_LOCK_ALARM).toBe("QRL_AUTO_LOCK");
     });
   });
 
   describe("KEEP_ALIVE_ALARM", () => {
     it("should be publicly accessible", () => {
-      expect(LockManager.KEEP_ALIVE_ALARM).toBe("ZOND_KEEP_ALIVE");
+      expect(LockManager.KEEP_ALIVE_ALARM).toBe("QRL_KEEP_ALIVE");
     });
   });
 

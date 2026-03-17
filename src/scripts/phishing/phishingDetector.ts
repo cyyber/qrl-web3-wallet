@@ -5,7 +5,7 @@ const PHISHING_CONFIG_URL =
   "https://raw.githubusercontent.com/MetaMask/eth-phishing-detect/master/src/config.json";
 const PHISHING_CACHE_KEY = "PHISHING_BLOCKLIST_CACHE";
 const PHISHING_CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
-export const PHISHING_ALARM_NAME = "ZOND_PHISHING_REFRESH";
+export const PHISHING_ALARM_NAME = "QRL_PHISHING_REFRESH";
 
 export type PhishingCheckResult = {
   isDomainPhishing: boolean;
@@ -33,7 +33,7 @@ async function fetchRemoteConfig(): Promise<PhishingConfig | null> {
     if (!response.ok) return null;
     return await response.json();
   } catch (error) {
-    console.warn("ZondWeb3Wallet: Failed to fetch phishing blocklist", error);
+    console.warn("QrlWeb3Wallet: Failed to fetch phishing blocklist", error);
     return null;
   }
 }

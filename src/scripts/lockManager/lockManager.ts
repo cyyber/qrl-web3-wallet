@@ -46,8 +46,8 @@ export const LOCK_MANAGER_MESSAGES = {
  */
 class LockManager {
   private static decryptedKeys?: DecryptedKeyType[];
-  static readonly AUTO_LOCK_ALARM = "ZOND_AUTO_LOCK";
-  static readonly KEEP_ALIVE_ALARM = "ZOND_KEEP_ALIVE";
+  static readonly AUTO_LOCK_ALARM = "QRL_AUTO_LOCK";
+  static readonly KEEP_ALIVE_ALARM = "QRL_KEEP_ALIVE";
   private static readonly SESSION_KEYS_KEY = "_LM_CACHED_KEYS";
 
   static async lock() {
@@ -255,7 +255,7 @@ class LockManager {
   static getDecryptedKeys() {
     if (!this.decryptedKeys) {
       this.clearDecryptedKeys();
-      throw new Error("Zond Web3 Wallet is locked");
+      throw new Error("QRL Web3 Wallet is locked");
     }
     return this.decryptedKeys;
   }

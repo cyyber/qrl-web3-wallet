@@ -74,20 +74,20 @@ describe("getOptimalTokenBalance", () => {
 
   it("should return the balance 10,000.0 if the balance is 10000", () => {
     const balance = "10000";
-    const tokenBalance = "10,000.0 ZOND";
+    const tokenBalance = "10,000.0 QRL";
 
-    expect(getOptimalTokenBalance(balance, "ZOND")).toBe(tokenBalance);
+    expect(getOptimalTokenBalance(balance, "QRL")).toBe(tokenBalance);
   });
 
   it("should return the balance 100,000.0 if the balance is 100000", () => {
     const balance = "100000";
-    const tokenBalance = "100,000.0 ZOND";
+    const tokenBalance = "100,000.0 QRL";
 
-    expect(getOptimalTokenBalance(balance, "ZOND")).toBe(tokenBalance);
+    expect(getOptimalTokenBalance(balance, "QRL")).toBe(tokenBalance);
   });
 
-  it("should return the balance 0.0 if the balance is a text `Zond`", () => {
-    const balance = "Zond";
+  it("should return the balance 0.0 if the balance is a text `QRL`", () => {
+    const balance = "QRL";
     const tokenBalance = "0.0 QRL";
 
     expect(getOptimalTokenBalance(balance)).toBe(tokenBalance);

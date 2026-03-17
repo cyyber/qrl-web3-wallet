@@ -786,7 +786,7 @@ describe("LedgerStore", () => {
         },
       }));
       vi.doMock("@theqrl/web3", () => ({
-        zond: { accounts: {
+        qrl: { accounts: {
           FeeMarketEIP1559Transaction: { fromTxData: mockFromTxData, fromValuesArray: mockFromValuesArray },
           Common: { custom: vi.fn().mockReturnValue({ chainId: 1 }) },
         }},
@@ -832,7 +832,7 @@ describe("LedgerStore", () => {
         },
       }));
       vi.doMock("@theqrl/web3", () => ({
-        zond: { accounts: {
+        qrl: { accounts: {
           FeeMarketEIP1559Transaction: { fromTxData: mockFromTxData, fromValuesArray: mockFromValuesArray },
           Common: { custom: vi.fn().mockReturnValue({ chainId: 1 }) },
         }},
