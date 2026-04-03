@@ -33,10 +33,6 @@ export default defineConfig({
       // Base aliases from vite.config
       { find: "@", replacement: path.resolve(__dirname, "src") },
       {
-        find: "@noble/hashes",
-        replacement: path.resolve(__dirname, "node_modules/@noble/hashes"),
-      },
-      {
         find: "events",
         replacement: path.resolve(
           __dirname,
@@ -53,12 +49,12 @@ export default defineConfig({
     setupFiles: ["src/__mocks__/i18nTestSetup.ts", "vitest.setup.ts"],
     server: {
       deps: {
-        inline: ["@theqrl/abi"],
+        inline: ["@theqrl/abi", "@theqrl/qrl-cryptography", "@noble/hashes"],
       },
     },
     coverage: {
       provider: "v8",
-      directory: "coverage",
+      reportsDirectory: "coverage",
       exclude: ["src/components/UI/**"],
     },
   },
