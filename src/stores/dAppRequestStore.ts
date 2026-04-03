@@ -1,3 +1,4 @@
+import { BlockchainDataType } from "@/configuration/qrlBlockchainConfig";
 import { EXTENSION_MESSAGES } from "@/scripts/constants/streamConstants";
 import {
   DAppRequestType,
@@ -8,9 +9,18 @@ import StorageUtil from "@/utilities/storageUtil";
 import { action, makeAutoObservable, observable } from "mobx";
 import browser from "webextension-polyfill";
 
+type CurrentTabData = {
+  favIconUrl: string;
+  urlOrigin: string;
+  title: string;
+  connectedAccounts: string[];
+  connectedBlockchains: BlockchainDataType[];
+};
+
 class DAppRequestStore {
+  currentTabData?: CurrentTabData;
   dAppRequestData?: DAppRequestType;
-  responseData: any = {};
+  responseData: Record<string, unknown> = {};
   canProceed: boolean = false;
   onPermissionCallBack: (hasApproved: boolean) => Promise<void> = async () =>
     undefined;
@@ -30,15 +40,53 @@ class DAppRequestStore {
       setOnPermissionCallBack: action.bound,
       onPermission: action.bound,
       approvalProcessingStatus: observable.struct,
+      fetchCurrentTabData: action.bound,
+      disconnectFromCurrentTab: action.bound,
     });
+    this.fetchCurrentTabData();
+  }
+
+  get hasDAppRequest() {
+    return !!this.dAppRequestData;
+  }
+
+  get hasDAppConnected() {
+    return !!this?.currentTabData?.connectedAccounts?.length;
+  }
+
+  async fetchCurrentTabData() {
+    const tabs = await browser.tabs.query({
+      active: true,
+      currentWindow: true,
+    });
+    const currentTab = tabs[0];
+    const urlOrigin = new URL(currentTab?.url ?? "").origin;
+    this.currentTabData = {
+      favIconUrl: currentTab?.favIconUrl ?? "",
+      title: currentTab?.title ?? "",
+      urlOrigin,
+      connectedAccounts:
+        (await StorageUtil.getDAppsConnectedAccountsData(urlOrigin))
+          ?.accounts ?? [],
+      connectedBlockchains:
+        (await StorageUtil.getDAppsConnectedAccountsData(urlOrigin))
+          ?.blockchains ?? [],
+    };
+  }
+
+  async disconnectFromCurrentTab() {
+    await StorageUtil.clearDAppsConnectedAccountsData(
+      this.currentTabData?.urlOrigin,
+    );
+    await this.fetchCurrentTabData();
   }
 
   async readDAppRequestData() {
-    const storedDAppRequestData = await StorageUtil.getDAppRequestData();
+    const storedDAppRequestData = await StorageUtil.getDAppsRequestData();
     this.dAppRequestData = storedDAppRequestData;
   }
 
-  addToResponseData(data: any) {
+  addToResponseData(data: Record<string, unknown>) {
     const serializableData = getSerializableObject(data);
     this.responseData = { ...this.responseData, ...serializableData };
   }
@@ -78,11 +126,11 @@ class DAppRequestStore {
       await browser.runtime.sendMessage(response);
     } catch (error) {
       console.warn(
-        "ZondWeb3Wallet: Error while resolving the permission request\n",
+        "QrlWeb3Wallet: Error while resolving the permission request\n",
         error,
       );
     } finally {
-      await StorageUtil.clearDAppRequestData();
+      await StorageUtil.clearDAppsRequestData();
       this.setApprovalProcessingStatus({
         isProcessing: false,
         hasCompleted: true,

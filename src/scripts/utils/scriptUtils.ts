@@ -19,7 +19,7 @@ export function checkForLastError() {
     return undefined;
   }
 
-  // @ts-ignore
+  // @ts-expect-error - lastError may have a stack property not declared in webextension-polyfill types
   // if it quacks like an Error, its an Error
   if (lastError.stack && lastError.message) {
     return lastError;
@@ -28,7 +28,17 @@ export function checkForLastError() {
   return new Error(lastError.message);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getSerializableObject(jsonObject: any) {
+  if (jsonObject?.error) {
+    const error = jsonObject?.error;
+    return {
+      error: {
+        message: error?.message,
+        stack: error?.stack,
+      },
+    };
+  }
   return JSON.parse(
     JSON.stringify(jsonObject, (_, value) => {
       if (typeof value === "bigint") {
