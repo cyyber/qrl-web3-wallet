@@ -12,8 +12,8 @@ const QRL_MAINNET_DATA = {
 };
 
 const QRL_TESTNET_DATA = {
-  chainId: "0x7e7e",
-  chainName: "Zond Testnet",
+  chainId: "0x539",
+  chainName: "QRL Zond Testnet v2",
   rpcUrls: ["http://209.250.255.226:8545"],
   blockExplorerUrls: ["https://www.theqrl.org/markets/"],
   nativeCurrency: {
