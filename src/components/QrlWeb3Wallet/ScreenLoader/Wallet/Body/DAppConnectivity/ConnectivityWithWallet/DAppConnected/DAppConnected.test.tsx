@@ -38,13 +38,14 @@ describe("DAppConnected", () => {
       ),
     ).toBeInTheDocument();
     expect(screen.getByText("Q00000")).toBeInTheDocument();
-    expect(screen.getByText("8fF1f")).toBeInTheDocument();
-    expect(screen.getByText("1376A")).toBeInTheDocument();
-    expect(screen.getByText("14C05")).toBeInTheDocument();
-    expect(screen.getByText("5E9F5")).toBeInTheDocument();
-    expect(screen.getByText("6df80")).toBeInTheDocument();
-    expect(screen.getByText("563E1")).toBeInTheDocument();
-    expect(screen.getByText("6722b")).toBeInTheDocument();
+    expect(screen.getByText("020fB")).toBeInTheDocument();
+    expect(screen.getByText("08fF1")).toBeInTheDocument();
+    expect(screen.getByText("f1376")).toBeInTheDocument();
+    expect(screen.getByText("A14C0")).toBeInTheDocument();
+    expect(screen.getByText("55E9F")).toBeInTheDocument();
+    expect(screen.getByText("56df8")).toBeInTheDocument();
+    expect(screen.getByText("0563E")).toBeInTheDocument();
+    expect(screen.getByText("16722")).toBeInTheDocument();
     expect(screen.getByText("0.0 QRL")).toBeInTheDocument();
   });
 });

@@ -34,9 +34,9 @@ describe("AccountId", () => {
 
     const addressParts = [
       "Q00000",
-      "20fB0",
-      "8fF1f",
-      "6722b",
+      "020fB",
+      "08fF1",
+      "16722",
       "10.0 QRL",
     ];
     for (const word of addressParts) {

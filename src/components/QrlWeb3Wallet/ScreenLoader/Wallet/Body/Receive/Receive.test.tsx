@@ -64,8 +64,8 @@ describe("Receive", () => {
       }),
     );
 
-    // Address is rendered as "Q 20B71 4091c ..." (prefix + space-separated chunks)
-    expect(screen.getByText(/Q\s+20B71/)).toBeInTheDocument();
+    // Address is rendered as "Q 00000 00000 ... 020B7 14091 ..." (prefix + space-separated chunks)
+    expect(screen.getByText(/Q\s+00000\s+00000.*020B7\s+14091/)).toBeInTheDocument();
   });
 
   it("should copy address to clipboard on click", async () => {

@@ -106,7 +106,7 @@ describe("ContactsStore", () => {
     };
     await store.addContact(contact);
 
-    await store.removeContact("q20b714091cf2a62dadda2847803e3f1b9d2d3779");
+    await store.removeContact("q0000000000000000000000000000000000000000000000000000000020b714091cf2a62dadda2847803e3f1b9d2d3779");
 
     expect(store.contacts).toHaveLength(0);
   });
@@ -169,7 +169,7 @@ describe("ContactsStore", () => {
 
     await store.addContact({
       name: "Alice Lower",
-      address: "q20b714091cf2a62dadda2847803e3f1b9d2d3779",
+      address: "q0000000000000000000000000000000000000000000000000000000020b714091cf2a62dadda2847803e3f1b9d2d3779",
     });
 
     expect(store.contacts).toHaveLength(1);

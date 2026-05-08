@@ -107,7 +107,7 @@ describe("TokenTransfer", () => {
     expect(screen.getByText("Active account")).toBeInTheDocument();
     expect(screen.getByText("Account address")).toBeInTheDocument();
     expect(
-      screen.getByText("Q 20B71 4091c F2a62 DADda 28478 03e3f 1B9D2 D3779"),
+      screen.getByText("Q 00000 00000 00000 00000 00000 00000 00000 00000 00000 00000 00000 08A8e AFb1c f62Bf Beb17 41769 DAE1a 9dd47 99619 2"),
     ).toBeInTheDocument();
     expect(screen.getByText("Balance")).toBeInTheDocument();
     expect(screen.getByText("0.0 QRL")).toBeInTheDocument();
@@ -193,7 +193,7 @@ describe("TokenTransfer", () => {
 
     await fillAndSubmitForm();
     expect(mockAddTransaction).toHaveBeenCalledWith(
-      "Q0000000000000000000000000000000000000000000000000000000020B714091cF2a62DADda2847803e3f1B9D2D3779",
+      "Q000000000000000000000000000000000000000000000000000000008A8eAFb1cf62BfBeb1741769DAE1a9dd47996192",
       expect.objectContaining({
         pendingStatus: "pending",
         status: false,
@@ -242,7 +242,7 @@ describe("TokenTransfer", () => {
 
     await fillAndSubmitForm();
     expect(mockAddTransaction).toHaveBeenCalledWith(
-      "Q0000000000000000000000000000000000000000000000000000000020B714091cF2a62DADda2847803e3f1B9D2D3779",
+      "Q000000000000000000000000000000000000000000000000000000008A8eAFb1cf62BfBeb1741769DAE1a9dd47996192",
       expect.objectContaining({
         transactionHash: "0xtxhash",
         pendingStatus: "pending",
@@ -267,7 +267,7 @@ describe("TokenTransfer", () => {
 
     await fillAndSubmitForm();
     expect(mockAddTransaction).toHaveBeenCalledWith(
-      "Q0000000000000000000000000000000000000000000000000000000020B714091cF2a62DADda2847803e3f1B9D2D3779",
+      "Q000000000000000000000000000000000000000000000000000000008A8eAFb1cf62BfBeb1741769DAE1a9dd47996192",
       expect.objectContaining({
         transactionHash: "0xtxhash",
         pendingStatus: "pending",
@@ -355,7 +355,7 @@ describe("TokenTransfer", () => {
     await fillAndSubmitForm("Send TST");
     expect(mockSignZrc20Token).toHaveBeenCalled();
     expect(mockAddTransaction).toHaveBeenCalledWith(
-      "Q0000000000000000000000000000000000000000000000000000000020B714091cF2a62DADda2847803e3f1B9D2D3779",
+      "Q000000000000000000000000000000000000000000000000000000008A8eAFb1cf62BfBeb1741769DAE1a9dd47996192",
       expect.objectContaining({
         pendingStatus: "pending",
         tokenSymbol: "TST",

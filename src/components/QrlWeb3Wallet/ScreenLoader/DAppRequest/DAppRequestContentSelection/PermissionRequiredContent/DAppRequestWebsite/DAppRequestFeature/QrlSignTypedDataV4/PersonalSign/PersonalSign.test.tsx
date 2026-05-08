@@ -40,7 +40,7 @@ describe("PersonalSign", () => {
 
     expect(screen.getByText("From Address")).toBeInTheDocument();
     expect(
-      screen.getByText("Q 20D20 b8026 B8F02 54024 6f581 20ddA Af35A ECD9B"),
+      screen.getByText("Q 00000 00000 00000 00000 00000 00000 00000 00000 00000 00000 00000 020D2 0b802 6B8F0 25402 46f58 120dd AAf35 AECD9 B"),
     ).toBeInTheDocument();
     expect(screen.getByText("Message")).toBeInTheDocument();
     expect(screen.getByText(expectedMessage)).toBeInTheDocument();

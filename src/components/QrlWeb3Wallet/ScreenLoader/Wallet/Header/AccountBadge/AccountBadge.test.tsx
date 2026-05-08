@@ -29,6 +29,6 @@ describe("AccountBadge", () => {
       }),
     );
 
-    expect(screen.getByText("Q20fB0...6722b")).toBeInTheDocument();
+    expect(screen.getByText("Q00000...b")).toBeInTheDocument();
   });
 });

@@ -207,11 +207,11 @@ describe("ImportLedger", () => {
         } as any,
       });
 
-      expect(screen.getByText(/Q20aaa11.*6660A/)).toBeInTheDocument();
+      expect(screen.getByText(/Q0000000\.\.\.f6660A/)).toBeInTheDocument();
       expect(screen.getByText("Account #1")).toBeInTheDocument();
-      expect(screen.getByText(/Q20bbb22.*7770B/)).toBeInTheDocument();
+      expect(screen.getByText(/Q0000000\.\.\.a7770B/)).toBeInTheDocument();
       expect(screen.getByText("Account #2")).toBeInTheDocument();
-      expect(screen.getByText(/Q20ccc33.*8880C/)).toBeInTheDocument();
+      expect(screen.getByText(/Q0000000\.\.\.b8880C/)).toBeInTheDocument();
       expect(screen.getByText("Account #3")).toBeInTheDocument();
     });
 

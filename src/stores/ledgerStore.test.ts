@@ -913,7 +913,7 @@ describe("LedgerStore", () => {
         publicKey: "0xpk",
       });
 
-      const result = await store.fetchPublicKey("q1234567890123456789012345678901234567890");
+      const result = await store.fetchPublicKey("q000000000000000000000000000000000000000000000000000000001234567890123456789012345678901234567890");
 
       expect(result.publicKey).toBe("0xpk");
       expect(store.accounts[0].publicKey).toBe("0xpk");

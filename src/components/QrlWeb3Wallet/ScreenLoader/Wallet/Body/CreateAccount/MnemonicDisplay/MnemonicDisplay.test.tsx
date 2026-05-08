@@ -50,7 +50,7 @@ describe("MnemonicDisplay", () => {
       "Keep this safe",
     );
     expect(screen.getByRole("paragraph")).toHaveTextContent(
-      "Don't lose this mnemonic phrases. Download it right now. You may need this someday to import or recover your new account Q20fB0 ... 6722b",
+      "Don't lose this mnemonic phrases. Download it right now. You may need this someday to import or recover your new account Q00000 ... 6722b",
     );
     const downloadButton = screen.getByRole("button", { name: "Download" });
     expect(downloadButton).toBeInTheDocument();

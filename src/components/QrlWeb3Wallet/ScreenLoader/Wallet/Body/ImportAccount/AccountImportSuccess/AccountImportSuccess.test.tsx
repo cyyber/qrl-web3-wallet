@@ -58,7 +58,7 @@ describe("AccountImportSuccess", () => {
       "Account imported",
     );
     expect(
-      screen.getByText("Q 20fB0 8fF1f 1376A 14C05 5E9F5 6df80 563E1 6722b"),
+      screen.getByText("Q 00000 00000 00000 00000 00000 00000 00000 00000 00000 00000 00000 020fB 08fF1 f1376 A14C0 55E9F 56df8 0563E 16722 b"),
     ).toBeInTheDocument();
     expect(
       screen.getByText("Your account is successfully imported."),

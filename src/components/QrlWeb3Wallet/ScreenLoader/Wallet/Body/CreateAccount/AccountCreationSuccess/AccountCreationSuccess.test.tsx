@@ -57,7 +57,7 @@ describe("AccountCreationSuccess", () => {
     );
     expect(screen.getByText("Account public address:")).toBeInTheDocument();
     expect(
-      screen.getByText("Q 20504 6e6A6 E159e D6ACe dE46A 36CAD 6D449 C80A1"),
+      screen.getByText("Q 00000 00000 00000 00000 00000 00000 00000 00000 00000 00000 00000 02050 46e6A 6E159 eD6AC edE46 A36CA D6D44 9C80A 1"),
     ).toBeInTheDocument();
     expect(
       screen.getByText(

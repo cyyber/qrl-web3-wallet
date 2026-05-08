@@ -131,7 +131,7 @@ describe("QrlSendTransactionForContent", () => {
     expect(dataTab).toBeInTheDocument();
     expect(screen.getByText("From Address")).toBeInTheDocument();
     expect(
-      screen.getByText("Q 20D20 b8026 B8F02 54024 6f581 20ddA Af35A ECD9B"),
+      screen.getByText("Q 00000 00000 00000 00000 00000 00000 00000 00000 00000 00000 00000 020D2 0b802 6B8F0 25402 46f58 120dd AAf35 AECD9 B"),
     ).toBeInTheDocument();
     expect(screen.getByText("Gas Limit")).toBeInTheDocument();
     expect(screen.getByText("117683")).toBeInTheDocument();
@@ -169,7 +169,7 @@ describe("QrlSendTransactionForContent", () => {
     expect(dataTab).toBeInTheDocument();
     expect(screen.getByText("From Address")).toBeInTheDocument();
     expect(
-      screen.getByText("Q 20D20 b8026 B8F02 54024 6f581 20ddA Af35A ECD9B"),
+      screen.getByText("Q 00000 00000 00000 00000 00000 00000 00000 00000 00000 00000 00000 020D2 0b802 6B8F0 25402 46f58 120dd AAf35 AECD9 B"),
     ).toBeInTheDocument();
     expect(screen.getByText("Gas Limit")).toBeInTheDocument();
     expect(screen.getByText("117683")).toBeInTheDocument();
@@ -206,11 +206,11 @@ describe("QrlSendTransactionForContent", () => {
     expect(dataTab).not.toBeInTheDocument();
     expect(screen.getByText("From Address")).toBeInTheDocument();
     expect(
-      screen.getByText("Q 20D20 b8026 B8F02 54024 6f581 20ddA Af35A ECD9B"),
+      screen.getByText("Q 00000 00000 00000 00000 00000 00000 00000 00000 00000 00000 00000 020D2 0b802 6B8F0 25402 46f58 120dd AAf35 AECD9 B"),
     ).toBeInTheDocument();
     expect(screen.getByText("To Address")).toBeInTheDocument();
     expect(
-      screen.getByText("Q 20EE9 76078 6AD48 aB90E 326c5 cd78c 6269B a10AB"),
+      screen.getByText("Q 00000 00000 00000 00000 00000 00000 00000 00000 00000 00000 00000 020EE 97607 86AD4 8aB90 E326c 5cd78 c6269 Ba10A B"),
     ).toBeInTheDocument();
     expect(screen.getByText("Value")).toBeInTheDocument();
     expect(screen.getByText("0.000000000000000048 QRL")).toBeInTheDocument();

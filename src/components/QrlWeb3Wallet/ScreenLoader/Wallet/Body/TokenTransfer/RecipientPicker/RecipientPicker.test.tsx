@@ -115,7 +115,7 @@ describe("RecipientPicker", () => {
 
     expect(screen.getByText("Account 2")).toBeInTheDocument();
     expect(
-      screen.getByText(/Q0000000000000000000000000000000000000000000000000000000020fB08fF1f1376A14C055E9F56df80563E16722b/),
+      screen.getByText(/Q00000.*020fB.*16722 b/),
     ).toBeInTheDocument();
   });
 
@@ -186,7 +186,7 @@ describe("RecipientPicker", () => {
 
     // With no labels from store, address is shown as both label and address line
     const matches = screen.getAllByText(
-      /Q0000000000000000000000000000000000000000000000000000000020fB08fF1f1376A14C055E9F56df80563E16722b/,
+      /Q00000.*020fB.*16722 b/,
     );
     expect(matches.length).toBeGreaterThanOrEqual(1);
   });
@@ -259,7 +259,7 @@ describe("RecipientPicker", () => {
     await userEvent.click(screen.getByText("Recent"));
 
     expect(
-      screen.getByText(/Q0000000000000000000000000000000000000000000000000000000020fB08fF1f1376A14C055E9F56df80563E16722b/),
+      screen.getByText(/Q00000.*020fB.*16722 b/),
     ).toBeInTheDocument();
   });
 
@@ -299,7 +299,7 @@ describe("RecipientPicker", () => {
     expect(screen.getByText("Account 2")).toBeInTheDocument();
 
     const addressButton = screen.getByText(
-      /Q0000000000000000000000000000000000000000000000000000000020fB08fF1f1376A14C055E9F56df80563E16722b/,
+      /Q00000.*020fB.*16722 b/,
     );
     await userEvent.click(addressButton.closest("button")!);
 
@@ -365,7 +365,7 @@ describe("RecipientPicker", () => {
 
     await userEvent.click(screen.getByText("Recent"));
     const recentButton = screen
-      .getByText(/Q0000000000000000000000000000000000000000000000000000000020fB08fF1f1376A14C055E9F56df80563E16722b/)
+      .getByText(/Q00000.*020fB.*16722 b/)
       .closest("button")!;
     await userEvent.click(recentButton);
 

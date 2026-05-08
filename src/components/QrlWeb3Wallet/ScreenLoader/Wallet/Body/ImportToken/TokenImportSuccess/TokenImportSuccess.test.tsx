@@ -39,7 +39,7 @@ describe("TokenImportSuccess", () => {
     );
     expect(screen.getByText("Contract address")).toBeInTheDocument();
     expect(
-      screen.getByText("Q 0db39 81cb9 3db98 5e4e3 a62ff 695f7 a1b24 2dd7c"),
+      screen.getByText("Q 00000 00000 00000 00000 00000 00000 00000 00000 00000 00000 00000 00db3 981cb 93db9 85e4e 3a62f f695f 7a1b2 42dd7 c"),
     ).toBeInTheDocument();
     expect(screen.getByText("Name")).toBeInTheDocument();
     expect(screen.getByText("MOCK TOKEN")).toBeInTheDocument();
