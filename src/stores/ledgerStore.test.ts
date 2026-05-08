@@ -42,13 +42,13 @@ describe("LedgerStore", () => {
 
   const mockAccounts: LedgerAccount[] = [
     {
-      address: "Q1234567890123456789012345678901234567890",
+      address: "Q000000000000000000000000000000000000000000000000000000001234567890123456789012345678901234567890",
       derivationPath: "m/44'/238'/0'/0'/0'",
       publicKey: "0xpublickey1",
       index: 0,
     },
     {
-      address: "Q0987654321098765432109876543210987654321",
+      address: "Q000000000000000000000000000000000000000000000000000000000987654321098765432109876543210987654321",
       derivationPath: "m/44'/238'/0'/0'/1'",
       publicKey: "0xpublickey2",
       index: 1,
@@ -579,7 +579,7 @@ describe("LedgerStore", () => {
     });
 
     it("should return false if account not found", async () => {
-      const result = await store.verifyAddress("Q0000000000000000000000000000000000000000");
+      const result = await store.verifyAddress("Q000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
 
       expect(result).toBe(false);
       expect(mockVerifyAddress).not.toHaveBeenCalled();
@@ -620,7 +620,7 @@ describe("LedgerStore", () => {
     });
 
     it("should return undefined if not found", () => {
-      const account = store.getAccountByAddress("Q0000000000000000000000000000000000000000");
+      const account = store.getAccountByAddress("Q000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
       expect(account).toBeUndefined();
     });
   });
@@ -635,7 +635,7 @@ describe("LedgerStore", () => {
     });
 
     it("should return false for non-ledger account", () => {
-      expect(store.isLedgerAccount("Q0000000000000000000000000000000000000000")).toBe(false);
+      expect(store.isLedgerAccount("Q000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000")).toBe(false);
     });
   });
 
@@ -669,7 +669,7 @@ describe("LedgerStore", () => {
 
     it("should return error for non-ledger account", async () => {
       const result = await store.signTransaction(
-        "Q0000000000000000000000000000000000000000",
+        "Q000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
         mockRlpEncodedTx
       );
 
@@ -766,8 +766,8 @@ describe("LedgerStore", () => {
       vi.resetModules();
 
       const storedAccounts = [
-        { address: "Q111", derivationPath: "m/44'/238'/0'/0'/0'", publicKey: "", index: 0 },
-        { address: "Q222", derivationPath: "m/44'/238'/0'/0'/3'", publicKey: "", index: 3 },
+        { address: "Q000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000111", derivationPath: "m/44'/238'/0'/0'/0'", publicKey: "", index: 0 },
+        { address: "Q000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000222", derivationPath: "m/44'/238'/0'/0'/3'", publicKey: "", index: 3 },
       ];
       mockGetLedgerAccounts.mockResolvedValue(storedAccounts);
       mockIsConnected.mockReturnValue(false);
@@ -862,7 +862,7 @@ describe("LedgerStore", () => {
       store.connectionState = "connected";
       store.accounts = [
         {
-          address: "Q1234567890123456789012345678901234567890",
+          address: "Q000000000000000000000000000000000000000000000000000000001234567890123456789012345678901234567890",
           derivationPath: "m/44'/238'/0'/0'/0'",
           publicKey: "",
           index: 0,
@@ -873,12 +873,12 @@ describe("LedgerStore", () => {
     it("should fetch public key and update account", async () => {
       const expectedPublicKey = "0xabc123publickey";
       mockGetPublicKey.mockResolvedValue({
-        address: "Q1234567890123456789012345678901234567890",
+        address: "Q000000000000000000000000000000000000000000000000000000001234567890123456789012345678901234567890",
         derivationPath: "m/44'/238'/0'/0'/0'",
         publicKey: expectedPublicKey,
       });
 
-      const result = await store.fetchPublicKey("Q1234567890123456789012345678901234567890");
+      const result = await store.fetchPublicKey("Q000000000000000000000000000000000000000000000000000000001234567890123456789012345678901234567890");
 
       expect(result.publicKey).toBe(expectedPublicKey);
       expect(mockGetPublicKey).toHaveBeenCalledWith("m/44'/238'/0'/0'/0'");
@@ -888,27 +888,27 @@ describe("LedgerStore", () => {
 
     it("should throw if account not found", async () => {
       await expect(
-        store.fetchPublicKey("Q0000000000000000000000000000000000000000")
-      ).rejects.toThrow("Account Q0000000000000000000000000000000000000000 not found");
+        store.fetchPublicKey("Q000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000")
+      ).rejects.toThrow("Account Q000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 not found");
     });
 
     it("should auto-connect if not connected", async () => {
       store.connectionState = "disconnected";
       mockConnect.mockResolvedValue(mockDeviceInfo);
       mockGetPublicKey.mockResolvedValue({
-        address: "Q1234567890123456789012345678901234567890",
+        address: "Q000000000000000000000000000000000000000000000000000000001234567890123456789012345678901234567890",
         derivationPath: "m/44'/238'/0'/0'/0'",
         publicKey: "0xpk",
       });
 
-      await store.fetchPublicKey("Q1234567890123456789012345678901234567890");
+      await store.fetchPublicKey("Q000000000000000000000000000000000000000000000000000000001234567890123456789012345678901234567890");
 
       expect(mockConnect).toHaveBeenCalled();
     });
 
     it("should handle case-insensitive address matching", async () => {
       mockGetPublicKey.mockResolvedValue({
-        address: "Q1234567890123456789012345678901234567890",
+        address: "Q000000000000000000000000000000000000000000000000000000001234567890123456789012345678901234567890",
         derivationPath: "m/44'/238'/0'/0'/0'",
         publicKey: "0xpk",
       });
@@ -926,7 +926,7 @@ describe("LedgerStore", () => {
       maxPriorityFeePerGas: "0x1",
       maxFeePerGas: "0x2",
       gasLimit: "0x5208",
-      to: "Q1234567890123456789012345678901234567890",
+      to: "Q000000000000000000000000000000000000000000000000000000001234567890123456789012345678901234567890",
       value: "0x1000",
       data: "0x",
     };
@@ -972,20 +972,20 @@ describe("LedgerStore", () => {
     it("should fetch public key if not present on account", async () => {
       // Account without public key
       store.accounts = [{
-        address: "Q1234567890123456789012345678901234567890",
+        address: "Q000000000000000000000000000000000000000000000000000000001234567890123456789012345678901234567890",
         derivationPath: "m/44'/238'/0'/0'/0'",
         publicKey: "",
         index: 0,
       }];
 
       mockGetPublicKey.mockResolvedValue({
-        address: "Q1234567890123456789012345678901234567890",
+        address: "Q000000000000000000000000000000000000000000000000000000001234567890123456789012345678901234567890",
         derivationPath: "m/44'/238'/0'/0'/0'",
         publicKey: "0xfetchedpublickey",
       });
 
       await store.signAndSerializeTransaction(
-        "Q1234567890123456789012345678901234567890",
+        "Q000000000000000000000000000000000000000000000000000000001234567890123456789012345678901234567890",
         mockTxData,
         mockCommon,
       );
@@ -1024,21 +1024,21 @@ describe("LedgerStore", () => {
 
     it("should throw if fetchPublicKey returns empty public key", async () => {
       store.accounts = [{
-        address: "Q1234567890123456789012345678901234567890",
+        address: "Q000000000000000000000000000000000000000000000000000000001234567890123456789012345678901234567890",
         derivationPath: "m/44'/238'/0'/0'/0'",
         publicKey: "",
         index: 0,
       }];
 
       mockGetPublicKey.mockResolvedValue({
-        address: "Q1234567890123456789012345678901234567890",
+        address: "Q000000000000000000000000000000000000000000000000000000001234567890123456789012345678901234567890",
         derivationPath: "m/44'/238'/0'/0'/0'",
         publicKey: "",
       });
 
       await expect(
         store.signAndSerializeTransaction(
-          "Q1234567890123456789012345678901234567890",
+          "Q000000000000000000000000000000000000000000000000000000001234567890123456789012345678901234567890",
           mockTxData,
           mockCommon,
         )

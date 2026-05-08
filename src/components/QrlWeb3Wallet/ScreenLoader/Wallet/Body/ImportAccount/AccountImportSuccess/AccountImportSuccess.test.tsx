@@ -25,7 +25,7 @@ describe("AccountImportSuccess", () => {
     mockedStoreValues = mockedStore(),
     mockedProps: ComponentProps<typeof AccountImportSuccess> = {
       account: {
-        address: "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+        address: "Q0000000000000000000000000000000000000000000000000000000020fB08fF1f1376A14C055E9F56df80563E16722b",
         seed: "",
         sign: (data: string | Record<string, unknown>) => ({
           messageHash: data.toString(),
@@ -94,7 +94,7 @@ describe("AccountImportSuccess", () => {
     vi.advanceTimersByTime(1000);
     expect(clipboardMock).toHaveBeenCalledTimes(1);
     expect(clipboardMock).toHaveBeenCalledWith(
-      "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+      "Q0000000000000000000000000000000000000000000000000000000020fB08fF1f1376A14C055E9F56df80563E16722b",
     );
   });
 });

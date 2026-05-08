@@ -81,7 +81,7 @@ describe("CreateAccount", () => {
           qrlInstance: {
             accounts: {
               create: () => ({
-                address: "Q205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
+                address: "Q00000000000000000000000000000000000000000000000000000000205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
                 seed: "",
                 sign: (_data: Record<string, unknown> | string) => {
                   return { messageHash: "", signature: "", message: "" };
@@ -129,7 +129,7 @@ describe("CreateAccount", () => {
           qrlInstance: {
             accounts: {
               create: () => ({
-                address: "Q205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
+                address: "Q00000000000000000000000000000000000000000000000000000000205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
                 seed: "",
                 sign: (_data: Record<string, unknown> | string) => {
                   return { messageHash: "", signature: "", message: "" };

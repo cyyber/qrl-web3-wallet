@@ -97,7 +97,7 @@ describe("TokenTransfer", () => {
       async () => {
         await userEvent.type(
           receiverAddressField,
-          "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+          "Q0000000000000000000000000000000000000000000000000000000020fB08fF1f1376A14C055E9F56df80563E16722b",
         );
         await userEvent.type(amountField, "2.5");
       },
@@ -152,7 +152,7 @@ describe("TokenTransfer", () => {
       async () => {
         await userEvent.type(
           receiverAddressField,
-          "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+          "Q0000000000000000000000000000000000000000000000000000000020fB08fF1f1376A14C055E9F56df80563E16722b",
         );
         await userEvent.type(amountField, "2.5");
       },
@@ -202,7 +202,7 @@ describe("TokenTransfer", () => {
 
     await fillAndSubmitForm();
     expect(mockAddTransaction).toHaveBeenCalledWith(
-      "Q20B714091cF2a62DADda2847803e3f1B9D2D3779",
+      "Q0000000000000000000000000000000000000000000000000000000020B714091cF2a62DADda2847803e3f1B9D2D3779",
       expect.objectContaining({
         pendingStatus: "pending",
         status: false,
@@ -251,7 +251,7 @@ describe("TokenTransfer", () => {
 
     await fillAndSubmitForm();
     expect(mockAddTransaction).toHaveBeenCalledWith(
-      "Q20B714091cF2a62DADda2847803e3f1B9D2D3779",
+      "Q0000000000000000000000000000000000000000000000000000000020B714091cF2a62DADda2847803e3f1B9D2D3779",
       expect.objectContaining({
         transactionHash: "0xtxhash",
         pendingStatus: "pending",
@@ -276,7 +276,7 @@ describe("TokenTransfer", () => {
 
     await fillAndSubmitForm();
     expect(mockAddTransaction).toHaveBeenCalledWith(
-      "Q20B714091cF2a62DADda2847803e3f1B9D2D3779",
+      "Q0000000000000000000000000000000000000000000000000000000020B714091cF2a62DADda2847803e3f1B9D2D3779",
       expect.objectContaining({
         transactionHash: "0xtxhash",
         pendingStatus: "pending",
@@ -338,7 +338,7 @@ describe("TokenTransfer", () => {
       {
         tokenDetails: {
           isZrc20Token: true,
-          tokenContractAddress: "Q1234567890abcdef1234567890abcdef12345678",
+          tokenContractAddress: "Q000000000000000000000000000000000000000000000000000000001234567890abcdef1234567890abcdef12345678",
           tokenDecimals: 18,
           tokenImage: "token.png",
           tokenBalance: "100.0",
@@ -364,7 +364,7 @@ describe("TokenTransfer", () => {
     await fillAndSubmitForm("Send TST");
     expect(mockSignZrc20Token).toHaveBeenCalled();
     expect(mockAddTransaction).toHaveBeenCalledWith(
-      "Q20B714091cF2a62DADda2847803e3f1B9D2D3779",
+      "Q0000000000000000000000000000000000000000000000000000000020B714091cF2a62DADda2847803e3f1B9D2D3779",
       expect.objectContaining({
         pendingStatus: "pending",
         tokenSymbol: "TST",
@@ -378,7 +378,7 @@ describe("TokenTransfer", () => {
       amount: 0,
       tokenDetails: {
         isZrc20Token: true,
-        tokenContractAddress: "Qabcdef1234567890abcdef1234567890abcdef12",
+        tokenContractAddress: "Q00000000000000000000000000000000000000000000000000000000abcdef1234567890abcdef1234567890abcdef12",
         tokenDecimals: 8,
         tokenImage: "stored-token.png",
         tokenBalance: "200.0",
@@ -420,7 +420,7 @@ describe("TokenTransfer", () => {
       async () => {
         await userEvent.type(
           receiverAddressField,
-          "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+          "Q0000000000000000000000000000000000000000000000000000000020fB08fF1f1376A14C055E9F56df80563E16722b",
         );
         await userEvent.type(amountField, "10");
       },
@@ -460,7 +460,7 @@ describe("TokenTransfer", () => {
       async () => {
         await userEvent.type(
           receiverAddressField,
-          "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+          "Q0000000000000000000000000000000000000000000000000000000020fB08fF1f1376A14C055E9F56df80563E16722b",
         );
         await userEvent.type(amountField, "5");
       },
@@ -487,7 +487,7 @@ describe("TokenTransfer", () => {
       {
         tokenDetails: {
           isZrc20Token: true,
-          tokenContractAddress: "Q1234567890abcdef1234567890abcdef12345678",
+          tokenContractAddress: "Q000000000000000000000000000000000000000000000000000000001234567890abcdef1234567890abcdef12345678",
           tokenDecimals: 18,
           tokenImage: "token.png",
           tokenBalance: "50.0 TST",
@@ -515,7 +515,7 @@ describe("TokenTransfer", () => {
       async () => {
         await userEvent.type(
           receiverAddressField,
-          "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+          "Q0000000000000000000000000000000000000000000000000000000020fB08fF1f1376A14C055E9F56df80563E16722b",
         );
         await userEvent.type(amountField, "100");
       },
@@ -537,7 +537,7 @@ describe("TokenTransfer", () => {
       {
         tokenDetails: {
           isZrc20Token: true,
-          tokenContractAddress: "Q1234567890abcdef1234567890abcdef12345678",
+          tokenContractAddress: "Q000000000000000000000000000000000000000000000000000000001234567890abcdef1234567890abcdef12345678",
           tokenDecimals: 18,
           tokenImage: "token.png",
           tokenBalance: "1,000.0 TST",
@@ -565,7 +565,7 @@ describe("TokenTransfer", () => {
       async () => {
         await userEvent.type(
           receiverAddressField,
-          "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+          "Q0000000000000000000000000000000000000000000000000000000020fB08fF1f1376A14C055E9F56df80563E16722b",
         );
         await userEvent.type(amountField, "10");
       },

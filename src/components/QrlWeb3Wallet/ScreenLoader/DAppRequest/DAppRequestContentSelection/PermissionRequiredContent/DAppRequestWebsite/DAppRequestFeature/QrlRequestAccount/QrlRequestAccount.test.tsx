@@ -25,7 +25,7 @@ describe("QrlRequestAccount", () => {
             isLoading: false,
             accounts: [
               {
-                accountAddress: "Q20915094FEDE91EFAC68fD43D82e9Fff4daC7482",
+                accountAddress: "Q0000000000000000000000000000000000000000000000000000000020915094FEDE91EFAC68fD43D82e9Fff4daC7482",
                 accountBalance: "10 QRL",
               },
             ],
@@ -49,7 +49,7 @@ describe("QrlRequestAccount", () => {
     ).toBeInTheDocument();
     expect(checkBox).toBeInTheDocument();
     expect(checkBox).toBeEnabled();
-    expect(screen.getByText("Q20915")).toBeInTheDocument();
+    expect(screen.getByText("Q00000")).toBeInTheDocument();
     expect(screen.getByText("094FE")).toBeInTheDocument();
     expect(screen.getByText("DE91E")).toBeInTheDocument();
     expect(screen.getByText("FAC68")).toBeInTheDocument();

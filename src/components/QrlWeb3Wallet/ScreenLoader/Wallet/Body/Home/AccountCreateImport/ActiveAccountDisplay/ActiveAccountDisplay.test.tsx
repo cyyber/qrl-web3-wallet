@@ -22,7 +22,7 @@ describe("ActiveAccountDisplay", () => {
       mockedStore({
         qrlStore: {
           activeAccount: {
-            accountAddress: "Q205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
+            accountAddress: "Q00000000000000000000000000000000000000000000000000000000205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
           },
           getAccountBalance: (_accountAddress: string) => {
             return "2.45 QRL";

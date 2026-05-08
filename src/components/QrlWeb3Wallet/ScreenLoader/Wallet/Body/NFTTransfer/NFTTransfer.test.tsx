@@ -6,7 +6,7 @@ import { MemoryRouter } from "react-router-dom";
 import NFTTransfer from "./NFTTransfer";
 
 const defaultState = {
-  contractAddress: "Q20B714091cF2a62DADda2847803e3f1B9D2D3779",
+  contractAddress: "Q0000000000000000000000000000000000000000000000000000000020B714091cF2a62DADda2847803e3f1B9D2D3779",
   tokenId: "7",
   collectionName: "TestNFT",
   imageUrl: "https://example.com/nft.png",

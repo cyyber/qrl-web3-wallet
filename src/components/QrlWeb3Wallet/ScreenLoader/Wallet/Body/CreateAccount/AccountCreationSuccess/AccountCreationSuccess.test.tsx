@@ -24,7 +24,7 @@ describe("AccountCreationSuccess", () => {
     mockedStoreValues = mockedStore(),
     mockedProps: ComponentProps<typeof AccountCreationSuccess> = {
       account: {
-        address: "Q205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
+        address: "Q00000000000000000000000000000000000000000000000000000000205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
         seed: "",
         sign: (_data: Record<string, unknown> | string) => {
           return { messageHash: "", signature: "", message: "" };
@@ -89,7 +89,7 @@ describe("AccountCreationSuccess", () => {
     vi.advanceTimersByTime(1000);
     expect(clipboardMock).toHaveBeenCalledTimes(1);
     expect(clipboardMock).toHaveBeenCalledWith(
-      "Q205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
+      "Q00000000000000000000000000000000000000000000000000000000205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
     );
   });
 });

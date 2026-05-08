@@ -20,7 +20,7 @@ describe("WatchAssetInfo", () => {
           params: [
             {
               options: {
-                address: "Q20B714091cF2a62DADda2847803e3f1B9D2D3779",
+                address: "Q0000000000000000000000000000000000000000000000000000000020B714091cF2a62DADda2847803e3f1B9D2D3779",
                 symbol: "TST",
                 image: "testImage",
                 decimals: 18,

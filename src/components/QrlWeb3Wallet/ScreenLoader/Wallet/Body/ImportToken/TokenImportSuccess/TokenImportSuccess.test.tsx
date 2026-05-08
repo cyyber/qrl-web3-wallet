@@ -16,7 +16,7 @@ describe("TokenImportSuccess", () => {
       <StoreProvider value={mockedStoreValues}>
         <MemoryRouter>
           <TokenImportSuccess
-            contractAddress="Q0db3981cb93db985e4e3a62ff695f7a1b242dd7c"
+            contractAddress="Q000000000000000000000000000000000000000000000000000000000db3981cb93db985e4e3a62ff695f7a1b242dd7c"
             onCancelImport={mockedOnCancelImport}
             token={{
               balance: 25,

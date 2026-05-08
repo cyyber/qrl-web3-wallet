@@ -17,7 +17,7 @@ describe("MnemonicDisplay", () => {
     mockedProps: ComponentProps<typeof MnemonicDisplay> = {
       onMnemonicNoted: mockedOnMnemonicNoted,
       account: {
-        address: "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+        address: "Q0000000000000000000000000000000000000000000000000000000020fB08fF1f1376A14C055E9F56df80563E16722b",
         seed: "0x7819dc0205e6a5c286796886ce16e637b99e1838701cc6988c5886ddc890a7f328771d9197fd17f36faa759d9b8c4c42",
         sign: (data: string | Record<string, unknown>) => ({
           messageHash: data.toString(),

@@ -36,7 +36,7 @@ describe("Receive", () => {
   });
 
   it("should render a QR code for the active account", () => {
-    const address = "Q20B714091cF2a62DADda2847803e3f1B9D2D3779";
+    const address = "Q0000000000000000000000000000000000000000000000000000000020B714091cF2a62DADda2847803e3f1B9D2D3779";
     renderComponent(
       mockedStore({
         qrlStore: { activeAccount: { accountAddress: address } },
@@ -49,7 +49,7 @@ describe("Receive", () => {
   });
 
   it("should use accountAddress from location state when provided", () => {
-    const stateAddress = "Q20fB08fF1f1376A14C055E9F56df80563E16722b";
+    const stateAddress = "Q0000000000000000000000000000000000000000000000000000000020fB08fF1f1376A14C055E9F56df80563E16722b";
     renderComponent(mockedStore(), { accountAddress: stateAddress });
 
     const qr = screen.getByTestId("qr-code");
@@ -57,7 +57,7 @@ describe("Receive", () => {
   });
 
   it("should display the split address", () => {
-    const address = "Q20B714091cF2a62DADda2847803e3f1B9D2D3779";
+    const address = "Q0000000000000000000000000000000000000000000000000000000020B714091cF2a62DADda2847803e3f1B9D2D3779";
     renderComponent(
       mockedStore({
         qrlStore: { activeAccount: { accountAddress: address } },
@@ -69,7 +69,7 @@ describe("Receive", () => {
   });
 
   it("should copy address to clipboard on click", async () => {
-    const address = "Q20B714091cF2a62DADda2847803e3f1B9D2D3779";
+    const address = "Q0000000000000000000000000000000000000000000000000000000020B714091cF2a62DADda2847803e3f1B9D2D3779";
     const mockedWriteText = vi.fn(() => Promise.resolve());
     Object.defineProperty(navigator, "clipboard", {
       value: { writeText: mockedWriteText },
