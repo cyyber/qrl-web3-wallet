@@ -3,13 +3,6 @@ import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ContactForm from "./ContactForm";
 
-vi.mock("@theqrl/web3", () => ({
-  validator: {
-    isAddressString: (addr: string) =>
-      typeof addr === "string" && addr.startsWith("Q") && addr.length >= 41,
-  },
-}));
-
 describe("ContactForm", () => {
   afterEach(cleanup);
 

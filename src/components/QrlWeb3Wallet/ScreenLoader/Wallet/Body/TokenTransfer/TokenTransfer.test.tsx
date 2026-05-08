@@ -6,15 +6,6 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import TokenTransfer from "./TokenTransfer";
 
-vi.mock("@theqrl/web3", async () => {
-  const originalModule =
-    await vi.importActual<typeof import("@theqrl/web3")>("@theqrl/web3");
-  return {
-    ...originalModule,
-    validator: { isAddressString: vi.fn(() => true) },
-  };
-});
-
 const {
   mockGetTransactionValues,
   mockSetTransactionValues,
