@@ -100,8 +100,10 @@ describe("LedgerStore", () => {
       new Uint8Array([0x01]), // value
       new Uint8Array([]),   // data
       [],                   // accessList
-      new Uint8Array([]),   // publicKey (empty for unsigned)
+      new Uint8Array([]),   // descriptor (empty for unsigned)
+      new Uint8Array([]),   // extraParams (empty for unsigned)
       new Uint8Array([]),   // signature (empty for unsigned)
+      new Uint8Array([]),   // publicKey (empty for unsigned)
     ]);
     mockGetMessageToSign.mockReturnValue(new Uint8Array([0x02, 0xf8, 0x50]));
     mockFromTxData.mockReturnValue({
@@ -1045,7 +1047,7 @@ describe("LedgerStore", () => {
       ).rejects.toThrow("Failed to fetch public key from Ledger");
     });
 
-    it("should pass correct values to fromValuesArray with publicKey before signature", async () => {
+    it("should pass descriptor, extraParams, signature, and publicKey to fromValuesArray", async () => {
       await store.signAndSerializeTransaction(
         mockAccounts[0].address,
         mockTxData,
@@ -1055,14 +1057,15 @@ describe("LedgerStore", () => {
       const callArgs = mockFromValuesArray.mock.calls[0];
       const valuesArray = callArgs[0] as any[];
 
-      // Should have 12 elements: 9 tx fields + publicKey + signature + descriptor
-      expect(valuesArray).toHaveLength(12);
-      // publicKey and signature should be Buffer instances
-      expect(Buffer.isBuffer(valuesArray[9])).toBe(true);  // publicKey
-      expect(Buffer.isBuffer(valuesArray[10])).toBe(true);  // signature
-      // descriptor should be Uint8Array (3 bytes: [1, 0, 0] for ML-DSA-87)
-      expect(valuesArray[11]).toBeInstanceOf(Uint8Array);
-      expect(valuesArray[11]).toHaveLength(3);
+      // Should have 13 elements:
+      // 9 tx fields + descriptor + extraParams + signature + publicKey.
+      expect(valuesArray).toHaveLength(13);
+      expect(valuesArray[9]).toBeInstanceOf(Uint8Array);
+      expect(valuesArray[9]).toHaveLength(3);
+      expect(valuesArray[10]).toBeInstanceOf(Uint8Array);
+      expect(valuesArray[10]).toHaveLength(0);
+      expect(Buffer.isBuffer(valuesArray[11])).toBe(true); // signature
+      expect(Buffer.isBuffer(valuesArray[12])).toBe(true); // publicKey
     });
   });
 });
