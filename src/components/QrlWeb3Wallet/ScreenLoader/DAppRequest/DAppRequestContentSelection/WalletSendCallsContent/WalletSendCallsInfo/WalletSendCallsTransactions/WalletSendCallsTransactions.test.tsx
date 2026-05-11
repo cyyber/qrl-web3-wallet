@@ -28,7 +28,7 @@ describe("WalletSendCallsTransactions", () => {
                 chainId: "0x1",
                 calls: [
                   {
-                    to: "Q208318ecd68f26726CE7C54b29CaBA94584969B6",
+                    to: "Q00000000000000000000000000000000000000000000000000000000208318ecd68f26726CE7C54b29CaBA94584969B6",
                     value: "0xde0b6b3a7640000",
                   },
                 ],
@@ -42,7 +42,7 @@ describe("WalletSendCallsTransactions", () => {
     expect(screen.getByText("Transaction 1")).toBeInTheDocument();
     expect(screen.queryByText("To Address")).not.toBeInTheDocument();
     expect(
-      screen.queryByText("Q208318ecd68f26726CE7C54b29CaBA94584969B6"),
+      screen.queryByText("Q00000000000000000000000000000000000000000000000000000000208318ecd68f26726CE7C54b29CaBA94584969B6"),
     ).not.toBeInTheDocument();
     expect(screen.queryByText("Amount")).not.toBeInTheDocument();
     expect(screen.queryByText("1 QRL")).not.toBeInTheDocument();
@@ -50,7 +50,7 @@ describe("WalletSendCallsTransactions", () => {
     await userEvent.click(expandButton);
     expect(screen.getByText("To Address")).toBeInTheDocument();
     expect(
-      screen.getByText("Q208318ecd68f26726CE7C54b29CaBA94584969B6"),
+      screen.getByText("Q00000000000000000000000000000000000000000000000000000000208318ecd68f26726CE7C54b29CaBA94584969B6"),
     ).toBeInTheDocument();
     expect(screen.getByText("Amount")).toBeInTheDocument();
     expect(screen.getByText("1 QRL")).toBeInTheDocument();

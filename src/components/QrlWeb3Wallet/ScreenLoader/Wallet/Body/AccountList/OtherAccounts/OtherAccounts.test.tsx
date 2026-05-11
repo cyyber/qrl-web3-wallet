@@ -30,17 +30,17 @@ describe("OtherAccounts", () => {
     mockedStore({
       qrlStore: {
         activeAccount: {
-          accountAddress: "Q205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
+          accountAddress: "Q00000000000000000000000000000000000000000000000000000000205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
         },
         qrlAccounts: {
           isLoading: false,
           accounts: [
             {
-              accountAddress: "Q205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
+              accountAddress: "Q00000000000000000000000000000000000000000000000000000000205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
               accountBalance: "2.4568 QRL",
             },
             {
-              accountAddress: "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+              accountAddress: "Q0000000000000000000000000000000000000000000000000000000020fB08fF1f1376A14C055E9F56df80563E16722b",
               accountBalance: "0.3695 QRL",
             },
           ],
@@ -106,28 +106,28 @@ describe("OtherAccounts", () => {
     );
     expect(mockedWriteText).toBeCalledTimes(1);
     expect(mockedWriteText).toBeCalledWith(
-      "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+      "Q0000000000000000000000000000000000000000000000000000000020fB08fF1f1376A14C055E9F56df80563E16722b",
     );
   });
 
   const storeWithLabel = (overrides: Record<string, any> = {}) => {
     const labels: Record<string, string> = {
-      Q20fB08fF1f1376A14C055E9F56df80563E16722b: "Account 2",
+      Q0000000000000000000000000000000000000000000000000000000020fB08fF1f1376A14C055E9F56df80563E16722b: "Account 2",
     };
     return mockedStore({
       qrlStore: {
         activeAccount: {
-          accountAddress: "Q205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
+          accountAddress: "Q00000000000000000000000000000000000000000000000000000000205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
         },
         qrlAccounts: {
           isLoading: false,
           accounts: [
             {
-              accountAddress: "Q205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
+              accountAddress: "Q00000000000000000000000000000000000000000000000000000000205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
               accountBalance: "2.4568 QRL",
             },
             {
-              accountAddress: "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+              accountAddress: "Q0000000000000000000000000000000000000000000000000000000020fB08fF1f1376A14C055E9F56df80563E16722b",
               accountBalance: "0.3695 QRL",
             },
           ],
@@ -187,7 +187,7 @@ describe("OtherAccounts", () => {
     );
 
     expect(setLabel).toHaveBeenCalledWith(
-      "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+      "Q0000000000000000000000000000000000000000000000000000000020fB08fF1f1376A14C055E9F56df80563E16722b",
       "Savings",
     );
   });
@@ -227,7 +227,7 @@ describe("OtherAccounts", () => {
 
     await waitFor(() => {
       expect(setLabel).toHaveBeenCalledWith(
-        "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+        "Q0000000000000000000000000000000000000000000000000000000020fB08fF1f1376A14C055E9F56df80563E16722b",
         "New Label",
       );
     });
@@ -264,17 +264,17 @@ describe("OtherAccounts", () => {
       mockedStore({
         qrlStore: {
           activeAccount: {
-            accountAddress: "Q205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
+            accountAddress: "Q00000000000000000000000000000000000000000000000000000000205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
           },
           qrlAccounts: {
             isLoading: false,
             accounts: [
               {
-                accountAddress: "Q205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
+                accountAddress: "Q00000000000000000000000000000000000000000000000000000000205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
                 accountBalance: "2.4568 QRL",
               },
               {
-                accountAddress: "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+                accountAddress: "Q0000000000000000000000000000000000000000000000000000000020fB08fF1f1376A14C055E9F56df80563E16722b",
                 accountBalance: "0.3695 QRL",
               },
             ],
@@ -297,29 +297,29 @@ describe("OtherAccounts", () => {
     );
 
     expect(hideAccount).toHaveBeenCalledWith(
-      "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+      "Q0000000000000000000000000000000000000000000000000000000020fB08fF1f1376A14C055E9F56df80563E16722b",
     );
   });
 
   it("should not show hidden accounts in the list", () => {
     const hidden: Record<string, boolean> = {
-      Q20fB08fF1f1376A14C055E9F56df80563E16722b: true,
+      Q0000000000000000000000000000000000000000000000000000000020fB08fF1f1376A14C055E9F56df80563E16722b: true,
     };
     renderComponent(
       mockedStore({
         qrlStore: {
           activeAccount: {
-            accountAddress: "Q205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
+            accountAddress: "Q00000000000000000000000000000000000000000000000000000000205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
           },
           qrlAccounts: {
             isLoading: false,
             accounts: [
               {
-                accountAddress: "Q205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
+                accountAddress: "Q00000000000000000000000000000000000000000000000000000000205046e6A6E159eD6ACedE46A36CAD6D449C80A1",
                 accountBalance: "2.4568 QRL",
               },
               {
-                accountAddress: "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+                accountAddress: "Q0000000000000000000000000000000000000000000000000000000020fB08fF1f1376A14C055E9F56df80563E16722b",
                 accountBalance: "0.3695 QRL",
               },
             ],
@@ -327,7 +327,7 @@ describe("OtherAccounts", () => {
         },
         hiddenAccountsStore: {
           hiddenAccounts: hidden,
-          hiddenAddresses: ["Q20fB08fF1f1376A14C055E9F56df80563E16722b"],
+          hiddenAddresses: ["Q0000000000000000000000000000000000000000000000000000000020fB08fF1f1376A14C055E9F56df80563E16722b"],
           loadHiddenAccounts: async () => {},
           hideAccount: async () => {},
           unhideAccount: async () => {},

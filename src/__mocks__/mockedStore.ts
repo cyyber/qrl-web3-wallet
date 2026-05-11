@@ -2,6 +2,7 @@ import {
   type BlockchainDataType,
   DEFAULT_BLOCKCHAIN,
 } from "@/configuration/qrlBlockchainConfig";
+import { QRL_EXAMPLE_ADDRESS } from "@/constants/address";
 import type LockStore from "@/stores/lockStore";
 import type SettingsStore from "@/stores/settingsStore";
 import type { StoreType } from "@/stores/store";
@@ -34,7 +35,7 @@ const mockedStoreValues: StoreType = {
   } as unknown as SettingsStore,
   qrlStore: {
     activeAccount: {
-      accountAddress: "Q20B714091cF2a62DADda2847803e3f1B9D2D3779",
+      accountAddress: QRL_EXAMPLE_ADDRESS,
     },
     qrlAccounts: {
       isLoading: false,

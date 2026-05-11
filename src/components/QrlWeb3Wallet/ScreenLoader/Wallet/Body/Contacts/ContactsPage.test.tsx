@@ -6,13 +6,6 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import ContactsPage from "./ContactsPage";
 
-vi.mock("@theqrl/web3", () => ({
-  validator: {
-    isAddressString: (addr: string) =>
-      typeof addr === "string" && addr.startsWith("Q") && addr.length >= 41,
-  },
-}));
-
 describe("ContactsPage", () => {
   afterEach(cleanup);
 
@@ -65,7 +58,7 @@ describe("ContactsPage", () => {
           contacts: [
             {
               name: "Alice",
-              address: "Q20B714091cF2a62DADda2847803e3f1B9D2D3779",
+              address: "Q0000000000000000000000000000000000000000000000000000000020B714091cF2a62DADda2847803e3f1B9D2D3779",
             },
           ],
         },
@@ -82,7 +75,7 @@ describe("ContactsPage", () => {
           contacts: [
             {
               name: "Alice",
-              address: "Q20B714091cF2a62DADda2847803e3f1B9D2D3779",
+              address: "Q0000000000000000000000000000000000000000000000000000000020B714091cF2a62DADda2847803e3f1B9D2D3779",
             },
           ],
         },
@@ -102,7 +95,7 @@ describe("ContactsPage", () => {
           contacts: [
             {
               name: "Alice",
-              address: "Q20B714091cF2a62DADda2847803e3f1B9D2D3779",
+              address: "Q0000000000000000000000000000000000000000000000000000000020B714091cF2a62DADda2847803e3f1B9D2D3779",
             },
           ],
           removeContact,
@@ -113,7 +106,7 @@ describe("ContactsPage", () => {
     await userEvent.click(screen.getByLabelText("Delete contact"));
 
     expect(removeContact).toHaveBeenCalledWith(
-      "Q20B714091cF2a62DADda2847803e3f1B9D2D3779",
+      "Q0000000000000000000000000000000000000000000000000000000020B714091cF2a62DADda2847803e3f1B9D2D3779",
     );
   });
 
@@ -135,7 +128,7 @@ describe("ContactsPage", () => {
     );
     await userEvent.type(
       screen.getByPlaceholderText("Q address"),
-      "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+      "Q0000000000000000000000000000000000000000000000000000000020fB08fF1f1376A14C055E9F56df80563E16722b",
     );
 
     const saveButton = screen.getByRole("button", { name: /Save/i });
@@ -148,7 +141,7 @@ describe("ContactsPage", () => {
     await waitFor(() => {
       expect(addContact).toHaveBeenCalledWith({
         name: "Bob",
-        address: "Q20fB08fF1f1376A14C055E9F56df80563E16722b",
+        address: "Q0000000000000000000000000000000000000000000000000000000020fB08fF1f1376A14C055E9F56df80563E16722b",
       });
     });
 
@@ -164,7 +157,7 @@ describe("ContactsPage", () => {
           contacts: [
             {
               name: "Alice",
-              address: "Q20B714091cF2a62DADda2847803e3f1B9D2D3779",
+              address: "Q0000000000000000000000000000000000000000000000000000000020B714091cF2a62DADda2847803e3f1B9D2D3779",
             },
           ],
           updateContact,
@@ -187,10 +180,10 @@ describe("ContactsPage", () => {
 
     await waitFor(() => {
       expect(updateContact).toHaveBeenCalledWith(
-        "Q20B714091cF2a62DADda2847803e3f1B9D2D3779",
+        "Q0000000000000000000000000000000000000000000000000000000020B714091cF2a62DADda2847803e3f1B9D2D3779",
         {
           name: "Alice Updated",
-          address: "Q20B714091cF2a62DADda2847803e3f1B9D2D3779",
+          address: "Q0000000000000000000000000000000000000000000000000000000020B714091cF2a62DADda2847803e3f1B9D2D3779",
         },
       );
     });

@@ -19,11 +19,11 @@ import { Label } from "@/components/UI/Label";
 import { ROUTES } from "@/router/router";
 import { useStore } from "@/stores/store";
 import type { TransactionHistoryEntry } from "@/types/transactionHistory";
+import AddressUtil from "@/utilities/addressUtil";
 import StorageUtil from "@/utilities/storageUtil";
 import StringUtil from "@/utilities/stringUtil";
 import { isQrnsName, resolveQrnsName } from "@/utilities/qrnsResolver";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { validator } from "@theqrl/web3";
 import { Image, Loader, Send, X } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useEffect, useRef, useState } from "react";
@@ -43,7 +43,7 @@ const createFormSchema = (t: TFunction) =>
     })
     .refine(
       (fields) =>
-        validator.isAddressString(fields.receiverAddress) ||
+        AddressUtil.isQrlAddress(fields.receiverAddress.trim()) ||
         isQrnsName(fields.receiverAddress),
       {
         message: t("validation.addressInvalid"),
