@@ -29,7 +29,7 @@ const isPlainObject = (v: unknown): v is Record<string, unknown> =>
   typeof v === "object" && v !== null && !Array.isArray(v);
 
 const tryDecimalAndHex = (v: string | number | bigint): string => {
-  // QRL typed data frequently encodes large token values; show
+  // For numeric types, QRL typed data frequently encodes large token values; show
   // both decimal and hex so users can recognise huge numbers (F-6).
   try {
     const asBig = typeof v === "bigint" ? v : BigInt(v as string | number);
