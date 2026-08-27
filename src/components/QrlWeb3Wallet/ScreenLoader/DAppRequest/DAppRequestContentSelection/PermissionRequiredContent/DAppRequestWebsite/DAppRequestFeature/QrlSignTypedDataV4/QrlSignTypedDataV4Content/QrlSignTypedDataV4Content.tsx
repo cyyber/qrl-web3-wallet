@@ -15,7 +15,7 @@ import { useStore } from "@/stores/store";
 import StringUtil, { sanitizeForDisplay } from "@/utilities/stringUtil";
 import { MLDSA87, ExtendedSeed } from "@theqrl/wallet.js";
 import { bytesToHex } from "@theqrl/web3-utils";
-import { getEncodedEip712Data } from "@theqrl/web3-qrl-abi";
+import { getEncodedQRLTypedData } from "@theqrl/web3-qrl-abi";
 import { parseAndValidateSeed, sign } from "@theqrl/web3-qrl-accounts";
 import { Copy } from "lucide-react";
 import { observer } from "mobx-react-lite";
@@ -29,7 +29,7 @@ const isPlainObject = (v: unknown): v is Record<string, unknown> =>
   typeof v === "object" && v !== null && !Array.isArray(v);
 
 const tryDecimalAndHex = (v: string | number | bigint): string => {
-  // For numeric types, EIP-712 frequently encodes large token values; show
+  // For numeric types, QRL typed data frequently encodes large token values; show
   // both decimal and hex so users can recognise huge numbers (F-6).
   try {
     const asBig = typeof v === "bigint" ? v : BigInt(v as string | number);
@@ -229,7 +229,7 @@ const QrlSignTypedDataV4Content = observer(() => {
       if (fromAddress.toLowerCase() !== addressFromSeed?.toLowerCase()) {
         throw new Error("Account seed did not match with the address");
       }
-      const messageHash = getEncodedEip712Data(typedData, true);
+      const messageHash = getEncodedQRLTypedData(typedData, true);
       const signature = sign(messageHash, seed)?.signature;
 
       const seedUint8Array = parseAndValidateSeed(seed);
@@ -265,7 +265,7 @@ const QrlSignTypedDataV4Content = observer(() => {
       <div className="rounded-md bg-muted/50 p-2 text-xs">
         <div className="font-semibold">Structured-data signature ({primaryType})</div>
         <div className="text-muted-foreground">
-          This is an EIP-712 signature, distinct from a transaction. Review every field carefully — a signature here may authorise token transfers or contract actions on your behalf.
+          This is a QRL typed-data signature, distinct from a transaction. Review every field carefully — a signature here may authorise token transfers or contract actions on your behalf.
         </div>
       </div>
       {isApprovalSignature && (
@@ -294,12 +294,12 @@ const QrlSignTypedDataV4Content = observer(() => {
       )}
       {chainIdMissing && (
         <div className="rounded-md border border-yellow-500 bg-yellow-50 p-2 text-xs text-yellow-900 dark:bg-yellow-900/30 dark:text-yellow-200">
-          <strong>Warning:</strong> the dApp did not declare a chainId in the EIP-712 domain. This signature is not bound to any chain and could be replayed on any chain hosting the verifying contract.
+          <strong>Warning:</strong> the dApp did not declare a chainId in the QRL typed-data domain. This signature is not bound to any chain and could be replayed on any chain hosting the verifying contract.
         </div>
       )}
       {chainIdMismatch && (
         <div className="rounded-md border border-yellow-500 bg-yellow-50 p-2 text-xs text-yellow-900 dark:bg-yellow-900/30 dark:text-yellow-200">
-          <strong>Warning:</strong> the EIP-712 domain chainId ({declaredChainId}) does not match the wallet&apos;s active chain ({activeChainId}). The signature will be valid on the declared chain only.
+          <strong>Warning:</strong> the QRL typed-data domain chainId ({declaredChainId}) does not match the wallet&apos;s active chain ({activeChainId}). The signature will be valid on the declared chain only.
         </div>
       )}
       <Accordion
