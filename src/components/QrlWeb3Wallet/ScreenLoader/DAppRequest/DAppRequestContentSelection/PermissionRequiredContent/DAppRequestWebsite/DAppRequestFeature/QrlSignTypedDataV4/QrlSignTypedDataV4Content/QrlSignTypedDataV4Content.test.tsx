@@ -13,7 +13,7 @@ describe("QrlSignTypedDataV4Content", () => {
   const fromAddress = "Q0000000000000000000000000000000000000000000000000000000020D20b8026B8F02540246f58120ddAAf35AECD9B00000000000000000000000000000000";
   const msgParams = {
     types: {
-      EIP712Domain: [
+      QRLTypedDataDomain: [
         {
           name: "name",
           type: "string",
@@ -118,6 +118,9 @@ describe("QrlSignTypedDataV4Content", () => {
     // Message accordion: structured-data banner + primary type
     expect(
       screen.getByText(/Structured-data signature/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/This is a QRL typed-data signature/i),
     ).toBeInTheDocument();
     expect(screen.getByText("Primary Type")).toBeInTheDocument();
     expect(screen.getByText("Mail")).toBeInTheDocument();
@@ -239,7 +242,7 @@ describe("QrlSignTypedDataV4Content", () => {
     await userEvent.click(copyButton);
     expect(clipboardMock).toHaveBeenCalledTimes(1);
     expect(clipboardMock).toHaveBeenCalledWith(
-      '{"types":{"EIP712Domain":[{"name":"name","type":"string"},{"name":"version","type":"string"},{"name":"chainId","type":"uint256"},{"name":"verifyingContract","type":"address"}],"Person":[{"name":"name","type":"string"},{"name":"wallet","type":"address"}],"Mail":[{"name":"from","type":"Person"},{"name":"to","type":"Person"},{"name":"contents","type":"string"}]},"primaryType":"Mail","domain":{"name":"Ether Mail","version":"1","chainId":1,"verifyingContract":"Q00000000000000000000000000000000000000000000000000000000CcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC00000000000000000000000000000000"},"message":{"from":{"name":"Cow","wallet":"Q00000000000000000000000000000000000000000000000000000000CD2a3d9F938E13CD947Ec05AbC7FE734Df8DD82600000000000000000000000000000000"},"to":{"name":"Bob","wallet":"Q00000000000000000000000000000000000000000000000000000000bBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB00000000000000000000000000000000"},"contents":"Hello, Bob!"}}',
+      '{"types":{"QRLTypedDataDomain":[{"name":"name","type":"string"},{"name":"version","type":"string"},{"name":"chainId","type":"uint256"},{"name":"verifyingContract","type":"address"}],"Person":[{"name":"name","type":"string"},{"name":"wallet","type":"address"}],"Mail":[{"name":"from","type":"Person"},{"name":"to","type":"Person"},{"name":"contents","type":"string"}]},"primaryType":"Mail","domain":{"name":"Ether Mail","version":"1","chainId":1,"verifyingContract":"Q00000000000000000000000000000000000000000000000000000000CcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC00000000000000000000000000000000"},"message":{"from":{"name":"Cow","wallet":"Q00000000000000000000000000000000000000000000000000000000CD2a3d9F938E13CD947Ec05AbC7FE734Df8DD82600000000000000000000000000000000"},"to":{"name":"Bob","wallet":"Q00000000000000000000000000000000000000000000000000000000bBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB00000000000000000000000000000000"},"contents":"Hello, Bob!"}}',
     );
   });
 });
