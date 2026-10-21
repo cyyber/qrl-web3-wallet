@@ -1,0 +1,38 @@
+{
+  "sources": {
+    "goQrl": "https://github.com/theQRL/go-qrl/tree/f3864c46b3f94662c514105da1efaf3466394fae",
+    "walletVectors": "https://github.com/theQRL/go-qrllib/blob/v0.11.0/wallet/ml_dsa_87/wallet_test.go",
+    "abiVectors": "https://github.com/theQRL/go-qrl/blob/f3864c46b3f94662c514105da1efaf3466394fae/accounts/abi/testdata/hyperion-0.2.0.json"
+  },
+  "wallets": [
+    {
+      "name": "ML-DSA Wallet 1",
+      "extendedSeed": "010000f29f58aff0b00de2844f7e20bd9eeaacc379150043beeb328335817512b29fbb7184da84a092f842b2a06d72a24a5d28",
+      "address": "Qd5812f6cf4a0f645aa620cd57319a0ed649dd8f5519a9dde7770ae5b0e49e547985f35eb972a2a07041561aa39c65a3991478f9b1e6749e05277dcf58a9a8b72"
+    },
+    {
+      "name": "ML-DSA Wallet 2",
+      "extendedSeed": "010000a7b1a3005d9e110009c48d45deb43f0a0e31846ed2c5aaefb6d4238040ad4c08794ffe65585c13eb6948c2faf6db90c2",
+      "address": "Qbe95a82d87a6cb9c7ff4c64e0c15bb1dff20b1d77e6b571b28ad4736f2a2a3e5857e8c225d6d61399b15beef3b196936e490ed6e234374c4887cbbe86c13b1ba"
+    }
+  ],
+  "abi": [
+    {
+      "callData": "0x0f3446a9",
+      "encoded": "0x0000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "inputs": [
+        {
+          "type": "uint256"
+        },
+        {
+          "type": "int256"
+        }
+      ],
+      "name": "aliases",
+      "values": [
+        "115792089237316195423570985008687907853269984665640564039457584007913129639935",
+        "-1"
+      ]
+    }
+  ]
+}

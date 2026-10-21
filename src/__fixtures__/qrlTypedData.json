@@ -1,0 +1,195 @@
+{
+  "source": "Generated with go-qrl f3864c46b3f94662c514105da1efaf3466394fae, apitypes.TypedDataAndHash",
+  "vectors": [
+    {
+      "typedData": {
+        "types": {
+          "QRLTypedDataDomain": [
+            {
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "name": "version",
+              "type": "string"
+            },
+            {
+              "name": "chainId",
+              "type": "uint256"
+            },
+            {
+              "name": "verifyingContract",
+              "type": "address"
+            }
+          ],
+          "Person": [
+            {
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "name": "wallet",
+              "type": "address"
+            }
+          ],
+          "Mail": [
+            {
+              "name": "from",
+              "type": "Person"
+            },
+            {
+              "name": "to",
+              "type": "Person[]"
+            },
+            {
+              "name": "contents",
+              "type": "string"
+            }
+          ]
+        },
+        "primaryType": "Mail",
+        "domain": {
+          "name": "QRL Wallet Compatibility",
+          "version": "1",
+          "chainId": 1337,
+          "verifyingContract": "Q11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
+        },
+        "message": {
+          "from": {
+            "name": "Cow",
+            "wallet": "Q22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222"
+          },
+          "to": [
+            {
+              "name": "Bob",
+              "wallet": "Q33333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333"
+            },
+            {
+              "name": "Alice",
+              "wallet": "Q44444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444"
+            }
+          ],
+          "contents": "0x68656c6c6f"
+        }
+      },
+      "hash": "0x262d6571bfd95d70552e7ac728aa350dd4c83518aaa00813f017a00c9791178b"
+    },
+    {
+      "typedData": {
+        "types": {
+          "QRLTypedDataDomain": [
+            {
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "name": "version",
+              "type": "string"
+            },
+            {
+              "name": "chainId",
+              "type": "uint256"
+            },
+            {
+              "name": "verifyingContract",
+              "type": "address"
+            }
+          ],
+          "WideValues": [
+            {
+              "name": "unsigned",
+              "type": "uint"
+            },
+            {
+              "name": "signed",
+              "type": "int"
+            },
+            {
+              "name": "fixed",
+              "type": "bytes64"
+            },
+            {
+              "name": "data",
+              "type": "bytes"
+            },
+            {
+              "name": "flags",
+              "type": "bool[]"
+            },
+            {
+              "name": "amounts",
+              "type": "uint256[]"
+            }
+          ]
+        },
+        "primaryType": "WideValues",
+        "domain": {
+          "name": "QRL Wallet Compatibility",
+          "version": "1",
+          "chainId": 1337,
+          "verifyingContract": "Q11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
+        },
+        "message": {
+          "unsigned": "6703903964971298549787012499102923063739682910296196688861780721860882015036773488400937149083451713845015929093243025426876941405973284973216824503042171",
+          "signed": "-1",
+          "fixed": "0xabababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababab",
+          "data": "0xdeadbeef",
+          "flags": [true, false],
+          "amounts": ["1", "2"]
+        }
+      },
+      "hash": "0x8c78f2f6ced7e281674ed8618872817e7dd4f6b1c962e0cfd92deb5b8c743856"
+    },
+    {
+      "typedData": {
+        "types": {
+          "QRLTypedDataDomain": [
+            {
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "name": "version",
+              "type": "string"
+            },
+            {
+              "name": "chainId",
+              "type": "uint256"
+            },
+            {
+              "name": "verifyingContract",
+              "type": "address"
+            }
+          ],
+          "Tree": [
+            {
+              "name": "value",
+              "type": "string"
+            },
+            {
+              "name": "children",
+              "type": "Tree[]"
+            }
+          ]
+        },
+        "primaryType": "Tree",
+        "domain": {
+          "name": "QRL Wallet Compatibility",
+          "version": "1",
+          "chainId": 1337,
+          "verifyingContract": "Q11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
+        },
+        "message": {
+          "value": "root",
+          "children": [
+            {
+              "value": "leaf",
+              "children": []
+            }
+          ]
+        }
+      },
+      "hash": "0xfb4efee10ddd5b7ba237b3328c5f5b4da51a1de0e55b1e32e8cf8c6c9188b5fb"
+    }
+  ]
+}

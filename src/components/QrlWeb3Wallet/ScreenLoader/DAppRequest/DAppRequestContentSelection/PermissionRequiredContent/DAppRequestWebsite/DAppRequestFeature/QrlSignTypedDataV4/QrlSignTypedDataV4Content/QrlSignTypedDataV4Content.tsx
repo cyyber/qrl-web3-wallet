@@ -13,10 +13,7 @@ import {
 } from "@/components/UI/Tooltip";
 import { useStore } from "@/stores/store";
 import StringUtil, { sanitizeForDisplay } from "@/utilities/stringUtil";
-import { MLDSA87, ExtendedSeed } from "@theqrl/wallet.js";
-import { bytesToHex } from "@theqrl/web3-utils";
-import { getEncodedQRLTypedData } from "@theqrl/web3-qrl-abi";
-import { parseAndValidateSeed, sign } from "@theqrl/web3-qrl-accounts";
+import { signQrlTypedData } from "@/utilities/qrlTypedData";
 import { Copy } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useTranslation } from "react-i18next";
@@ -229,13 +226,7 @@ const QrlSignTypedDataV4Content = observer(() => {
       if (fromAddress.toLowerCase() !== addressFromSeed?.toLowerCase()) {
         throw new Error("Account seed did not match with the address");
       }
-      const messageHash = getEncodedQRLTypedData(typedData, true);
-      const signature = sign(messageHash, seed)?.signature;
-
-      const seedUint8Array = parseAndValidateSeed(seed);
-      const extSeed = new ExtendedSeed(seedUint8Array);
-      const acc = MLDSA87.newWalletFromExtendedSeed(extSeed);
-      const publicKey = bytesToHex(acc.getPK());
+      const { signature, publicKey } = signQrlTypedData(typedData, seed);
 
       if (signature) {
         addToResponseData({
